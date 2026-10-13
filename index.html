@@ -1,0 +1,196 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Detective Block 1 — Prototype 0.1</title><style>
+:root{font-family:Inter,ui-sans-serif,system-ui,sans-serif;color:#e7ebef;background:#0b0e11}*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#0b0e11,#11161b);min-height:100vh}header{display:flex;justify-content:space-between;gap:24px;padding:24px 32px;border-bottom:1px solid #2a323a;background:#0d1115;position:sticky;top:0;z-index:2}h1{margin:2px 0 0;font-size:28px}h1 span{font-weight:400;color:#9ba8b4}p{color:#8f9ca7;margin:4px 0 14px}header p,small{font-size:11px;letter-spacing:.12em;color:#73808b}.clock{text-align:right}.clock strong{display:block;font-size:20px;font-variant-numeric:tabular-nums}.clock span{font-size:12px;color:#82909c}main{padding:24px 32px;max-width:1500px;margin:auto}.controls{border:1px solid #29313a;background:#11171c;padding:18px;display:grid;grid-template-columns:1fr 2fr 1.5fr;gap:16px;align-items:center}.controls b,.controls code{display:block}.buttons{display:flex;gap:8px;flex-wrap:wrap}button{border:1px solid #39434d;background:#182027;color:#dce3e8;padding:9px 11px;border-radius:5px;cursor:pointer;font:inherit;font-size:12px}button:hover{background:#222d35}.primary{border-color:#7d8d99;background:#25313a}#status{grid-column:1/-1;color:#b9c5cd;min-height:18px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}.grid section{border:1px solid #29313a;background:#10161b;padding:18px;min-width:0}h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 5px}.events{display:flex;flex-direction:column;gap:7px;max-height:430px;overflow:auto}.event{display:grid;grid-template-columns:155px 145px 90px 1fr;gap:8px;text-align:left;align-items:center}.event span,.event em{color:#8e9ba6;font-style:normal}.event small{grid-column:1/5;color:#aab5bd}.event i{grid-column:1/5;color:#d4dde3;font-size:10px;letter-spacing:.1em}.event b{font-size:10px;color:#c0ccd4}.event strong{font-size:12px}.empty{padding:20px;color:#6e7b85}pre{background:#0a0e11;border:1px solid #242c33;padding:14px;overflow:auto;min-height:130px;color:#b9c5ce}.rng{display:flex;gap:8px;align-items:center;margin:10px 0}input{background:#0b1014;border:1px solid #36414b;color:#dce3e8;padding:9px;min-width:260px}footer{padding:20px 32px;text-align:center;color:#66737d;font-size:11px}@media(max-width:900px){header,.controls,.grid{grid-template-columns:1fr;display:grid}.clock{text-align:left}.event{grid-template-columns:1fr 1fr}.event small,.event i{grid-column:1/3}.controls{grid-template-columns:1fr}.rng{flex-wrap:wrap}}
+
+</style></head><body>
+<header><div><p>DETECTIVE GAME · CORE SIMULATION HARNESS</p><h1>Block 1 <span>Prototype 0.1</span></h1></div><div class="clock"><small>CANONICAL WORLD TIME</small><strong id="clock"></strong><span id="counts"></span></div></header>
+<main>
+<section class="controls"><div><small>WORLD</small><b id="world"></b><small>SEED</small><code id="seed"></code></div><div class="buttons"><button id="m1">+1 MIN</button><button id="m10">+10 MIN</button><button id="h1">+1 HOUR</button><button id="d1">+1 DAY</button><button class="primary" id="next">ADVANCE TO NEXT PLAYER EVENT</button></div><div class="buttons"><button id="save">SAVE / OVERWRITE CAREER</button><button id="load">RELOAD CAREER</button><button id="reset">RESET DEV WORLD</button></div><div id="status"></div></section>
+<div class="grid"><section><h2>Event Queue</h2><p>Typed future work. Evaluation entries are explicitly marked; objective importance does not imply player relevance.</p><div id="queue" class="events"></div></section><section><h2>Immutable Historical Ledger</h2><p>Executed reality is appended here. Later events may change current state, never rewrite committed history.</p><div id="history" class="events"></div></section></div>
+<div class="grid lower"><section><h2>Current World State</h2><pre id="facts"></pre><h2>Committed Contextual RNG</h2><pre id="rng"></pre><div class="rng"><input id="rollContext" value="NPC-001:question-tolerance"><button id="roll">COMMIT d10</button><span id="rollResult"></span></div><button id="addEval">ADD +30m TEST EVALUATION</button></section><section><h2>Developer Inspector</h2><p>Click any queue/history event. This is programmer-only Objective Reality/debug information.</p><pre id="inspect">Select an event.</pre></section></div>
+</main><footer>iPhone/iPad standalone build · Developer harness only · not player UI · Objective Reality is intentionally visible here.</footer><script>
+function hash32(text) {
+    let h = 2166136261 >>> 0;
+    for (let i = 0; i < text.length; i++) {
+        h ^= text.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+    }
+    h += h << 13;
+    h ^= h >>> 7;
+    h += h << 3;
+    h ^= h >>> 17;
+    h += h << 5;
+    return h >>> 0;
+}
+function contextualRoll(seed, context, sides) {
+    if (!Number.isInteger(sides) || sides < 2)
+        throw new Error("sides must be >= 2");
+    return (hash32(`${seed}::${context}`) % sides) + 1;
+}
+
+const VERSION = "block1-0.1";
+function iso(ms) { return new Date(ms).toISOString(); }
+function time(e) { return new Date(e.at).getTime(); }
+class WorldEngine {
+    state;
+    constructor(state) { this.state = structuredClone(state); this.sortQueue(); }
+    static create(seed = "DEV-0001", start = "2026-10-13T12:00:00.000Z") {
+        return new WorldEngine({
+            worldId: `WORLD-${seed}`,
+            careerId: `CAREER-${seed}`,
+            seed,
+            now: iso(start),
+            nextId: 1,
+            facts: { "garage.window": "intact", "tools.status": "present" },
+            queue: [], history: [], committedRandom: {}, simulationVersion: VERSION
+        });
+    }
+    id() { return `EVT-${String(this.state.nextId++).padStart(6, "0")}`; }
+    sortQueue() { this.state.queue.sort((a, b) => time(a) - time(b) || a.id.localeCompare(b.id)); }
+    schedule(at, kind, type, summary, opts = {}) {
+        if (new Date(at).getTime() < new Date(this.state.now).getTime())
+            throw new Error("Cannot schedule in the past");
+        const e = {
+            id: this.id(), at: iso(at), kind, lifecycle: "SCHEDULED", type, summary,
+            actorIds: opts.actorIds ?? [], locationId: opts.locationId,
+            playerRelevant: opts.playerRelevant ?? kind === "PLAYER_EVENT",
+            objectiveImportance: opts.objectiveImportance ?? "NORMAL",
+            causedBy: opts.causedBy ?? [], payload: opts.payload ?? {}
+        };
+        this.state.queue.push(e);
+        return structuredClone(e);
+    }
+    roll(context, sides) {
+        const key = `${context}:d${sides}`;
+        const prior = this.state.committedRandom[key];
+        if (prior !== undefined)
+            return prior;
+        const value = contextualRoll(this.state.seed, key, sides);
+        this.state.committedRandom[key] = value;
+        return value;
+    }
+    commit(e, before, after) {
+        const h = { ...structuredClone(e), lifecycle: "COMMITTED", committedAt: this.state.now, before, after };
+        this.state.history.push(h);
+    }
+    resolve(e) {
+        this.state.now = e.at;
+        e.lifecycle = "EVALUATED";
+        if (e.kind === "EVALUATION" || e.kind === "SYSTEM_EVALUATION") {
+            const chance = Number(e.payload.chancePercent ?? 100);
+            const roll = this.roll(`${e.id}:evaluation`, 100);
+            if (roll <= chance) {
+                e.lifecycle = "EXECUTED";
+                this.commit(e);
+                const produces = e.payload.produces;
+                if (produces) {
+                    this.schedule(e.at, "COMMITTED_ACTION", String(produces.type ?? "DERIVED_ACTION"), String(produces.summary ?? "Derived action"), {
+                        actorIds: e.actorIds, locationId: e.locationId, causedBy: [e.id], playerRelevant: Boolean(produces.playerRelevant),
+                        payload: produces.payload ?? {}
+                    });
+                }
+            }
+            else {
+                this.commit({ ...e, summary: `${e.summary} [evaluated: no execution]` });
+            }
+            return;
+        }
+        e.lifecycle = "EXECUTED";
+        const before = {};
+        const after = {};
+        const mutations = (e.payload.mutations ?? {});
+        for (const [k, v] of Object.entries(mutations)) {
+            before[k] = this.state.facts[k];
+            this.state.facts[k] = v;
+            after[k] = v;
+        }
+        this.commit(e, Object.keys(before).length ? before : undefined, Object.keys(after).length ? after : undefined);
+    }
+    advanceTo(targetIso) {
+        const target = new Date(targetIso).getTime();
+        if (target < new Date(this.state.now).getTime())
+            throw new Error("Time cannot move backward");
+        while (true) {
+            this.sortQueue();
+            const split = this.state.queue.findIndex(e => time(e) > target);
+            const count = split === -1 ? this.state.queue.length : split;
+            if (count === 0)
+                break;
+            const due = this.state.queue.splice(0, count);
+            for (const e of due)
+                this.resolve(e);
+            // resolve() may schedule derived events at or before the target. Loop to catch them.
+        }
+        this.state.now = iso(target);
+    }
+    advanceMs(ms) { this.advanceTo(iso(new Date(this.state.now).getTime() + ms)); }
+    advanceToNextPlayerEvent() {
+        this.sortQueue();
+        const target = this.state.queue.find(e => e.playerRelevant);
+        if (!target)
+            return null;
+        const targetId = target.id;
+        this.advanceTo(target.at);
+        return structuredClone(this.state.history.find(h => h.id === targetId) ?? target);
+    }
+    snapshot() { return structuredClone(this.state); }
+    serialize() { return JSON.stringify(this.state); }
+    static deserialize(json) { return new WorldEngine(JSON.parse(json)); }
+}
+
+const SAVE_KEY = "detective:block1:career:dev";
+let engine = WorldEngine.create("KATO-DEV-SEED", "2026-10-13T12:00:00.000Z");
+const $ = (id) => document.getElementById(id);
+const fmt = (iso) => new Date(iso).toLocaleString([], { year: "numeric", month: "short", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" });
+function seedScenario() {
+    if (engine.state.queue.length || engine.state.history.length)
+        return;
+    const base = new Date(engine.state.now).getTime();
+    engine.schedule(new Date(base + 5 * 60_000).toISOString(), "SYSTEM_EVALUATION", "ROUTINE_CHECK", "World-only routine evaluation", { payload: { chancePercent: 65 }, objectiveImportance: "LOW" });
+    engine.schedule(new Date(base + 15 * 60_000).toISOString(), "COMMITTED_ACTION", "WINDOW_BREAK", "Garage window breaks", { actorIds: ["NPC-SON"], locationId: "LOC-GARAGE", objectiveImportance: "HIGH", payload: { mutations: { "garage.window": "broken" } } });
+    engine.schedule(new Date(base + 23 * 60_000).toISOString(), "COMMITTED_ACTION", "TOOLS_REMOVED", "Three tools leave garage", { actorIds: ["NPC-SON"], locationId: "LOC-GARAGE", objectiveImportance: "HIGH", payload: { mutations: { "tools.status": "removed" } } });
+    engine.schedule(new Date(base + 45 * 60_000).toISOString(), "EVALUATION", "DOG_WALK", "Evaluate dog-walker route", { actorIds: ["NPC-DOGWALKER"], payload: { chancePercent: 75, produces: { type: "PASS_GARAGE", summary: "Dog walker passes garage", playerRelevant: false } } });
+    engine.schedule(new Date(base + 90 * 60_000).toISOString(), "PLAYER_EVENT", "DISPATCH", "Dispatch assigns a routine call", { playerRelevant: true });
+    engine.schedule(new Date(base + 150 * 60_000).toISOString(), "PLAYER_EVENT", "TRAINING", "Mandatory training reminder", { playerRelevant: true });
+    render();
+}
+function renderEvents(events, history = false) {
+    if (!events.length)
+        return `<div class="empty">None</div>`;
+    return events.map(e => `<button class="event" data-id="${e.id}" data-source="${history ? "history" : "queue"}"><span>${fmt(e.at)}</span><b>${e.kind}</b><em>${e.lifecycle}</em><strong>${e.type}</strong><small>${e.summary}</small>${e.playerRelevant ? '<i>PLAYER-RELEVANT</i>' : ''}</button>`).join("");
+}
+function render() {
+    $("clock").textContent = fmt(engine.state.now);
+    $("world").textContent = engine.state.worldId;
+    $("seed").textContent = engine.state.seed;
+    $("queue").innerHTML = renderEvents(engine.state.queue);
+    $("history").innerHTML = renderEvents([...engine.state.history].reverse(), true);
+    $("facts").textContent = JSON.stringify(engine.state.facts, null, 2);
+    $("rng").textContent = JSON.stringify(engine.state.committedRandom, null, 2);
+    $("counts").textContent = `${engine.state.queue.length} queued · ${engine.state.history.length} committed`;
+    document.querySelectorAll(".event").forEach(btn => btn.onclick = () => inspect(btn.dataset.id, btn.dataset.source === "history"));
+}
+function inspect(id, history) {
+    const e = (history ? engine.state.history : engine.state.queue).find(x => x.id === id);
+    $("inspect").textContent = JSON.stringify(e, null, 2);
+}
+function save() { localStorage.setItem(SAVE_KEY, engine.serialize()); toast("Career save overwritten at current world state."); }
+function load() { const s = localStorage.getItem(SAVE_KEY); if (!s) {
+    toast("No saved career yet.");
+    return;
+} engine = WorldEngine.deserialize(s); toast("Saved career restored."); render(); }
+function reset() { if (!confirm("Reset the prototype world? This also clears the one career save."))
+    return; localStorage.removeItem(SAVE_KEY); engine = WorldEngine.create("KATO-DEV-SEED", "2026-10-13T12:00:00.000Z"); seedScenario(); toast("Prototype world reset."); }
+function toast(t) { $("status").textContent = t; setTimeout(() => { $("status").textContent = ""; }, 2600); }
+$("m1").onclick = () => { engine.advanceMs(60_000); render(); };
+$("m10").onclick = () => { engine.advanceMs(600_000); render(); };
+$("h1").onclick = () => { engine.advanceMs(3_600_000); render(); };
+$("d1").onclick = () => { engine.advanceMs(86_400_000); render(); };
+$("next").onclick = () => { const e = engine.advanceToNextPlayerEvent(); toast(e ? `Stopped for ${e.type}: ${e.summary}` : "No future player-relevant event."); render(); };
+$("save").onclick = save;
+$("load").onclick = load;
+$("reset").onclick = reset;
+$("roll").onclick = () => { const context = $("rollContext"); const value = engine.roll(context.value || "manual-test", 10); $("rollResult").textContent = `d10 = ${value} (committed to context)`; render(); };
+$("addEval").onclick = () => { const at = new Date(new Date(engine.state.now).getTime() + 30 * 60_000).toISOString(); engine.schedule(at, "EVALUATION", "MANUAL_EVALUATION", "Developer-created evaluation", { payload: { chancePercent: 50 } }); render(); };
+seedScenario();
+
+</script></body></html>
