@@ -1,99 +1,92 @@
-<!doctype html>
-<html lang="en">
-<head>
+<!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Detective Game — Block 4 Prototype 0.1</title>
+<title>Detective Game — Block 4 Prototype 0.2</title>
 <style>
-:root{color-scheme:dark;--bg:#0b1116;--panel:#10181e;--line:#29343c;--text:#e7edf1;--muted:#98a6b0;--accent:#b9c7d0}
+:root{color-scheme:dark;--bg:#0b1116;--panel:#10181e;--line:#29343c;--text:#e7edf1;--muted:#98a6b0}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-main{max-width:900px;margin:auto;padding:38px 20px 80px}.eyebrow{letter-spacing:.13em;color:#7f8c96;font-size:.8rem}
-h1{font-size:2rem;margin:.55rem 0 .25rem}h1 span{font-weight:400;color:#aab5bd}h2{margin-top:0}
-p{color:var(--muted);line-height:1.55}.panel{border:1px solid var(--line);background:var(--panel);padding:20px;margin-top:22px}
-button{background:#17232b;color:#e7edf1;border:1px solid #52636e;border-radius:6px;padding:13px 15px;font-size:.92rem;margin-right:8px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}.card{border:1px solid var(--line);padding:13px;background:#0d1419}
-.label{font-size:.73rem;letter-spacing:.1em;color:#7f8c96}.value{font-size:1rem;margin-top:5px}.timeline{border-left:2px solid #33414a;margin-left:5px;padding-left:18px}
-.event{margin:0 0 18px}.event b{display:block}.event small{color:#83919a}.anchor{display:inline-block;border:1px solid #394750;padding:3px 6px;margin:5px 4px 0 0;font-size:.7rem;color:#aebbc3}
-pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#080d10;border:1px solid var(--line);padding:14px;color:#c9d4db;font-size:.72rem}
-.note{font-size:.83rem}
-</style></head>
-<body><main>
+main{max-width:920px;margin:auto;padding:38px 20px 80px}.eyebrow{letter-spacing:.13em;color:#7f8c96;font-size:.8rem}
+h1{font-size:2rem;margin:.55rem 0 .25rem}h1 span{font-weight:400;color:#aab5bd}h2{margin-top:0}p{color:var(--muted);line-height:1.55}
+.panel{border:1px solid var(--line);background:var(--panel);padding:20px;margin-top:22px}button{background:#17232b;color:#e7edf1;border:1px solid #52636e;border-radius:6px;padding:13px 15px;font-size:.92rem;margin:0 7px 8px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}.card{border:1px solid var(--line);padding:13px;background:#0d1419}.label{font-size:.72rem;letter-spacing:.1em;color:#7f8c96}.value{margin-top:5px}
+.timeline{border-left:2px solid #33414a;margin-left:5px;padding-left:18px}.event{margin:0 0 19px}.event b{display:block}.event small{color:#83919a}.tag{display:inline-block;border:1px solid #394750;padding:3px 6px;margin:5px 4px 0 0;font-size:.68rem;color:#aebbc3}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#080d10;border:1px solid var(--line);padding:14px;color:#c9d4db;font-size:.71rem}.note{font-size:.83rem}.good{color:#9bd3aa}
+</style></head><body><main>
 <div class="eyebrow">DETECTIVE GAME · LIFE ENGINE GENERATION</div>
-<h1>Block 4 <span>Prototype 0.1</span></h1>
-<p>Generate one ordinary person chronologically. No case role. No narrative destiny. No self-awareness.</p>
-
-<section class="panel">
-<h2>First Generated NPC</h2>
-<p class="note">The same seed always produces the same biography. A new seed creates a different person.</p>
-<button onclick="generate()">GENERATE NPC</button><button onclick="newSeed()">NEW SEED</button>
-<p id="seed"></p>
-</section>
-
-<section class="panel" id="identity"><h2>No person generated yet.</h2></section>
-<section class="panel" id="circ"><h2>Current Circumstance — 2026</h2><p>Waiting for generation.</p></section>
-<section class="panel"><h2>Chronological Biography</h2><div id="timeline" class="timeline"><p>Waiting for generation.</p></div></section>
+<h1>Block 4 <span>Prototype 0.2</span></h1>
+<p>Causal biography prototype. Each stage consumes established life history rather than rolling independently.</p>
+<section class="panel"><h2>Generate a Person</h2>
+<p class="note">Birth names are contextually weighted—not gender-locked. The same seed must reproduce the same person.</p>
+<button onclick="generate()">GENERATE SAME SEED</button><button onclick="newSeed()">NEW SEED</button><p id="seed"></p></section>
+<section class="panel" id="identity"><h2>No NPC generated yet.</h2></section>
+<section class="panel" id="current"><h2>Current Circumstance — 2026</h2><p>Waiting.</p></section>
+<section class="panel"><h2>Causal Biography</h2><div id="timeline" class="timeline"><p>Waiting.</p></div></section>
+<section class="panel"><h2>Generation Audit</h2><p class="note">Developer view: why later outcomes were available or weighted.</p><div id="audit"></div></section>
 <section class="panel"><h2>Nine Life Anchors</h2><div id="anchors"></div></section>
-<section class="panel"><h2>Developer Record</h2><p>Hidden from players.</p><pre id="raw">Waiting for generation.</pre></section>
-</main>
-<script>
-let seed=Math.floor(Math.random()*1000000000);
+<section class="panel"><h2>Developer Record</h2><pre id="raw">Waiting.</pre></section>
+</main><script>
+let seed=Math.floor(Math.random()*1e9);
 function rng(s){return function(){s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-function pick(r,a){return a[Math.floor(r()*a.length)]} function chance(r,p){return r()<p}
-const first=["Aaron","Adam","Adrian","Alicia","Amanda","Amy","Andre","Angela","Anna","Anthony","Brandon","Brian","Carla","Carlos","Carmen","Daniel","David","Derek","Elena","Emily","Eric","Erin","Gabriel","Grace","Hannah","Isaac","Jasmine","Jason","Jennifer","Jessica","Jordan","Jose","Julia","Kevin","Laura","Luis","Marcus","Maria","Michael","Monica","Nathan","Nicole","Olivia","Rachel","Rebecca","Robert","Samuel","Sarah","Steven","Teresa","Thomas","Vanessa"];
+const pick=(r,a)=>a[Math.floor(r()*a.length)], chance=(r,p)=>r()<p;
+function weighted(r,items){let total=items.reduce((s,x)=>s+x[1],0),v=r()*total;for(const x of items){v-=x[1];if(v<=0)return x[0]}return items.at(-1)[0]}
+const male=["Aaron","Adam","Anthony","Brian","Carlos","Daniel","David","Eric","Gabriel","Isaac","Jason","Jose","Kevin","Luis","Marcus","Michael","Nathan","Robert","Samuel","Steven","Thomas"];
+const female=["Alicia","Amanda","Amy","Angela","Anna","Carla","Carmen","Elena","Emily","Erin","Grace","Hannah","Jasmine","Jennifer","Jessica","Julia","Laura","Maria","Monica","Nicole","Olivia","Rachel","Rebecca","Sarah","Teresa","Vanessa"];
+const neutral=["Adrian","Alex","Casey","Jordan","Morgan","Riley","Taylor"];
 const last=["Bennett","Brooks","Carter","Castillo","Coleman","Diaz","Foster","Garcia","Gomez","Hale","Hernandez","Johnson","Kim","Lewis","Martin","Miller","Mitchell","Morales","Nguyen","Ortiz","Parker","Ramirez","Reed","Rivera","Robinson","Sanchez","Taylor","Thomas","Walker","Williams"];
-const towns=["a small farming town","a county-seat town","a working-class suburb","a regional city","a rural community","a midsize industrial city"];
-const jobs=["warehouse associate","construction laborer","medical assistant","bookkeeper","auto technician","school custodian","restaurant manager","delivery driver","office administrator","electrician","machine operator","retail supervisor","teacher's aide","insurance clerk"];
-const hobbies=["local softball","fishing","gardening","video games","church activities","home repair","live music","running","cooking","youth sports","woodworking","photography"];
 const anchors=["General Identity","Family / Background","Childhood","Education","Employment","Relationships / Household","Finances","Social Connections","Life Events"];
-function ev(year,title,text,tags){return{year,title,text,tags}}
+function birthName(r,sex){let pool=sex==="Male"?[[male,84],[neutral,13],[female,3]]:[[female,84],[neutral,13],[male,3]];return pick(r,weighted(r,pool))}
+function ev(year,title,text,tags,causes=[]){return{year,title,text,tags,causes}}
 function generate(){
- let r=rng(seed), birth=pick(r,[1973,1977,1980,1984,1987,1990,1993,1996,1999,2001]), sex=pick(r,["Female","Male"]);
- let fn=pick(r,first), ln=pick(r,last), name=fn+" "+ln, place=pick(r,towns);
- let siblings=pick(r,[0,1,1,1,2,2,3]), stable=chance(r,.72), parentWork=pick(r,["steady hourly work","seasonal work","clerical work","skilled trade work","health-care support work","small-business work"]);
- let events=[];
- events.push(ev(birth,"Birth",`${name} is born in ${place}. The household has ${siblings===0?"no other children":siblings+" other child"+(siblings>1?"ren":"")}.`,["General Identity","Family / Background"]));
- let y=birth+pick(r,[5,6,7,8,9]);
- if(chance(r,.38)) events.push(ev(y,"Household change",stable?`The family moves across town after a change in a parent's ${parentWork}.`:`A period of household instability results in a move and a change in daily routine.`,["Childhood","Family / Background","Finances"]));
- let schoolTrait=pick(r,["generally average academically","stronger in practical subjects than written work","a strong reader but inconsistent with homework","quiet in class and academically steady","socially comfortable but an uneven student"]);
- events.push(ev(birth+12,"Early adolescence",`${fn} is ${schoolTrait}. Outside school, ${pick(r,["friends mostly come from the neighborhood","a sibling is an important social connection","school activities widen the social circle","the social circle stays fairly small"])}.`,["Childhood","Education","Social Connections"]));
- let grad=birth+18; let edu=pick(r,["high school diploma","high school diploma","high school diploma","GED"]);
- events.push(ev(grad,"Secondary education",`${fn} completes a ${edu}.`,["Education"]));
- let post=pick(r,["enters full-time work","takes community-college courses while working","begins vocational training","works several short-term jobs before settling into steadier employment"]);
- events.push(ev(grad+1,"Transition to adulthood",`${fn} ${post}.`,["Education","Employment","Finances"]));
- let job1=pick(r,jobs); events.push(ev(grad+3,"Employment",`${fn} begins working as a ${job1}. The job becomes the main source of income.`,["Employment","Finances","Social Connections"]));
- let relation=chance(r,.7), partner=pick(r,first)+" "+pick(r,last), relYear=grad+pick(r,[5,7,9,11]);
- if(relation) events.push(ev(relYear,"Long-term relationship",`${fn} begins a long-term relationship with ${partner}.`,["Relationships / Household","Social Connections"]));
- let childCount=relation?pick(r,[0,1,1,2,2,3]):pick(r,[0,0,0,1]);
- if(relation&&chance(r,.72)) events.push(ev(relYear+2,"Household formation",`${fn} and ${partner} establish a shared household.`,["Relationships / Household","Finances"]));
- if(childCount>0) events.push(ev(relYear+4,"Family change",`${fn}'s household gains ${childCount===1?"a child":childCount+" children over the following years"}.`,["Family / Background","Relationships / Household","Finances","Life Events"]));
- let job2=pick(r,jobs); if(job2===job1) job2=pick(r,jobs);
- let changeYear=Math.min(2023,grad+pick(r,[9,12,15,18]));
- events.push(ev(changeYear,"Work change",`${fn} leaves the earlier job and becomes a ${job2}, prompted by ${pick(r,["better pay","more predictable hours","a layoff","an opportunity through an acquaintance","a need for steadier work"])}.`,["Employment","Finances","Social Connections"]));
- let shock=chance(r,.58), shockYear=Math.min(2024,changeYear+pick(r,[2,3,4,5]));
- if(shock) events.push(ev(shockYear,"Life event",pick(r,[`${fn} helps a close relative through a prolonged illness, adding time and financial pressure.`,`${fn}'s vehicle requires an expensive replacement, temporarily tightening household finances.`,`${fn} loses contact with a longtime friend after a disagreement and gradual drift.`,`${fn} becomes more involved with ${pick(r,hobbies)}, creating several new acquaintances.`]),["Life Events","Finances","Social Connections","Relationships / Household"]));
- events.sort((a,b)=>a.year-b.year);
- let age=2026-birth, finances=pick(r,["tight but stable","generally stable with little excess","comfortable enough for routine expenses","uneven, with recurring pressure from larger expenses"]);
- let household=relation?(childCount?`${partner} and ${childCount} child${childCount>1?"ren":""}`:partner):pick(r,["lives alone","shares housing with a relative"]);
- let hobby=pick(r,hobbies);
- let npc={id:"NPC-"+String(seed).padStart(9,"0"),seed,instantiatedAt:"2026-10-13",creationMode:"RETROACTIVE",identity:{name,sex,birthYear:birth,age,birthContext:place},anchors:{},biography:events,currentCircumstance:{employment:job2,household,finances,socialRoutine:hobby,simulationState:"RELEVANT"}};
- anchors.forEach(a=>npc.anchors[a]=events.filter(e=>e.tags.includes(a)).map(e=>({year:e.year,event:e.title})));
- render(npc);
+ let r=rng(seed), sex=pick(r,["Female","Male"]), birth=pick(r,[1976,1980,1984,1987,1990,1993,1996,1999,2001]), fn=birthName(r,sex), ln=pick(r,last), name=fn+" "+ln;
+ let setting=pick(r,["small farming town","county-seat town","working-class suburb","regional city","rural community","midsize industrial city"]);
+ let siblings=weighted(r,[[0,15],[1,38],[2,30],[3,12],[4,5]]), stability=weighted(r,[["stable",68],["strained",24],["unstable",8]]);
+ let parentWork=pick(r,["steady hourly work","clerical work","skilled-trade work","health-care support work","seasonal work","small-business work"]);
+ let E=[], audit=[]; E.push(ev(birth,"Birth",`${name} is born in a ${setting}, into a ${stability} household with ${siblings} sibling${siblings===1?"":"s"}.`,["General Identity","Family / Background"]));
+ let moved=chance(r,stability==="stable"?.25:stability==="strained"?.48:.68);
+ if(moved){let y=birth+pick(r,[5,6,7,8,9]);E.push(ev(y,"Household move",`A change connected to a parent's ${parentWork} leads the household to move.`,["Family / Background","Childhood","Finances"],["family stability","parent employment"]));}
+ let schoolBase=stability==="stable"?2:stability==="strained"?1:0; if(!moved)schoolBase++;
+ let school=weighted(r,schoolBase>=3?[["strong",30],["steady",50],["uneven",20]]:schoolBase>=1?[["strong",18],["steady",48],["uneven",34]]:[["strong",8],["steady",35],["uneven",57]]);
+ let social=pick(r,["small neighborhood circle","several school friends","one or two close friends","broad but casual social circle"]);
+ E.push(ev(birth+13,"Adolescence",`${fn} is ${school==="strong"?"academically strong":school==="steady"?"academically steady":"an uneven student"} and develops a ${social}.`,["Childhood","Education","Social Connections"],["household stability","prior moves"]));
+ let grad=birth+18, education;
+ if(school==="strong") education=weighted(r,[["high school diploma",68],["high school diploma + college path",27],["GED",5]]);
+ else if(school==="steady") education=weighted(r,[["high school diploma",79],["GED",13],["vocational path",8]]);
+ else education=weighted(r,[["high school diploma",52],["GED",33],["vocational path",15]]);
+ E.push(ev(grad,"Secondary education",`${fn} completes a ${education}.`,["Education"],["adolescent school trajectory"]));
+ audit.push(`Education weighted from ${school} school trajectory + ${stability} household.`);
+ let earlyJobs=education.includes("college")?["office assistant","bank teller","medical receptionist","retail associate"]:education==="vocational path"?["apprentice electrician","auto shop assistant","machine operator"]:["warehouse associate","retail associate","delivery driver","restaurant worker","construction laborer","school custodian"];
+ let job1=pick(r,earlyJobs);E.push(ev(grad+1,"Early employment",`${fn} begins working as a ${job1}.`,["Employment","Finances","Social Connections"],["education","local opportunity"]));
+ let skillTrack=job1.includes("restaurant")?"hospitality":job1.includes("construction")||job1.includes("electrician")||job1.includes("auto")||job1.includes("machine")?"trade":job1.includes("office")||job1.includes("bank")||job1.includes("reception")?"administrative":"operations";
+ let changeYear=Math.min(2024,grad+pick(r,[5,7,9,11]));
+ let cause=pick(r,["better pay","more predictable hours","a layoff","a referral from someone known through work","an opening with advancement potential"]);
+ let nextByTrack={hospitality:["shift supervisor","restaurant manager","hotel front-desk supervisor"],trade:["journeyman tradesperson","maintenance technician","crew lead"],administrative:["office administrator","insurance clerk","department coordinator"],operations:["warehouse lead","retail supervisor","logistics coordinator","delivery route supervisor"]};
+ let job2=pick(r,nextByTrack[skillTrack]);E.push(ev(changeYear,"Work transition",`${fn} moves from ${job1} into work as a ${job2}, following ${cause}.`,["Employment","Finances","Social Connections"],["prior work experience","work contacts","employment circumstance"]));
+ audit.push(`Later job selected from ${skillTrack} pathway created by ${job1}; no unrelated management jump.`);
+ let relChance=stability==="unstable"?.58:.72, relation=chance(r,relChance), partner=null, household="lives alone";
+ if(relation){let psex=pick(r,["Female","Male"]), pfn=birthName(r,psex), pln=pick(r,last);partner={id:"NPC-"+String((seed^0x51f15e)&0x7fffffff).padStart(9,"0"),name:pfn+" "+pln,sex:psex};let ry=Math.min(2024,grad+pick(r,[4,6,8,10]));E.push(ev(ry,"Long-term relationship",`${fn} begins a long-term relationship with ${partner.name}.`,["Relationships / Household","Social Connections"],["adult social network"])); if(chance(r,.72)){E.push(ev(Math.min(2025,ry+2),"Shared household",`${fn} and ${partner.name} establish a shared household.`,["Relationships / Household","Finances"],["long-term relationship"]));household=`shares a household with ${partner.name}`}}
+ audit.push(relation?`Partner instantiated as a persistent linked NPC (${partner.id}), not a text-only name.`:"No long-term partner generated; no partner NPC fabricated.");
+ let baseIncome={hospitality:43,trade:58,administrative:48,operations:49}[skillTrack], dependents=relation&&chance(r,.42)?pick(r,[1,1,2]):0;
+ if(dependents){E.push(ev(Math.min(2025,changeYear+1),"Household responsibility",`${fn}'s household gains ${dependents===1?"a dependent":"two dependents"}, increasing recurring obligations.`,["Family / Background","Relationships / Household","Finances","Life Events"],["household relationship"]));household+=` and ${dependents} dependent${dependents>1?"s":""}`}
+ let housingCost=setting.includes("city")||setting.includes("suburb")?20:15, debt=education.includes("college")?8:pick(r,[1,3,5]), pressure=housingCost+debt+dependents*7;
+ let finances=baseIncome-pressure>=30?"stable with modest discretionary room":baseIncome-pressure>=20?"generally stable with little excess":"financially tight with limited buffer";
+ audit.push(`Financial condition derived from earning-path index ${baseIncome}, housing pressure ${housingCost}, debt pressure ${debt}, dependents ${dependents}; result: ${finances}.`);
+ let shock=chance(r,.55);if(shock){let sy=Math.min(2025,changeYear+pick(r,[1,2,3]));let opts=[
+ [`Vehicle expense`,`${fn} faces an expensive vehicle repair, reducing the household's financial buffer.`,["Life Events","Finances"]],
+ [`Family obligation`,`${fn} spends more time helping a close relative through a difficult period.`,["Life Events","Relationships / Household","Social Connections"]],
+ [`New routine`,`${fn} becomes regularly involved in ${pick(r,["local softball","live music","gardening","youth sports","home repair","running"])}, widening the acquaintance network.`,["Life Events","Social Connections"]]
+ ];let o=pick(r,opts);E.push(ev(sy,o[0],o[1],o[2],["current employment/household circumstances"]))}
+ E.sort((a,b)=>a.year-b.year);
+ let npc={id:"NPC-"+String(seed).padStart(9,"0"),seed,instantiatedAt:"2026-10-13",creationMode:"RETROACTIVE",identity:{birthName:name,currentName:name,sex,birthYear:birth,age:2026-birth,birthContext:setting,nameGeneration:{rule:"contextually weighted; not gender-locked"}},linkedPeople:partner?[partner]:[],biography:E,currentCircumstance:{employment:job2,household,finances,simulationState:"RELEVANT"},generationAudit:audit,anchors:{}};
+ anchors.forEach(a=>npc.anchors[a]=E.filter(e=>e.tags.includes(a)).map(e=>({year:e.year,event:e.title,causes:e.causes})));render(npc)
 }
 function render(n){
  document.getElementById("seed").textContent="World-context seed: "+n.seed;
- document.getElementById("identity").innerHTML=`<h2>${n.identity.name}</h2><div class="grid">
- <div class="card"><div class="label">NPC ID</div><div class="value">${n.id}</div></div>
- <div class="card"><div class="label">SEX</div><div class="value">${n.identity.sex}</div></div>
- <div class="card"><div class="label">BORN</div><div class="value">${n.identity.birthYear} · ${n.identity.birthContext}</div></div>
- <div class="card"><div class="label">AGE IN 2026</div><div class="value">${n.identity.age}</div></div></div>`;
- document.getElementById("circ").innerHTML=`<h2>Current Circumstance — 2026</h2><div class="grid">
- <div class="card"><div class="label">EMPLOYMENT</div><div class="value">${n.currentCircumstance.employment}</div></div>
- <div class="card"><div class="label">HOUSEHOLD</div><div class="value">${n.currentCircumstance.household}</div></div>
- <div class="card"><div class="label">FINANCES</div><div class="value">${n.currentCircumstance.finances}</div></div>
- <div class="card"><div class="label">SOCIAL ROUTINE</div><div class="value">${n.currentCircumstance.socialRoutine}</div></div></div>`;
- document.getElementById("timeline").innerHTML=n.biography.map(e=>`<div class="event"><small>${e.year}</small><b>${e.title}</b><div>${e.text}</div>${e.tags.map(t=>`<span class="anchor">${t}</span>`).join("")}</div>`).join("");
- document.getElementById("anchors").innerHTML=anchors.map(a=>`<div class="card" style="margin-bottom:8px"><b>${a}</b><div class="note">${n.anchors[a].length?n.anchors[a].map(x=>x.year+" — "+x.event).join("<br>"):"No major recorded transition yet."}</div></div>`).join("");
- document.getElementById("raw").textContent=JSON.stringify(n,null,2);
+ document.getElementById("identity").innerHTML=`<h2>${n.identity.currentName}</h2><div class="grid"><div class="card"><div class="label">NPC ID</div><div class="value">${n.id}</div></div><div class="card"><div class="label">SEX</div><div class="value">${n.identity.sex}</div></div><div class="card"><div class="label">BORN</div><div class="value">${n.identity.birthYear} · ${n.identity.birthContext}</div></div><div class="card"><div class="label">AGE IN 2026</div><div class="value">${n.identity.age}</div></div></div>`;
+ document.getElementById("current").innerHTML=`<h2>Current Circumstance — 2026</h2><div class="grid"><div class="card"><div class="label">EMPLOYMENT</div><div class="value">${n.currentCircumstance.employment}</div></div><div class="card"><div class="label">HOUSEHOLD</div><div class="value">${n.currentCircumstance.household}</div></div><div class="card"><div class="label">FINANCES</div><div class="value">${n.currentCircumstance.finances}</div></div><div class="card"><div class="label">LINKED PEOPLE</div><div class="value">${n.linkedPeople.length?n.linkedPeople.map(p=>p.name+" · "+p.id).join("<br>"):"None yet"}</div></div></div>`;
+ document.getElementById("timeline").innerHTML=n.biography.map(e=>`<div class="event"><small>${e.year}</small><b>${e.title}</b><div>${e.text}</div>${e.tags.map(t=>`<span class="tag">${t}</span>`).join("")}${e.causes.length?`<div class="note">Caused/weighted by: ${e.causes.join(", ")}</div>`:""}</div>`).join("");
+ document.getElementById("audit").innerHTML=n.generationAudit.map(x=>`<div class="card" style="margin-bottom:8px">${x}</div>`).join("");
+ document.getElementById("anchors").innerHTML=anchors.map(a=>`<div class="card" style="margin-bottom:8px"><b>${a}</b><div class="note">${n.anchors[a].length?n.anchors[a].map(x=>`${x.year} — ${x.event}`).join("<br>"):"No major recorded transition yet."}</div></div>`).join("");
+ document.getElementById("raw").textContent=JSON.stringify(n,null,2)
 }
-function newSeed(){seed=Math.floor(Math.random()*1000000000);generate()}
+function newSeed(){seed=Math.floor(Math.random()*1e9);generate()}
 document.getElementById("seed").textContent="Initial seed ready: "+seed;
 </script></body></html>
