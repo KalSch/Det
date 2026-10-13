@@ -1,12 +1,12 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Detective Block 1 — Prototype 0.2</title><style>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Detective Block 1 — Prototype 0.3</title><style>
 :root{font-family:Inter,ui-sans-serif,system-ui,sans-serif;color:#e7ebef;background:#0b0e11}*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#0b0e11,#11161b);min-height:100vh}header{display:flex;justify-content:space-between;gap:24px;padding:24px 32px;border-bottom:1px solid #2a323a;background:#0d1115;position:sticky;top:0;z-index:2}h1{margin:2px 0 0;font-size:28px}h1 span{font-weight:400;color:#9ba8b4}p{color:#8f9ca7;margin:4px 0 14px}header p,small{font-size:11px;letter-spacing:.12em;color:#73808b}.clock{text-align:right}.clock strong{display:block;font-size:20px;font-variant-numeric:tabular-nums}.clock span{font-size:12px;color:#82909c}main{padding:24px 32px;max-width:1500px;margin:auto}.controls{border:1px solid #29313a;background:#11171c;padding:18px;display:grid;grid-template-columns:1fr 2fr 1.5fr;gap:16px;align-items:center}.controls b,.controls code{display:block}.buttons{display:flex;gap:8px;flex-wrap:wrap}button{border:1px solid #39434d;background:#182027;color:#dce3e8;padding:9px 11px;border-radius:5px;cursor:pointer;font:inherit;font-size:12px}button:hover{background:#222d35}.primary{border-color:#7d8d99;background:#25313a}#status{grid-column:1/-1;color:#b9c5cd;min-height:18px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}.grid section{border:1px solid #29313a;background:#10161b;padding:18px;min-width:0}h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 5px}.events{display:flex;flex-direction:column;gap:7px;max-height:430px;overflow:auto}.event{display:grid;grid-template-columns:155px 145px 90px 1fr;gap:8px;text-align:left;align-items:center}.event span,.event em{color:#8e9ba6;font-style:normal}.event small{grid-column:1/5;color:#aab5bd}.event i{grid-column:1/5;color:#d4dde3;font-size:10px;letter-spacing:.1em}.event b{font-size:10px;color:#c0ccd4}.event strong{font-size:12px}.empty{padding:20px;color:#6e7b85}pre{background:#0a0e11;border:1px solid #242c33;padding:14px;overflow:auto;min-height:130px;color:#b9c5ce}.rng{display:flex;gap:8px;align-items:center;margin:10px 0}input{background:#0b1014;border:1px solid #36414b;color:#dce3e8;padding:9px;min-width:260px}.testrow{display:grid;grid-template-columns:1fr auto;gap:12px;padding:10px 0;border-bottom:1px solid #252d34;align-items:center}.pass{color:#9fd6ad}.fail{color:#ef9a9a}.warn{color:#e8cc8c}.testrow code{font-size:11px;color:#91a0ab}.qa-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}footer{padding:20px 32px;text-align:center;color:#66737d;font-size:11px}@media(max-width:900px){header,.controls,.grid{grid-template-columns:1fr;display:grid}.clock{text-align:left}.event{grid-template-columns:1fr 1fr}.event small,.event i{grid-column:1/3}.controls{grid-template-columns:1fr}.rng{flex-wrap:wrap}}
 
 </style></head><body>
-<header><div><p>DETECTIVE GAME · CORE SIMULATION HARNESS</p><h1>Block 1 <span>Prototype 0.2</span></h1></div><div class="clock"><small>CANONICAL WORLD TIME</small><strong id="clock"></strong><span id="counts"></span></div></header>
+<header><div><p>DETECTIVE GAME · CORE SIMULATION HARNESS</p><h1>Block 1 <span>Prototype 0.3</span></h1></div><div class="clock"><small>CANONICAL WORLD TIME</small><strong id="clock"></strong><span id="counts"></span></div></header>
 <main>
 <section class="controls"><div><small>WORLD</small><b id="world"></b><small>SEED</small><code id="seed"></code></div><div class="buttons"><button id="m1">+1 MIN</button><button id="m10">+10 MIN</button><button id="h1">+1 HOUR</button><button id="d1">+1 DAY</button><button class="primary" id="next">ADVANCE TO NEXT PLAYER EVENT</button></div><div class="buttons"><button id="save">SAVE / OVERWRITE CAREER</button><button id="load">RELOAD CAREER</button><button id="reset">RESET DEV WORLD</button></div><div id="status"></div></section>
 <div class="grid"><section><h2>Event Queue</h2><p>Typed future work. Evaluation entries are explicitly marked; objective importance does not imply player relevance.</p><div id="queue" class="events"></div></section><section><h2>Immutable Historical Ledger</h2><p>Executed reality is appended here. Later events may change current state, never rewrite committed history.</p><div id="history" class="events"></div></section></div>
-<section style="border:1px solid #29313a;background:#10161b;padding:18px;margin-top:18px"><h2>Block 1 QA / Stress Tests</h2><p>Developer-only checks for deterministic randomness, immutable history, evaluation reproducibility, long-duration advancement, and save/reload with pending future events.</p><div class="qa-buttons"><button class="primary" id="runTests">RUN ALL TESTS</button><button id="rngTest">RNG RELOAD TEST</button><button id="immutTest">IMMUTABILITY TEST</button><button id="longTest">1-YEAR STRESS TEST</button><button id="pendingTest">PENDING SAVE/RELOAD TEST</button></div><div id="testResults"><div class="empty">Tests not run yet.</div></div></section>
+<section style="border:1px solid #29313a;background:#10161b;padding:18px;margin-top:18px"><h2>Block 1 QA / Stress Tests</h2><p>Adversarial developer-only checks for ordering, causal chains, cancellation, simultaneous player events, large jumps, ID integrity, complex reloads, and indirect mutation resistance.</p><div class="qa-buttons"><button class="primary" id="runTests">RUN ALL ADVERSARIAL TESTS</button><button id="sameTimeTest">SAME-TIME ORDER</button><button id="causalTest">CAUSAL CHAIN</button><button id="cancelTest">CANCEL / IMPOSSIBLE</button><button id="multiPlayerTest">SIMULTANEOUS PLAYER EVENTS</button><button id="jumpTest">50-YEAR JUMP</button><button id="idTest">ID INTEGRITY</button><button id="complexReloadTest">COMPLEX RELOAD</button><button id="mutationTest">MUTATION RESISTANCE</button></div><div id="testResults"><div class="empty">Tests not run yet.</div></div></section>
 <div class="grid lower"><section><h2>Current World State</h2><pre id="facts"></pre><h2>Committed Contextual RNG</h2><pre id="rng"></pre><div class="rng"><input id="rollContext" value="NPC-001:question-tolerance"><button id="roll">COMMIT d10</button><span id="rollResult"></span></div><button id="addEval">ADD +30m TEST EVALUATION</button></section><section><h2>Developer Inspector</h2><p>Click any queue/history event. This is programmer-only Objective Reality/debug information.</p><pre id="inspect">Select an event.</pre></section></div>
 </main><footer>iPhone/iPad standalone build · Developer harness only · not player UI · Objective Reality is intentionally visible here.</footer><script>
 function hash32(text) {
@@ -28,7 +28,7 @@ function contextualRoll(seed, context, sides) {
     return (hash32(`${seed}::${context}`) % sides) + 1;
 }
 
-const VERSION = "block1-0.2";
+const VERSION = "block1-0.3";
 function iso(ms) { return new Date(ms).toISOString(); }
 function time(e) { return new Date(e.at).getTime(); }
 class WorldEngine {
@@ -73,8 +73,23 @@ class WorldEngine {
         const h = { ...structuredClone(e), lifecycle: "COMMITTED", committedAt: this.state.now, before, after };
         this.state.history.push(h);
     }
+    cancelEvent(id, reason = "Canceled") {
+        const i = this.state.queue.findIndex(e => e.id === id);
+        if (i < 0) return false;
+        const e = this.state.queue.splice(i, 1)[0];
+        this.state.history.push({ ...structuredClone(e), lifecycle: "CANCELED", committedAt: this.state.now, cancelReason: reason });
+        return true;
+    }
+    preconditionMet(e) {
+        const req = e.payload?.requiresFacts ?? {};
+        return Object.entries(req).every(([k,v]) => this.state.facts[k] === v);
+    }
     resolve(e) {
         this.state.now = e.at;
+        if (!this.preconditionMet(e)) {
+            this.commit({ ...e, lifecycle: "CANCELED", summary: `${e.summary} [canceled: precondition failed]`, cancelReason: "PRECONDITION_FAILED" });
+            return;
+        }
         e.lifecycle = "EVALUATED";
         if (e.kind === "EVALUATION" || e.kind === "SYSTEM_EVALUATION") {
             const chance = Number(e.payload.chancePercent ?? 100);
@@ -195,60 +210,78 @@ $("addEval").onclick = () => { const at = new Date(new Date(engine.state.now).ge
 
 function cloneJSON(x){ return JSON.parse(JSON.stringify(x)); }
 function testResult(name, ok, detail){ return {name,ok,detail}; }
-function runRngTest(){
-    const e = WorldEngine.create("RNG-TEST", "2026-10-13T12:00:00.000Z");
-    const a1=e.roll("NPC-42:question-tolerance",10);
-    e.roll("UNRELATED-A",100); e.roll("UNRELATED-B",20);
-    const saved=e.serialize();
-    const r=WorldEngine.deserialize(saved);
-    const a2=r.roll("NPC-42:question-tolerance",10);
-    return testResult("Contextual RNG survives reload", a1===a2, `before=${a1}, after reload=${a2}`);
+function runSameTimeTest(){
+    const e=WorldEngine.create("SAME-TIME","2026-10-13T12:00:00.000Z"), at="2026-10-13T12:10:00.000Z";
+    const ids=[]; for(let i=0;i<6;i++) ids.push(e.schedule(at,"COMMITTED_ACTION",`SAME_${i}`,`Same ${i}`).id);
+    e.advanceTo(at); const got=e.state.history.map(x=>x.id);
+    return testResult("Same-timestamp ordering is stable", JSON.stringify(ids)===JSON.stringify(got), `scheduled=${ids.join(', ')}; executed=${got.join(', ')}`);
 }
-function runImmutabilityTest(){
-    const e=WorldEngine.create("IMMUTABLE", "2026-10-13T12:00:00.000Z");
-    e.schedule("2026-10-13T12:05:00.000Z","COMMITTED_ACTION","BREAK","Break window",{payload:{mutations:{"window":"broken"}}});
+function runCausalTest(){
+    const e=WorldEngine.create("CAUSAL","2026-10-13T12:00:00.000Z");
+    const root=e.schedule("2026-10-13T12:05:00.000Z","EVALUATION","ROOT","Root evaluation",{payload:{chancePercent:100,produces:{type:"CHILD",summary:"Derived child",payload:{mutations:{"chain.child":"done"}}}}});
     e.advanceMs(10*60_000);
-    const frozen=JSON.stringify(e.state.history[0]);
-    e.schedule("2026-10-13T12:20:00.000Z","COMMITTED_ACTION","REPAIR","Repair window",{payload:{mutations:{"window":"repaired"}}});
+    const child=e.state.history.find(x=>x.type==="CHILD");
+    return testResult("Causal chain resolves at same timestamp", !!child && child.causedBy?.[0]===root.id && e.state.facts["chain.child"]==="done", `root=${root.id}; child=${child?.id}; causedBy=${child?.causedBy?.join(',')}`);
+}
+function runCancelTest(){
+    const e=WorldEngine.create("CANCEL","2026-10-13T12:00:00.000Z");
+    e.state.facts["door.open"]=false;
+    const manual=e.schedule("2026-10-13T12:05:00.000Z","COMMITTED_ACTION","MANUAL_CANCEL","Should never execute");
+    const canceled=e.cancelEvent(manual.id,"Developer cancellation test");
+    e.schedule("2026-10-13T12:06:00.000Z","COMMITTED_ACTION","IMPOSSIBLE","Requires open door",{payload:{requiresFacts:{"door.open":true},mutations:{"impossible.ran":true}}});
     e.advanceMs(10*60_000);
-    const same=frozen===JSON.stringify(e.state.history[0]);
-    return testResult("Committed history is immutable", same && e.state.facts.window==="repaired", `first event unchanged=${same}; current state=${e.state.facts.window}`);
+    const impossible=e.state.history.find(x=>x.type==="IMPOSSIBLE");
+    return testResult("Canceled/impossible events do not execute", canceled && impossible?.cancelReason==="PRECONDITION_FAILED" && !e.state.facts["impossible.ran"], `manual canceled=${canceled}; impossible lifecycle=${impossible?.lifecycle}; mutation absent=${!e.state.facts["impossible.ran"]}`);
 }
-function runEvaluationTest(){
-    const make=()=>{const e=WorldEngine.create("EVAL-TEST","2026-10-13T12:00:00.000Z");e.schedule("2026-10-13T12:30:00.000Z","EVALUATION","CHECK","Evaluate route",{payload:{chancePercent:50,produces:{type:"ROUTE_RESULT",summary:"Route occurs"}}});return e;};
-    const a=make(); a.advanceMs(31*60_000);
-    const b=make(); b.advanceMs(31*60_000);
-    const sig=x=>JSON.stringify({history:x.state.history.map(h=>[h.id,h.kind,h.type,h.summary]),rng:x.state.committedRandom,facts:x.state.facts});
-    return testResult("Evaluation is reproducible", sig(a)===sig(b), `same seed/context produced identical committed result`);
-}
-function runLongTest(){
-    const e=WorldEngine.create("LONG-TEST","2026-10-13T12:00:00.000Z");
-    const start=new Date(e.state.now).getTime();
-    for(let d=1;d<=365;d++) e.schedule(new Date(start+d*86400000).toISOString(),"SYSTEM_EVALUATION","DAILY_TICK",`Day ${d}`,{payload:{chancePercent:37}});
-    const t0=performance.now(); e.advanceMs(365*86400000); const elapsed=performance.now()-t0;
-    const ordered=e.state.history.every((h,i,a)=>i===0||time(a[i-1])<=time(h));
-    return testResult("1-year event-driven advancement", e.state.history.length===365 && ordered, `365 evaluations committed in ${elapsed.toFixed(1)} ms; no per-millisecond simulation`);
-}
-function runPendingTest(){
-    const e=WorldEngine.create("PENDING-TEST","2026-10-13T12:00:00.000Z");
-    e.schedule("2026-10-13T13:00:00.000Z","PLAYER_EVENT","COURT","Court appearance",{playerRelevant:true});
-    e.schedule("2026-10-13T12:30:00.000Z","SYSTEM_EVALUATION","HIDDEN","Hidden world evaluation",{payload:{chancePercent:100}});
-    const saved=e.serialize();
+function runMultiPlayerTest(){
+    const e=WorldEngine.create("MULTI-PLAYER","2026-10-13T12:00:00.000Z"), at="2026-10-13T13:00:00.000Z";
+    e.schedule("2026-10-13T12:30:00.000Z","SYSTEM_EVALUATION","HIDDEN","Hidden",{payload:{chancePercent:100}});
+    e.schedule(at,"PLAYER_EVENT","COURT","Court",{playerRelevant:true});
+    e.schedule(at,"PLAYER_EVENT","SUPERVISOR","Supervisor meeting",{playerRelevant:true});
     e.advanceToNextPlayerEvent();
-    const first=JSON.stringify({now:e.state.now,history:e.state.history,queue:e.state.queue,rng:e.state.committedRandom});
-    const r=WorldEngine.deserialize(saved); r.advanceToNextPlayerEvent();
-    const second=JSON.stringify({now:r.state.now,history:r.state.history,queue:r.state.queue,rng:r.state.committedRandom});
-    return testResult("Pending future survives save/reload", first===second && r.state.history.length===2, `reload reproduced hidden event + player stop exactly`);
+    const p=e.state.history.filter(x=>x.playerRelevant && x.at===at);
+    return testResult("Simultaneous player events resolve together", e.state.now===at && p.length===2 && e.state.queue.length===0, `stopped=${e.state.now}; player events committed=${p.length}`);
+}
+function runJumpTest(){
+    const e=WorldEngine.create("FIFTY-YEAR","2026-10-13T12:00:00.000Z"), start=new Date(e.state.now).getTime();
+    for(let y=1;y<=50;y++) for(let m=1;m<=12;m++) e.schedule(new Date(start+(y*12+m)*2629800000).toISOString(),"SYSTEM_EVALUATION","MONTHLY","Monthly world event",{payload:{chancePercent:51}});
+    const target=new Date(start+50*365.2425*86400000).toISOString(), t0=performance.now(); e.advanceTo(target); const ms=performance.now()-t0;
+    const ordered=e.state.history.every((h,i,a)=>i===0||time(a[i-1])<=time(h));
+    return testResult("50-year event-driven jump", ordered && e.state.history.length>550, `${e.state.history.length} events resolved in ${ms.toFixed(1)} ms`);
+}
+function runIdTest(){
+    const e=WorldEngine.create("ID-TEST","2026-10-13T12:00:00.000Z"), start=new Date(e.state.now).getTime();
+    for(let i=0;i<5000;i++) e.schedule(new Date(start+(i+1)*1000).toISOString(),"COMMITTED_ACTION","ID","ID test");
+    e.advanceMs(6000*1000); const ids=e.state.history.map(x=>x.id), unique=new Set(ids);
+    return testResult("Event IDs remain unique", ids.length===5000 && unique.size===5000, `${unique.size}/${ids.length} unique IDs`);
+}
+function runComplexReloadTest(){
+    const make=()=>{const e=WorldEngine.create("COMPLEX-RELOAD","2026-10-13T12:00:00.000Z"); e.state.facts.ready=true; e.schedule("2026-10-13T12:10:00.000Z","EVALUATION","A","Eval A",{payload:{chancePercent:100,produces:{type:"A_CHILD",summary:"A child"}}}); e.schedule("2026-10-13T12:10:00.000Z","COMMITTED_ACTION","B","B",{payload:{requiresFacts:{ready:true},mutations:{b:1}}}); e.schedule("2026-10-13T12:20:00.000Z","PLAYER_EVENT","STOP","Player stop",{playerRelevant:true}); return e;};
+    const a=make(), saved=a.serialize(); a.advanceToNextPlayerEvent();
+    const b=WorldEngine.deserialize(saved); b.advanceToNextPlayerEvent();
+    const sig=x=>JSON.stringify({now:x.state.now,history:x.state.history,queue:x.state.queue,facts:x.state.facts,rng:x.state.committedRandom,nextId:x.state.nextId});
+    return testResult("Complex pending structure survives reload", sig(a)===sig(b), `identical=${sig(a)===sig(b)}; committed=${a.state.history.length}`);
+}
+function runMutationTest(){
+    const e=WorldEngine.create("MUTATION","2026-10-13T12:00:00.000Z");
+    const scheduled=e.schedule("2026-10-13T12:05:00.000Z","COMMITTED_ACTION","ORIGINAL","Original",{payload:{mutations:{x:"one"}}});
+    scheduled.summary="MUTATED OUTSIDE"; scheduled.payload.mutations.x="evil";
+    e.advanceMs(10*60_000); const h=e.state.history[0]; const snap=e.snapshot(); snap.history[0].summary="MUTATED SNAPSHOT"; snap.facts.x="evil2";
+    return testResult("External references cannot mutate committed reality", h.summary==="Original" && e.state.facts.x==="one" && e.state.history[0].summary==="Original", `history=${e.state.history[0].summary}; state.x=${e.state.facts.x}`);
 }
 function renderTests(results){
     $("testResults").innerHTML=results.map(r=>`<div class="testrow"><div><b>${r.name}</b><br><code>${r.detail}</code></div><strong class="${r.ok?'pass':'fail'}">${r.ok?'PASS':'FAIL'}</strong></div>`).join('');
 }
-function runAll(){ const rs=[runRngTest(),runImmutabilityTest(),runEvaluationTest(),runLongTest(),runPendingTest()]; renderTests(rs); toast(`${rs.filter(x=>x.ok).length}/${rs.length} Block 1 QA tests passed.`); }
+function runAll(){ const rs=[runSameTimeTest(),runCausalTest(),runCancelTest(),runMultiPlayerTest(),runJumpTest(),runIdTest(),runComplexReloadTest(),runMutationTest()]; renderTests(rs); toast(`${rs.filter(x=>x.ok).length}/${rs.length} adversarial tests passed.`); }
 $("runTests").onclick=runAll;
-$("rngTest").onclick=()=>renderTests([runRngTest()]);
-$("immutTest").onclick=()=>renderTests([runImmutabilityTest()]);
-$("longTest").onclick=()=>renderTests([runLongTest()]);
-$("pendingTest").onclick=()=>renderTests([runPendingTest()]);
+$("sameTimeTest").onclick=()=>renderTests([runSameTimeTest()]);
+$("causalTest").onclick=()=>renderTests([runCausalTest()]);
+$("cancelTest").onclick=()=>renderTests([runCancelTest()]);
+$("multiPlayerTest").onclick=()=>renderTests([runMultiPlayerTest()]);
+$("jumpTest").onclick=()=>renderTests([runJumpTest()]);
+$("idTest").onclick=()=>renderTests([runIdTest()]);
+$("complexReloadTest").onclick=()=>renderTests([runComplexReloadTest()]);
+$("mutationTest").onclick=()=>renderTests([runMutationTest()]);
 seedScenario();
 
 </script></body></html>
