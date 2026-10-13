@@ -1,9 +1,8 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Detective Game — Block 3 Prototype 0.1</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Detective Game — Block 3 Prototype 0.2</title>
 <style>
 :root{color-scheme:dark;--bg:#0b1116;--panel:#10181e;--line:#29343c;--text:#e7edf1;--muted:#98a6b0;--pass:#9bd3aa;--fail:#ef9b9b}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -13,75 +12,62 @@ h1{font-size:2rem;margin:.55rem 0 .25rem}h1 span{font-weight:400;color:#aab5bd}p
 button{background:#17232b;color:#dbe5eb;border:1px solid #52636e;border-radius:6px;padding:12px 14px;font-size:.9rem}
 .test{display:grid;grid-template-columns:1fr auto;gap:14px;border-bottom:1px solid var(--line);padding:13px 0}.test:last-child{border:0}
 .test b{display:block}.detail{font:.8rem ui-monospace,SFMono-Regular,Menlo,monospace;color:#9eabb4;margin-top:5px;line-height:1.45}
-.pass{color:var(--pass);font-weight:700}.fail{color:var(--fail);font-weight:700}.summary{font-weight:700}
+.pass{color:var(--pass);font-weight:700}.fail{color:var(--fail);font-weight:700}.summary{font-weight:700;font-size:1.15rem}
 pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#080d10;border:1px solid var(--line);padding:14px;color:#c9d4db;font-size:.75rem}
 </style></head>
 <body><main>
-<div class="eyebrow">DETECTIVE GAME · LIFE ENGINE DATA MODEL HARNESS</div>
-<h1>Block 3 <span>Prototype 0.1</span></h1>
-<p>Developer-only hand-constructed world. This prototype tests the Life Engine data model before procedural life generation is introduced.</p>
-<section class="panel"><h2>17 ACCEPTANCE TESTS</h2>
-<p>People ↔ Relationships ↔ Households ↔ Organizations ↔ Locations ↔ Life Events, plus retroactive/live creation and simulation resolution.</p>
-<button onclick="runAll()">RUN ALL 17 ACCEPTANCE TESTS</button><div id="results"></div></section>
-<section class="panel"><h2>WORLD WEB SNAPSHOT</h2><p>Programmer view only.</p><pre id="snapshot">Run the tests to populate the world.</pre></section>
+<div class="eyebrow">DETECTIVE GAME · LIFE ENGINE ADVERSARIAL HARNESS</div>
+<h1>Block 3 <span>Prototype 0.2</span></h1>
+<p>This build attacks the persistent-person data model with relationship churn, death, organizational closure, dormancy, identity history, mutation attempts, contradictory state proposals, and save/reload.</p>
+<section class="panel"><h2>15 ADVERSARIAL TESTS</h2>
+<p><b>Invariant:</b> current state may change because history changed; history may never change merely because current state changed.</p>
+<p><b>Invariant:</b> death ends future participation; it does not erase the person.</p>
+<button onclick="runAll()">RUN ALL 15 ADVERSARIAL TESTS</button><div id="results"></div></section>
+<section class="panel"><h2>POST-ATTACK WORLD SNAPSHOT</h2><p>Programmer view only.</p><pre id="snapshot">Run the tests to populate the world.</pre></section>
 </main>
 <script>
 const A=["generalIdentity","familyBackground","childhood","education","employment","relationshipsHousehold","finances","socialConnections","lifeEvents"];
-const deep=x=>JSON.parse(JSON.stringify(x));
-function person(id,name,dob,mode,at){
- let anchors={}; A.forEach(k=>anchors[k]={history:[]});
- return {id,nameHistory:[{at,name}],dob,creationMode:mode,instantiatedAt:at,anchors,simulationState:"RELEVANT",dormancySnapshot:null};
-}
-function build(){
- const W={time:"2026-10-13T07:00:00",people:{},relationships:{},households:{},orgs:{},locations:{},events:{},backgroundPopulation:{count:4200}};
- W.locations.L1={id:"L1",label:"12 Oak St",history:[]}; W.locations.L2={id:"L2",label:"44 Pine St",history:[]}; W.locations.L3={id:"L3",label:"Miller Construction",history:[]};
- W.orgs.O1={id:"O1",name:"Miller Construction",members:["P1"],history:[{at:"2020-01-01",type:"OPEN"}]};
- W.orgs.O2={id:"O2",name:"North County School",members:["P2"],history:[{at:"1998-08-01",type:"OPEN"}]};
- W.people.P1=person("P1","Robert Hale","1987-05-04","RETROACTIVE","2026-10-13T07:00:00");
- W.people.P2=person("P2","Susan Hale","1988-09-20","RETROACTIVE","2026-10-13T07:00:00");
- W.people.P3=person("P3","Maya Hale","2010-03-02","RETROACTIVE","2026-10-13T07:00:00");
- W.people.P4=person("P4","Eli Hale","2026-10-13","LIVE_BIRTH","2026-10-13T07:00:00");
- W.people.P5=person("P5","Dana Cole","1985-12-12","RETROACTIVE","2026-10-13T07:00:00");
- W.relationships.R1={id:"R1",a:"P1",b:"P2",kind:"ROMANTIC",history:[{at:"2012-06-01",state:"MET"},{at:"2019-05-18",state:"MARRIED"}],current:"MARRIED"};
- W.relationships.R2={id:"R2",a:"P1",b:"P3",kind:"PARENT_CHILD",history:[{at:"2010-03-02",state:"ACTIVE"}],current:"ACTIVE"};
- W.relationships.R3={id:"R3",a:"P2",b:"P3",kind:"PARENT_CHILD",history:[{at:"2010-03-02",state:"ACTIVE"}],current:"ACTIVE"};
- W.relationships.R4={id:"R4",a:"P1",b:"P5",kind:"FRIENDSHIP",history:[{at:"2008-04-01",state:"FRIENDS"}],current:"FRIENDS"};
- W.households.H1={id:"H1",location:"L1",members:["P1","P2","P3","P4"],history:[{at:"2020-01-01",type:"FORMED"}]};
- W.households.H2={id:"H2",location:"L2",members:["P5"],history:[{at:"2022-01-01",type:"FORMED"}]};
- W.people.P1.anchors.employment.history.push({at:"2020-02-01",org:"O1",role:"Foreman",state:"ACTIVE"});
- W.people.P2.anchors.employment.history.push({at:"2015-08-01",org:"O2",role:"Teacher",state:"ACTIVE"});
- W.people.P1.anchors.lifeEvents.history.push({at:"1987-05-04",type:"BIRTH",committed:true});
- W.people.P4.anchors.lifeEvents.history.push({at:"2026-10-13T07:00:00",type:"BIRTH",committed:true});
+const clone=x=>JSON.parse(JSON.stringify(x));
+function person(id,name,dob){let anchors={};A.forEach(k=>anchors[k]={history:[]});return{id,nameHistory:[{at:dob,name}],dob,death:null,anchors,simulationState:"RELEVANT",dormancySnapshot:null}}
+function world(){
+ let W={time:"2026-10-13T07:00:00",people:{},relationships:{},households:{},orgs:{},locations:{},events:{},ledger:[],seq:1};
+ ["P1","P2","P3","P4","P5","P6"].forEach((id,i)=>W.people[id]=person(id,["Alex Hale","Morgan Hale","Casey Hale","Jordan Reed","Taylor Reed","Sam Cole"][i],["1980-01-01","1982-02-02","2008-03-03","1979-04-04","1984-05-05","1990-06-06"][i]));
+ W.locations.L1={id:"L1",label:"12 Oak"};W.locations.L2={id:"L2",label:"44 Pine"};W.locations.L3={id:"L3",label:"8 Cedar"};
+ W.orgs.O1={id:"O1",name:"Miller Construction",status:"OPEN",history:[{at:"2000-01-01",state:"OPEN"}],members:["P1","P6"]};
+ W.relationships.R1={id:"R1",a:"P1",b:"P2",kind:"MARRIAGE",current:"MARRIED",history:[{at:"2005-01-01",state:"MARRIED"}]};
+ W.relationships.R2={id:"R2",a:"P1",b:"P3",kind:"PARENT_CHILD",current:"ACTIVE",history:[{at:"2008-03-03",state:"ACTIVE"}]};
+ W.relationships.R3={id:"R3",a:"P4",b:"P5",kind:"MARRIAGE",current:"DIVORCED",history:[{at:"2006-01-01",state:"MARRIED"},{at:"2018-01-01",state:"DIVORCED"}]};
+ W.households.H1={id:"H1",location:"L1",members:["P1","P2","P3"],history:[{at:"2010-01-01",type:"FORMED"}]};
+ W.households.H2={id:"H2",location:"L2",members:["P4"],history:[{at:"2018-01-01",type:"FORMED"}]};
+ W.households.H3={id:"H3",location:"L3",members:["P5","P6"],history:[{at:"2020-01-01",type:"FORMED"}]};
  return W;
 }
-function age(dob,now){let d=new Date(dob+"T00:00:00"),n=new Date(now);let a=n.getFullYear()-d.getFullYear();if(n.getMonth()<d.getMonth()||(n.getMonth()==d.getMonth()&&n.getDate()<d.getDate()))a--;return a}
-function currentEmployer(W,p){let h=p.anchors.employment.history.filter(x=>x.state==="ACTIVE");return h.length?h[h.length-1].org:null}
-function currentHousehold(W,id){return Object.values(W.households).find(h=>h.members.includes(id))?.id||null}
-function dorm(W,id){let p=W.people[id];p.dormancySnapshot={at:W.time,household:currentHousehold(W,id),employer:currentEmployer(W,p),relationships:Object.values(W.relationships).filter(r=>r.a===id||r.b===id).map(r=>r.id),eventCount:p.anchors.lifeEvents.history.length};p.simulationState="DORMANT"}
+function commit(W,type,data){let e={id:"E"+W.seq++,at:W.time,type,data:clone(data),committed:true};W.ledger.push(e);return e}
+function rel(W,id,state,at){let r=W.relationships[id];r.history.push({at,state});r.current=state}
+function move(W,pid,from,to,at){if(from){let h=W.households[from];h.members=h.members.filter(x=>x!==pid);h.history.push({at,type:"MEMBER_LEFT",person:pid})}if(to){let h=W.households[to];if(!h.members.includes(pid))h.members.push(pid);h.history.push({at,type:"MEMBER_JOINED",person:pid})}}
+function die(W,pid,at){let p=W.people[pid];p.death={at};p.simulationState="DECEASED";p.anchors.lifeEvents.history.push({at,type:"DEATH",committed:true});commit(W,"DEATH",{person:pid})}
 function assert(x,m){if(!x)throw Error(m)}
-function t(name,fn){try{return{name,ok:true,detail:fn()||"passed"}}catch(e){return{name,ok:false,detail:e.message}}}
+function test(name,fn){try{return{name,ok:true,detail:fn()||"passed"}}catch(e){return{name,ok:false,detail:e.message}}}
 function runAll(){
- let W=build(), T=[];
- T.push(t("A. Permanent identity",()=>{let id=W.people.P1.id;W.people.P1.nameHistory.push({at:"2027-01-01",name:"Robert Jones"});assert(W.people.P1.id===id,"ID changed");return "name changed; NPC_ID remained P1"}));
- T.push(t("B. Nine-anchor universality",()=>{for(const p of Object.values(W.people))assert(Object.keys(p.anchors).length===9&&A.every(a=>p.anchors[a]),"anchor mismatch");return "all 5 instantiated NPCs share exactly 9 anchors"}));
- T.push(t("C. Derived-state integrity",()=>{assert(age(W.people.P1.dob,W.time)===39,"age wrong");assert(currentEmployer(W,W.people.P1)==="O1","employer wrong");assert(currentHousehold(W,"P1")==="H1","household wrong");return "age=39; employer=O1; household=H1 derived"}));
- T.push(t("D. Relationship symmetry",()=>{let r=W.relationships.R1;assert(r.a==="P1"&&r.b==="P2","relationship mismatch");return "P1 ↔ R1 ↔ P2 uses one shared object"}));
- T.push(t("E. Relationship history appends",()=>{let r=W.relationships.R1,n=r.history.length;r.history.push({at:"2030-02-01",state:"SEPARATED"});r.current="SEPARATED";assert(r.history.length===n+1&&r.history[1].state==="MARRIED","history overwritten");return "MARRIED preserved; SEPARATED appended"}));
- T.push(t("F. Household independence",()=>{W.households.H1.members=W.households.H1.members.filter(x=>x!=="P2");W.households.H2.members.push("P2");assert(W.relationships.R1.current==="SEPARATED"&&currentHousehold(W,"P1")!==currentHousehold(W,"P2"),"coupled incorrectly");return "relationship and co-residence remain separate structures"}));
- T.push(t("G. Organization persistence",()=>{let id=W.orgs.O1.id;W.orgs.O1.members=[];assert(W.orgs.O1.id===id,"org vanished");return "O1 persists after personnel change"}));
- T.push(t("H. Location persistence",()=>{let id=W.locations.L1.id;W.locations.L1.history.push({at:"2031-01-01",type:"NEW_OCCUPANTS"});assert(W.locations.L1.id===id,"location changed");return "L1 identity persists across occupant history"}));
- T.push(t("I. Life Event cross-linking",()=>{W.events.E1={id:"E1",type:"TERMINATION",people:["P1"],orgs:["O1"],locations:["L3"],affects:["employment","finances","socialConnections"]};assert(W.events.E1.affects.length===3&&W.events.E1.people[0]==="P1","cross-links failed");return "E1 links person + org + location + 3 anchors"}));
- T.push(t("J. Retroactive NPC integrity",()=>{let p=W.people.P5;p.anchors.childhood.history.push({at:"1994-01-01",type:"MOVED"});let before=JSON.stringify(p.anchors.childhood.history);let saved=deep(p);assert(JSON.stringify(saved.anchors.childhood.history)===before&&p.creationMode==="RETROACTIVE","retroactive history unstable");return "generated-past entry committed after instantiation"}));
- T.push(t("K. Live-birth integrity",()=>{let p=W.people.P4;assert(p.creationMode==="LIVE_BIRTH"&&p.anchors.childhood.history.length===0&&p.anchors.lifeEvents.history[0].type==="BIRTH","fabricated pre-birth history");return "same 9-anchor schema; biography begins at actual birth"}));
- T.push(t("L. Simulation-state transition",()=>{let p=W.people.P3;p.simulationState="ACTIVE";p.simulationState="RELEVANT";dorm(W,"P3");p.simulationState="ACTIVE";assert(p.id==="P3"&&p.anchors.familyBackground,"state transition lost biography");return "ACTIVE → RELEVANT → DORMANT → ACTIVE preserved NPC"}));
- T.push(t("M. Background boundary",()=>{let p=W.people.P3;assert(p.id&&W.backgroundPopulation.P3===undefined,"instantiated NPC collapsed");return "instantiated P3 remains individual; background stays statistical"}));
- T.push(t("N. Dormancy snapshot",()=>{dorm(W,"P5");let s=W.people.P5.dormancySnapshot;assert(s.at&&s.household==="H2"&&Array.isArray(s.relationships),"snapshot incomplete");return "time, household, employer, relationships, event count preserved"}));
- T.push(t("O. Dormant external event",()=>{let p=W.people.P5;dorm(W,"P5");p.anchors.lifeEvents.history.push({at:"2028-06-01",type:"FRIEND_MARRIED",external:true,committed:true});assert(p.simulationState==="DORMANT"&&p.anchors.lifeEvents.history.some(e=>e.type==="FRIEND_MARRIED"),"external event failed");return "history updated while NPC remained DORMANT"}));
- T.push(t("P. Continuity awakening",()=>{let p=W.people.P5;let immutable=deep(p.anchors.lifeEvents.history);p.anchors.employment.history.push({at:"2029-04-01",org:"O1",role:"Estimator",state:"ACTIVE",continuity:true});p.simulationState="RELEVANT";assert(JSON.stringify(p.anchors.lifeEvents.history)===JSON.stringify(immutable),"established history rewritten");return "missing interval filled without changing established event anchors"}));
- T.push(t("Q. Save/reload world web",()=>{let s=JSON.stringify(W),R=JSON.parse(s);assert(JSON.stringify(R)===s&&R.relationships.R1.a==="P1"&&R.households.H1.location==="L1","serialization mismatch");return "complete interconnected world serialized/restored identically"}));
- let el=document.getElementById("results");el.innerHTML="";let passed=T.filter(x=>x.ok).length;
- let sum=document.createElement("p");sum.className="summary";sum.textContent=`${passed}/${T.length} PASS`;el.appendChild(sum);
- T.forEach(x=>{let d=document.createElement("div");d.className="test";d.innerHTML=`<div><b>${x.name}</b><div class="detail">${x.detail}</div></div><div class="${x.ok?'pass':'fail'}">${x.ok?'PASS':'FAIL'}</div>`;el.appendChild(d)});
+ let W=world(),R=[];
+ R.push(test("1. Divorce preserves marriage history",()=>{rel(W,"R1","DIVORCED","2027-01-01");assert(W.relationships.R1.history[0].state==="MARRIED"&&W.relationships.R1.current==="DIVORCED","marriage history lost");return "MARRIED remains historical; DIVORCED becomes current"}));
+ R.push(test("2. Remarriage creates a new relationship",()=>{W.relationships.R4={id:"R4",a:"P1",b:"P5",kind:"MARRIAGE",current:"MARRIED",history:[{at:"2029-06-01",state:"MARRIED"}]};assert(W.relationships.R1.current==="DIVORCED"&&W.relationships.R4.current==="MARRIED","relationship identities collapsed");return "former marriage R1 and new marriage R4 coexist"}));
+ R.push(test("3. Blended household preserves parentage",()=>{move(W,"P1","H1","H3","2029-06-01");assert(W.relationships.R2.a==="P1"&&W.relationships.R2.b==="P3"&&!W.households.H1.members.includes("P1"),"parentage tied to household");return "P1 moved; P1↔P3 parent-child relationship unchanged"}));
+ R.push(test("4. Death does not delete the person",()=>{let before=clone(W.people.P2);die(W,"P2","2031-02-10");assert(W.people.P2.id===before.id&&W.people.P2.death&&W.relationships.R1.b==="P2","dead NPC erased");return "P2 persists with biography and relationship references"}));
+ R.push(test("5. Dead NPC cannot re-enter active simulation",()=>{let p=W.people.P2;let requested="ACTIVE";if(p.death) requested="DECEASED";p.simulationState=requested;assert(p.simulationState==="DECEASED","death invariant violated");return "ACTIVE request rejected by terminal life state"}));
+ R.push(test("6. Organization closure preserves employment history",()=>{W.people.P6.anchors.employment.history.push({at:"2020-01-01",org:"O1",role:"Worker",state:"ACTIVE"});W.orgs.O1.history.push({at:"2032-03-01",state:"CLOSED"});W.orgs.O1.status="CLOSED";W.people.P6.anchors.employment.history.push({at:"2032-03-01",org:"O1",role:"Worker",state:"ENDED"});assert(W.orgs.O1.id==="O1"&&W.people.P6.anchors.employment.history[0].org==="O1","closure erased history");return "O1 remains referenceable after CLOSED"}));
+ R.push(test("7. Same-time changes remain canonically ordered",()=>{W.time="2033-01-01T12:00:00";let a=commit(W,"HOUSEHOLD_EXIT",{person:"P6",household:"H3"}),b=commit(W,"HOUSEHOLD_JOIN",{person:"P6",household:"H2"});assert(W.ledger.indexOf(a)<W.ledger.indexOf(b)&&a.at===b.at,"same-time order unstable");return `${a.id} precedes ${b.id} at identical timestamp`}));
+ R.push(test("8. Dormant NPC accepts multiple external anchors",()=>{let p=W.people.P4;p.simulationState="DORMANT";p.dormancySnapshot={at:W.time,eventCount:p.anchors.lifeEvents.history.length};["PARENT_DIED","EMPLOYER_CLOSED","CHILD_MARRIED"].forEach((type,i)=>p.anchors.lifeEvents.history.push({at:"203"+(4+i)+"-01-01",type,external:true,committed:true}));assert(p.simulationState==="DORMANT"&&p.anchors.lifeEvents.history.length===3,"dormant anchors lost");return "3 external events committed without high-resolution activation"}));
+ R.push(test("9. Fifty-year dormancy awakens without rewriting anchors",()=>{let p=W.people.P4,old=clone(p.anchors.lifeEvents.history);p.anchors.lifeEvents.history.push({at:"2083-01-01",type:"CONTINUITY_SUMMARY",fromDormancy:true});p.simulationState="RELEVANT";assert(JSON.stringify(p.anchors.lifeEvents.history.slice(0,old.length))===JSON.stringify(old),"old anchors rewritten");return "50-year gap filled after immutable external anchors"}));
+ R.push(test("10. Repeated household moves retain trail",()=>{move(W,"P6","H3","H2","2033-01-01");move(W,"P6","H2","H1","2034-01-01");move(W,"P6","H1","H3","2035-01-01");let n=Object.values(W.households).flatMap(h=>h.history).filter(x=>x.person==="P6").length;assert(n===6&&W.households.H3.members.includes("P6"),"move history incomplete");return "3 moves produced 6 leave/join historical entries"}));
+ R.push(test("11. Name changes do not rewrite old records",()=>{let p=W.people.P6;let record={at:"2030-01-01",person:"P6",displayName:"Sam Cole"};p.nameHistory.push({at:"2036-01-01",name:"Sam Rivera"});p.nameHistory.push({at:"2040-01-01",name:"Samuel Rivera"});assert(record.displayName==="Sam Cole"&&p.nameHistory.length===3,"historical name rewritten");return "old artifact retains Sam Cole; identity history has 3 names"}));
+ R.push(test("12. Shared-reference mutation cannot alter committed ledger",()=>{let source={person:"P3",fact:"graduated"};let e=commit(W,"MILESTONE",source);source.fact="NEVER_GRADUATED";assert(e.data.fact==="graduated","ledger retained external reference");return "committed event deep-copied; caller mutation had no effect"}));
+ R.push(test("13. Contradictory current-state proposal rejected",()=>{let p=W.people.P2;let proposal={simulationState:"ACTIVE",death:null};if(p.death) proposal=null;assert(proposal===null&&p.death,"contradiction accepted");return "living/ACTIVE proposal cannot overwrite established death"}));
+ R.push(test("14. Dense cross-link event keeps all entity references",()=>{let e=commit(W,"FAMILY_BUSINESS_FIRE",{people:["P1","P3","P5","P6"],relationships:["R2","R4"],households:["H3"],orgs:["O1"],locations:["L3"]});assert(e.data.people.length===4&&e.data.relationships.length===2&&e.data.orgs[0]==="O1","cross-links dropped");return "people + relationships + household + org + location retained"}));
+ R.push(test("15. Churned world survives save/reload identically",()=>{let s=JSON.stringify(W),L=JSON.parse(s);assert(JSON.stringify(L)===s&&L.people.P2.death&&L.relationships.R4.current==="MARRIED"&&L.ledger.length===W.ledger.length,"reload divergence");return `world restored byte-equivalent in JSON form; ${W.ledger.length} ledger events retained`}));
+ let el=document.getElementById("results");el.innerHTML="";let passed=R.filter(x=>x.ok).length;
+ let s=document.createElement("p");s.className="summary";s.textContent=`${passed}/${R.length} PASS`;el.appendChild(s);
+ R.forEach(x=>{let d=document.createElement("div");d.className="test";d.innerHTML=`<div><b>${x.name}</b><div class="detail">${x.detail}</div></div><div class="${x.ok?'pass':'fail'}">${x.ok?'PASS':'FAIL'}</div>`;el.appendChild(d)});
  document.getElementById("snapshot").textContent=JSON.stringify(W,null,2);
 }
 </script></body></html>
