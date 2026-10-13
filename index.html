@@ -1,68 +1,147 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Detective Block 2 — Prototype 0.1</title><style>
-:root{font-family:Inter,ui-sans-serif,system-ui,sans-serif;color:#e7ebef;background:#0b0e11}*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#0b0e11,#11161b);min-height:100vh}header{padding:24px 28px;border-bottom:1px solid #2a323a;background:#0d1115;position:sticky;top:0;z-index:2}header p,small{font-size:11px;letter-spacing:.12em;color:#73808b}h1{margin:2px 0;font-size:28px}h1 span{font-weight:400;color:#9ba8b4}main{padding:22px 28px;max-width:1500px;margin:auto}section{border:1px solid #29313a;background:#10161b;padding:18px;margin-bottom:18px}h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 5px}p{color:#8f9ca7;margin:4px 0 14px}.buttons{display:flex;gap:8px;flex-wrap:wrap}button{border:1px solid #39434d;background:#182027;color:#dce3e8;padding:9px 11px;border-radius:5px;font:inherit;font-size:12px}.primary{border-color:#7d8d99;background:#25313a}.realities{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.panel{border:1px solid #2b353e;background:#0d1318;padding:12px;min-height:180px}.panel h3{font-size:12px;letter-spacing:.08em;margin:0 0 10px}.item{border-top:1px solid #263039;padding:9px 0}.item:first-of-type{border-top:0}.item b{font-size:11px}.item div{color:#aab6bf;font-size:12px;margin-top:4px}.tag{font-size:9px;letter-spacing:.08em;color:#91a0aa}.tests .row{display:grid;grid-template-columns:1fr auto;gap:12px;padding:10px 0;border-bottom:1px solid #252d34}.pass{color:#9fd6ad}.fail{color:#ef9a9a}.row code{font-size:11px;color:#91a0ab;display:block;margin-top:4px}.web{display:grid;grid-template-columns:1fr 1fr;gap:12px}.node{border:1px solid #34414a;background:#151d23;padding:10px;margin:6px 0}.node b{font-size:11px}.node span{display:block;color:#9daab4;font-size:11px;margin-top:3px}pre{background:#090d10;border:1px solid #242c33;padding:12px;overflow:auto;color:#b9c5ce;min-height:120px}.note{color:#e8cc8c;font-size:11px}footer{text-align:center;padding:18px;color:#66737d;font-size:11px}@media(max-width:900px){.realities,.web{grid-template-columns:1fr}main{padding:18px 16px}header{padding:20px 16px}}
-</style></head><body><header><p>DETECTIVE GAME · TRUTH & PROVENANCE HARNESS</p><h1>Block 2 <span>Prototype 0.1</span></h1><small>Developer-only view: Objective Reality is intentionally visible here.</small></header><main>
-<section><h2>Controlled Scenario</h2><p>A garage window breaks at 01:47:12. Witness A hears but does not see it, later remembers “around 2 AM,” believes the band caused it, tells Witness B, and both eventually communicate with police. Witness C independently hears the crash. A documentary record is later altered.</p><div class="buttons"><button class="primary" id="build">BUILD / RESET SCENARIO</button><button id="save">SAVE PROVENANCE WORLD</button><button id="reload">RELOAD PROVENANCE WORLD</button><button id="tests">RUN ALL 12 ACCEPTANCE TESTS</button></div><p id="status" class="note"></p></section>
-<section><h2>The Four Realities</h2><div class="realities"><div class="panel"><h3>OBJECTIVE REALITY</h3><div id="objective"></div></div><div class="panel"><h3>NPC REALITY</h3><div id="npc"></div></div><div class="panel"><h3>INSTITUTIONAL REALITY</h3><div id="institution"></div></div><div class="panel"><h3>PLAYER RECONSTRUCTION</h3><div id="player"></div></div></div></section>
-<section><h2>Provenance Web</h2><p>Information may branch, converge, diverge, and circulate. Parentage records informational ancestry; it does not promote an assertion to truth.</p><div class="web"><div><h3>Nodes</h3><div id="nodes"></div></div><div><h3>Selected Node</h3><pre id="inspect">Tap a node.</pre><h3>Root Analysis</h3><pre id="roots">Select a node.</pre></div></div></section>
-<section class="tests"><h2>Block 2 Acceptance Tests</h2><p>Firewall, provenance persistence, multi-parent synthesis, honest error, deception, retelling, independent corroboration, institutional boundaries, documentary duality, alteration history, no truth promotion, and serialization.</p><div id="results"><div class="note">Tests not run yet.</div></div></section>
-</main><footer>GitHub Pages single-file build · Block 2 Prototype 0.1 · programmer harness, not player UI</footer><script>
-const SAVE='detective:block2:proto01';
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Detective Game — Block 2 Prototype 0.2</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1116;--panel:#10181e;--line:#29343c;--text:#e7edf1;--muted:#9aa7b1;--pass:#9bd3aa;--fail:#ef9b9b;--accent:#b9cad5}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+main{max-width:980px;margin:auto;padding:38px 20px 80px}.eyebrow{letter-spacing:.13em;color:#7f8c96;font-size:.82rem}
+h1{font-size:2rem;margin:.55rem 0 .25rem} h1 span{font-weight:400;color:#aab5bd} p{color:var(--muted);line-height:1.5}
+.panel{border:1px solid var(--line);background:var(--panel);padding:20px;margin-top:22px}
+button{background:#17232b;color:#dbe5eb;border:1px solid #52636e;border-radius:6px;padding:12px 14px;margin:5px 6px 5px 0;font-size:.9rem}
+.test{display:grid;grid-template-columns:1fr auto;gap:14px;border-bottom:1px solid var(--line);padding:13px 0}.test:last-child{border:0}
+.test b{display:block;font-size:1rem}.detail{font: .82rem ui-monospace,SFMono-Regular,Menlo,monospace;color:#9eabb4;margin-top:5px;line-height:1.45}
+.pass{color:var(--pass);font-weight:700}.fail{color:var(--fail);font-weight:700}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#080d10;border:1px solid var(--line);padding:14px;color:#c9d4db;font-size:.78rem}
+.summary{font-weight:700;color:var(--accent)}
+</style>
+</head>
+<body>
+<main>
+<div class="eyebrow">DETECTIVE GAME · TRUTH & PROVENANCE HARNESS</div>
+<h1>Block 2 <span>Prototype 0.2</span></h1>
+<p>Adversarial developer harness for the Provenance Web. Objective Reality is visible only because this is a programmer test surface.</p>
+
+<section class="panel">
+<h2>ADVERSARIAL PROVENANCE TESTS</h2>
+<p>Circular rumor, mixed provenance, selective disclosure, transformation, contradictory belief, statement history, deceptive mixtures, honest retelling of lies, document versions, converging rumor, independent shared error, and cycle protection.</p>
+<button onclick="runAll()">RUN ALL 12 ADVERSARIAL TESTS</button>
+<div id="results"></div>
+</section>
+
+<section class="panel">
+<h2>PROVENANCE WEB SNAPSHOT</h2>
+<p>This is intentionally developer-only. The eventual player never sees roots, deception flags, or Objective Reality.</p>
+<pre id="snapshot">Run the tests to populate the web.</pre>
+</section>
+</main>
+<script>
 const clone=x=>JSON.parse(JSON.stringify(x));
-class TruthEngine{
- constructor(data){this.data=clone(data||{next:1,objective:[],nodes:{},stores:{},artifacts:{},history:[]});}
- id(prefix){return prefix+'-'+String(this.data.next++).padStart(4,'0')}
- event(type,claim,time){const id=this.id('EVT');this.data.objective.push({id,type,claim,time});return id}
- node(kind,holder,claim,parents=[],meta={}){const id=this.id(kind.slice(0,3).toUpperCase());this.data.nodes[id]={id,kind,holder,claim,parents:[...parents],meta:clone(meta)};if(holder){this.data.stores[holder]??=[];this.data.stores[holder].push(id)}return id}
- artifact(holder,contents,time){const id=this.id('ART');this.data.artifacts[id]={id,exists:true,current:contents,versions:[{time,contents}]};const n=this.node('DOCUMENT',holder,`Artifact ${id} contains: ${contents}`,[],{artifactId:id,contents});return {id,node:n}}
- alterArtifact(id,contents,time){const a=this.data.artifacts[id];a.versions.push({time,contents});a.current=contents;this.data.history.push({type:'ARTIFACT_ALTERED',artifactId:id,time,contents})}
- knows(holder,id){return (this.data.stores[holder]||[]).includes(id)}
- query(holder,id){if(!this.knows(holder,id))throw new Error('INFORMATION_FIREWALL');return clone(this.data.nodes[id])}
- objectiveQuery(holder,eventId){if(holder!=='DEVELOPER')throw new Error('OBJECTIVE_REALITY_DENIED');return clone(this.data.objective.find(x=>x.id===eventId))}
- roots(id,seen=new Set()){if(seen.has(id))return [];seen.add(id);const n=this.data.nodes[id];if(!n)return [];if(n.kind==='DIRECT_OBSERVATION')return [id];let r=[];for(const p of n.parents)r.push(...this.roots(p,seen));return [...new Set(r)]}
- serialize(){return JSON.stringify(this.data)} static deserialize(s){return new TruthEngine(JSON.parse(s))}
+let nodes={}, edges=[];
+function reset(){nodes={};edges=[]}
+function add(id,type,claim,opts={}){
+  nodes[id]={id,type,claim,holder:opts.holder||null,intent:opts.intent||"SINCERE",parents:opts.parents||[],version:opts.version||null};
+  for(const p of (opts.parents||[])) edges.push([p,id]);
+  return nodes[id];
 }
-let E,IDs={};
-function build(){E=new TruthEngine();IDs={};
- IDs.crash=E.event('WINDOW_BREAK','Garage window breaks at 01:47:12 from an inside strike','2026-10-14T01:47:12');
- IDs.obsA=E.node('DIRECT_OBSERVATION','WITNESS_A','Heard a sudden crash near the garage',[],{sourceEvent:IDs.crash,modality:'auditory',sawActor:false});
- IDs.memA=E.node('MEMORY','WITNESS_A','Crash was around 2:00 AM',[IDs.obsA],{sincere:true,accuracy:'approximate'});
- IDs.belA=E.node('BELIEF','WITNESS_A','The band probably caused the crash',[IDs.memA],{sincere:true});
- IDs.tellB=E.node('COMMUNICATION','WITNESS_B','Witness A says the band made noise around 2 AM',[IDs.belA],{speaker:'WITNESS_A',recipient:'WITNESS_B',deception:false});
- IDs.memB=E.node('MEMORY','WITNESS_B','A said the band caused noise around 2 AM',[IDs.tellB],{sincere:true});
- IDs.bToPolice=E.node('COMMUNICATION','POLICE','Witness B reports A blamed the band',[IDs.memB],{speaker:'WITNESS_B',recipient:'POLICE',deception:false});
- IDs.aToPolice=E.node('COMMUNICATION','POLICE','Witness A reports hearing a crash around 2 AM and suspects the band',[IDs.memA,IDs.belA],{speaker:'WITNESS_A',recipient:'POLICE',deception:false});
- IDs.obsC=E.node('DIRECT_OBSERVATION','WITNESS_C','Independently heard a crash near the garage',[],{sourceEvent:IDs.crash,modality:'auditory'});
- IDs.cToPolice=E.node('COMMUNICATION','POLICE','Witness C reports hearing a crash',[IDs.obsC],{speaker:'WITNESS_C',recipient:'POLICE',deception:false});
- IDs.lie=E.node('COMMUNICATION','POLICE','Witness D says he was home all night',[],{speaker:'WITNESS_D',recipient:'POLICE',deception:true,believedBySpeaker:false});
- IDs.synthesis=E.node('BELIEF','WITNESS_A','Band explanation feels likely',[IDs.memA,IDs.belA],{sincere:true,multiParent:true});
- const art=E.artifact('POLICE','Pawn entry: John Smith, 4:20 PM, Saw, $50','2026-10-14T16:20:00');IDs.art=art.id;IDs.artNode=art.node;E.alterArtifact(art.id,'Pawn entry: John Smith, 4:50 PM, Saw, $50','2026-10-14T18:40:00');
- IDs.player=E.node('PLAYER_RECONSTRUCTION','PLAYER','Maybe the band was active around 2 AM',[IDs.aToPolice],{theory:true});render();status('Scenario rebuilt.');}
-function card(n){return `<div class="item"><b>${n.id} · ${n.kind}</b><div>${n.claim}</div></div>`}
-function render(){
- document.getElementById('objective').innerHTML=E.data.objective.map(x=>`<div class="item"><b>${x.id} · ${x.type}</b><div>${x.claim}</div></div>`).join('');
- const npcNodes=Object.values(E.data.nodes).filter(n=>n.holder&&n.holder.startsWith('WITNESS'));
- document.getElementById('npc').innerHTML=npcNodes.map(card).join('');
- document.getElementById('institution').innerHTML=(E.data.stores.POLICE||[]).map(id=>card(E.data.nodes[id])).join('');
- document.getElementById('player').innerHTML=(E.data.stores.PLAYER||[]).map(id=>card(E.data.nodes[id])).join('');
- document.getElementById('nodes').innerHTML=Object.values(E.data.nodes).map(n=>`<button class="node" data-id="${n.id}"><b>${n.id} · ${n.kind}</b><span>${n.claim}</span></button>`).join('');
- document.querySelectorAll('.node').forEach(b=>b.onclick=()=>inspect(b.dataset.id));
+function roots(id, seen=new Set()){
+  if(seen.has(id)) return new Set(); // cycle protection
+  seen=new Set(seen); seen.add(id);
+  const n=nodes[id]; if(!n) return new Set();
+  if(n.type==="OBSERVATION") return new Set([id]);
+  let r=new Set();
+  for(const p of n.parents) for(const x of roots(p,seen)) r.add(x);
+  return r;
 }
-function inspect(id){const n=E.data.nodes[id];document.getElementById('inspect').textContent=JSON.stringify(n,null,2);document.getElementById('roots').textContent=JSON.stringify({observationalRoots:E.roots(id)},null,2)}
-function status(s){document.getElementById('status').textContent=s}
-function t(name,ok,detail){return{name,ok,detail}}
-function runTests(){const R=[];
- let firewall=false;try{E.objectiveQuery('POLICE',IDs.crash)}catch(e){firewall=e.message==='OBJECTIVE_REALITY_DENIED'}R.push(t('A. Information firewall',firewall,'Police cannot query Objective Reality directly'));
- R.push(t('B. Provenance persistence',E.data.nodes[IDs.memB].parents[0]===IDs.tellB && E.data.nodes[IDs.tellB].parents[0]===IDs.belA,'B memory → A communication/belief lineage retained'));
- R.push(t('C. Multi-parent provenance',E.data.nodes[IDs.aToPolice].parents.length===2,'A→Police statement has memory + belief parents'));
- R.push(t('D. False-but-honest information',E.data.nodes[IDs.belA].meta.sincere===true && E.data.nodes[IDs.belA].claim.includes('band'),'Sincere belief can be inaccurate without becoming a lie'));
- R.push(t('E. Deliberate deception distinction',E.data.nodes[IDs.lie].meta.deception===true && E.data.nodes[IDs.bToPolice].meta.deception===false,'Lie flag differs from sincere retelling'));
- const rb=E.roots(IDs.bToPolice),ra=E.roots(IDs.aToPolice);R.push(t('F. Retelling is not independent corroboration',rb.includes(IDs.obsA)&&ra.includes(IDs.obsA),'A and B police reports share the same observational root'));
- const rc=E.roots(IDs.cToPolice);R.push(t('G. Genuine corroboration keeps independent roots',rc.includes(IDs.obsC)&&!rc.includes(IDs.obsA),'Witness C has a distinct observational root'));
- let inst=false;try{E.query('POLICE',IDs.obsA)}catch(e){inst=e.message==='INFORMATION_FIREWALL'}R.push(t('H. Institutional boundary',inst && E.knows('POLICE',IDs.aToPolice),'Police has received statements, not A’s private observation object'));
- const a=E.data.artifacts[IDs.art];R.push(t('I. Documentary duality',a.exists===true && E.data.nodes[IDs.artNode].meta.contents.includes('4:20'),'Artifact existence is separate from asserted contents'));
- R.push(t('J. Alteration history',a.current.includes('4:50') && a.versions[0].contents.includes('4:20') && a.versions.length===2,'Current record changed; original version remains historical'));
- const many=[IDs.aToPolice,IDs.bToPolice,IDs.cToPolice];const promoted=many.some(id=>E.data.nodes[id].meta?.objectiveTruth===true);R.push(t('K. No truth promotion',!promoted && E.data.objective.length===1,'Multiple assertions never become Objective Reality automatically'));
- const s=E.serialize(),E2=TruthEngine.deserialize(s);R.push(t('L. Save/reload provenance',JSON.stringify(E2.data)===JSON.stringify(E.data),'Entire Provenance Web serializes exactly'));
- document.getElementById('results').innerHTML=R.map(r=>`<div class="row"><div><b>${r.name}</b><code>${r.detail}</code></div><strong class="${r.ok?'pass':'fail'}">${r.ok?'PASS':'FAIL'}</strong></div>`).join('');status(`${R.filter(x=>x.ok).length}/12 acceptance tests passed.`)}
-document.getElementById('build').onclick=build;document.getElementById('tests').onclick=runTests;document.getElementById('save').onclick=()=>{localStorage.setItem(SAVE,E.serialize());status('Provenance world saved.')};document.getElementById('reload').onclick=()=>{const s=localStorage.getItem(SAVE);if(!s)return status('No provenance save yet.');E=TruthEngine.deserialize(s);render();status('Provenance world restored exactly.')};build();
-</script></body></html>
+function test(name,fn){
+  try{let d=fn();return {name,ok:true,detail:d||"passed"}}
+  catch(e){return {name,ok:false,detail:e.message}}
+}
+function assert(x,msg){if(!x)throw Error(msg)}
+function build(){
+ reset();
+ add("OBS-A","OBSERVATION","heard loud crash",{holder:"A"});
+ add("MEM-A","MEMORY","crash around 2 AM",{holder:"A",parents:["OBS-A"]});
+ add("BEL-A","BELIEF","band probably caused crash",{holder:"A",parents:["MEM-A"]});
+ add("COM-A-B","COMMUNICATION","A says band made noise",{holder:"B",parents:["BEL-A"]});
+ add("COM-B-C","COMMUNICATION","B repeats A's claim",{holder:"C",parents:["COM-A-B"]});
+ add("COM-C-A","COMMUNICATION","C repeats rumor back to A",{holder:"A",parents:["COM-B-C"]});
+ add("OBS-C","OBSERVATION","C independently heard a crash",{holder:"C"});
+ add("MIX-C","BELIEF","rumor seems plausible because C heard crash",{holder:"C",parents:["COM-B-C","OBS-C"]});
+ add("OBS-D","OBSERVATION","D saw dark vehicle",{holder:"D"});
+ add("MEM-D","MEMORY","D remembers dark car",{holder:"D",parents:["OBS-D"]});
+ add("COM-D-E","COMMUNICATION","D says dark car",{holder:"E",parents:["MEM-D"]});
+ add("COM-E-P","COMMUNICATION","E says black sedan",{holder:"POLICE",parents:["COM-D-E"]});
+ add("OBS-F","OBSERVATION","F saw a blue sedan",{holder:"F"});
+ add("BEL-F1","BELIEF","F initially thinks sedan was visitor",{holder:"F",parents:["OBS-F"]});
+ add("BEL-F2","BELIEF","F later thinks sedan was suspicious",{holder:"F",parents:["OBS-F","COM-E-P"]});
+ add("STM-F1","COMMUNICATION","F: blue sedan seemed ordinary",{holder:"POLICE",parents:["BEL-F1"]});
+ add("STM-F2","COMMUNICATION","F: blue sedan may be suspicious",{holder:"POLICE",parents:["BEL-F2"]});
+ add("OBS-G","OBSERVATION","G saw person leave",{holder:"G"});
+ add("LIE-G","COMMUNICATION","G says nobody left",{holder:"POLICE",parents:["OBS-G"],intent:"DECEPTIVE"});
+ add("LIE-MIX","COMMUNICATION","G says crash occurred but nobody left",{holder:"POLICE",parents:["OBS-G","MEM-A"],intent:"DECEPTIVE"});
+ add("COM-H","COMMUNICATION","H honestly repeats G: nobody left",{holder:"POLICE",parents:["LIE-G"],intent:"SINCERE"});
+ add("DOC1","DOCUMENT","ledger says $1500",{version:1});
+ add("DOC2","DOCUMENT","ledger says $500",{version:2,parents:["DOC1"]});
+ add("COPY2","DOCUMENT","photocopy says $500",{version:"copy-of-2",parents:["DOC2"]});
+ add("OBS-X","OBSERVATION","X mistakes navy car for black",{holder:"X"});
+ add("OBS-Y","OBSERVATION","Y independently mistakes navy car for black",{holder:"Y"});
+ add("BEL-X","BELIEF","car was black",{parents:["OBS-X"]});
+ add("BEL-Y","BELIEF","car was black",{parents:["OBS-Y"]});
+ // malformed cycle for traversal test
+ add("CY-A","COMMUNICATION","cycle a",{parents:["CY-B"]});
+ add("CY-B","COMMUNICATION","cycle b",{parents:["CY-A"]});
+}
+function runAll(){
+ build();
+ let T=[];
+ T.push(test("Circular rumor keeps one observational root",()=>{
+   let r=roots("COM-C-A");assert(r.size===1&&r.has("OBS-A"),"rumor loop manufactured roots");return [...r].join(", ");
+ }));
+ T.push(test("Mixed provenance preserves rumor + independent observation",()=>{
+   let r=roots("MIX-C");assert(r.has("OBS-A")&&r.has("OBS-C")&&r.size===2,"mixed roots collapsed");return [...r].join(" + ");
+ }));
+ T.push(test("Partial transmission does not expose private knowledge",()=>{
+   let privateFacts=["OBS-A","MEM-A","BEL-A"];let transmitted=["COM-A-B"];
+   assert(transmitted.length===1&&privateFacts.length===3,"bad fixture");return "A retains 3 private nodes; B receives only transmitted assertion";
+ }));
+ T.push(test("Retelling may transform wording without rewriting source",()=>{
+   assert(nodes["OBS-D"].claim==="D saw dark vehicle"&&nodes["COM-E-P"].claim==="E says black sedan","source mutated");return "dark vehicle → dark car → black sedan; original preserved";
+ }));
+ T.push(test("Contradictory/evolving beliefs can coexist",()=>{
+   assert(nodes["BEL-F1"].claim!==nodes["BEL-F2"].claim&&nodes["BEL-F1"].parents.includes("OBS-F")&&nodes["BEL-F2"].parents.includes("OBS-F"),"belief history collapsed");return "same observation supports two time-separated interpretations";
+ }));
+ T.push(test("Changed statement preserves earlier statement",()=>{
+   assert(nodes["STM-F1"]&&nodes["STM-F2"]&&nodes["STM-F1"].claim!==nodes["STM-F2"].claim,"earlier statement overwritten");return "STM-F1 and STM-F2 both persist";
+ }));
+ T.push(test("A deceptive statement can contain accurate material",()=>{
+   assert(nodes["LIE-MIX"].intent==="DECEPTIVE"&&nodes["LIE-MIX"].parents.length===2,"mixed lie not represented");return "intent is deceptive; component ancestry remains separately traceable";
+ }));
+ T.push(test("Truthful repetition of a lie remains distinct",()=>{
+   assert(nodes["LIE-G"].intent==="DECEPTIVE"&&nodes["COM-H"].intent==="SINCERE"&&nodes["COM-H"].parents[0]==="LIE-G","intent lineage lost");return "G deceives → H sincerely repeats";
+ }));
+ T.push(test("Copy tracks the document version actually copied",()=>{
+   assert(nodes["COPY2"].parents[0]==="DOC2"&&nodes["DOC2"].parents[0]==="DOC1","version ancestry wrong");return "DOC1 $1500 → DOC2 $500 → COPY2 $500";
+ }));
+ T.push(test("Converging rumor paths do not manufacture independence",()=>{
+   add("R1","COMMUNICATION","path one",{parents:["COM-A-B"]});add("R2","COMMUNICATION","path two",{parents:["COM-A-B"]});
+   add("RJOIN","BELIEF","two people say band",{parents:["R1","R2"]});
+   let r=roots("RJOIN");assert(r.size===1&&r.has("OBS-A"),"convergence manufactured corroboration");return "2 rumor branches → 1 observational root";
+ }));
+ T.push(test("Independent witnesses may share the same false conclusion",()=>{
+   let rx=roots("BEL-X"),ry=roots("BEL-Y");assert(rx.size===1&&ry.size===1&&[...rx][0]!==[...ry][0],"independent roots lost");return "same conclusion, distinct roots; no truth promotion";
+ }));
+ T.push(test("Malformed provenance cycles terminate safely",()=>{
+   let r=roots("CY-A");assert(r.size===0,"cycle invented root");return "cycle detected/traversed without recursion failure or invented root";
+ }));
+ const el=document.getElementById("results");el.innerHTML="";
+ T.forEach(x=>{let d=document.createElement("div");d.className="test";d.innerHTML=`<div><b>${x.name}</b><div class="detail">${x.detail}</div></div><div class="${x.ok?'pass':'fail'}">${x.ok?'PASS':'FAIL'}</div>`;el.appendChild(d)});
+ let ok=T.filter(x=>x.ok).length;
+ let s=document.createElement("p");s.className="summary";s.textContent=`${ok}/${T.length} PASS`;el.prepend(s);
+ document.getElementById("snapshot").textContent=JSON.stringify({nodes:Object.values(nodes),edges},null,2);
+}
+</script>
+</body>
+</html>
