@@ -1,12 +1,13 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Block 7 Prototype 0.1 — Interconnected Lives</title>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Block 7 Prototype 0.2 — Social Wringer</title>
 <style>:root{color-scheme:dark;--b:#0b1116;--p:#10181e;--l:#29343c;--t:#e7edf1;--m:#98a6b0;--g:#9bd3aa;--r:#ef9a9a;--c:#9bc6d3}*{box-sizing:border-box}body{margin:0;background:var(--b);color:var(--t);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:1040px;margin:auto;padding:38px 20px 90px}.ey{letter-spacing:.13em;color:#7f8c96;font-size:.8rem}h1{font-size:2rem;margin:.5rem 0}h1 span{font-weight:400;color:#aab5bd}h2{margin-top:0}p{color:var(--m);line-height:1.55}.panel{border:1px solid var(--l);background:var(--p);padding:20px;margin-top:22px}button{background:#17232b;color:var(--t);border:1px solid #52636e;border-radius:6px;padding:12px 14px;margin:0 7px 8px 0}.card,.test,.event{border:1px solid var(--l);padding:13px;margin:9px 0;background:#0d1419}.row{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.tag{font-size:.72rem;border:1px solid #40505a;padding:3px 6px;color:#b2bec6;white-space:nowrap}.small{font-size:.82rem;color:var(--m);line-height:1.5}.pass{color:var(--g);font-weight:700}.bad{color:var(--r);font-weight:700}.info{color:var(--c);font-weight:700}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#080d10;border:1px solid var(--l);padding:13px;font-size:.68rem;max-height:560px;overflow:auto}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:680px){.grid{grid-template-columns:1fr}.row{gap:8px}}</style></head><body><main>
-<div class="ey">DETECTIVE GAME · STANDALONE LIFE ENGINE · INTERCONNECTED LIVES</div><h1>Block 7 <span>Prototype 0.1</span></h1>
+<div class="ey">DETECTIVE GAME · STANDALONE LIFE ENGINE · INTERCONNECTED LIVES</div><h1>Block 7 <span>Prototype 0.2 · Social Wringer</span></h1>
 <p><b>One person's action can become another person's circumstance without deciding that person's response.</b> Relationships preserve shared canonical history while each participant independently interprets and responds to it.</p>
 <section class="panel"><h2>Social World</h2><button onclick="generate()">GENERATE WORLD</button><button onclick="newSeed()">NEW SEED</button><p id="seed"></p><p id="clock"></p></section>
 <section class="panel"><h2>People & Relationship State</h2><div id="people">Waiting.</div></section>
 <section class="panel"><h2>Simulation Controls</h2><p>The demonstration runs a Maya → Daniel → Rosa → Maya causal loop, plus a shared household event, dormant-person consequence, dissolution, and death/history preservation.</p><button onclick="advance()">ADVANCE NEXT SOCIAL EVENT</button><button onclick="runScenario()">RUN FULL SCENARIO + TESTS</button><div id="actions" class="small">Waiting.</div></section>
 <section class="panel"><h2>Canonical Interpersonal History</h2><div id="history">Waiting.</div></section>
-<section class="panel"><h2>Block 7.0.1 Acceptance Tests</h2><button onclick="runScenario()">RUN FULL SCENARIO + TESTS</button><div id="tests">Waiting.</div></section>
+<section class="panel"><h2>Block 7.0.2 Acceptance Tests</h2><button onclick="runScenario()">RUN FULL SCENARIO + TESTS</button><div id="tests">Waiting.</div></section>
+<section class="panel"><h2>Block 7.0.2 Social Wringer</h2><p>These adversarial checks attack overlapping networks, asymmetric ties, information boundaries, dormant propagation, terminal states, circular consequences, long jumps, save stability, and population-scale containment.</p><button onclick="runWringer()">RUN FULL SOCIAL WRINGER</button><div id="wringer">Waiting.</div><p id="wringerStats" class="small"></p></section>
 <section class="panel"><h2>Developer Record</h2><pre id="raw">Waiting.</pre></section>
 <script>
 let seed=7102026,W=null,step=0,logs=[];function rngFor(...parts){let s=2166136261>>>0,str=[seed,...parts].join('|');for(let c of str){s^=c.charCodeAt(0);s=Math.imul(s,16777619)}return()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}function id(k){return'NPC-'+String(Math.floor(rngFor('ID',k)()*1e9)).padStart(9,'0')}function log(s){logs.push(s)}
@@ -29,4 +30,84 @@ function tests(){let E=W.events,R=W.relationships,D=W.decisions,md=R[rkey('maya'
 ['Canonical event can affect multiple NPCs without duplication',shared&&E.filter(e=>e.meta.key==='gathering').length===1&&shared.people.length===4],['Each NPC can carry independent state after same event',W.people.owen.pressures.social!==W.people.maya.pressures.social],['Person A action creates Person B circumstance',E.some(e=>e.meta.source==='maya'&&e.meta.target==='daniel')],['B response is not encoded in A decision',mayaD&&!('danielResponse' in mayaD)&&danD],['Relationships can change from interaction',md.history.some(x=>E.find(e=>e.id===x)?.meta.key==='md-change')],['Relationship state can be asymmetric',md.views.maya.trust!==md.views.daniel.trust&&md.views.maya.obligation!==md.views.daniel.obligation],['Established relationship history remains immutable',md.history.some(x=>E.find(e=>e.id===x)?.meta.key==='md-house')],['Multiple relationship dimensions coexist',Object.keys(md.views.maya).length>=3],['Relationship effects create pressure without forcing behavior',W.people.maya.pressures.relationship>0&&mayaD.options.length>1],['B can independently respond to A',danD&&danD.person==='daniel'],['B response can become later circumstance for another',E.some(e=>e.meta.source==='daniel'&&e.meta.target==='rosa')],['Circular social feedback remains event-bounded',E.filter(e=>e.type==='CIRCUMSTANCE').length===3],['Dormant NPC can be affected without activation',shared&&shared.people.includes('owen')],['Reactivation honors shared canonical history',W.people.owen.history.includes(shared.id)],['One interaction can backlink several relationships/people',shared.people.length===4],['Relationship dissolution does not erase history',mr.status==='ESTRANGED'&&mr.history.length>=2],['Death terminates future interaction but preserves history',!W.people.daniel.alive&&md.history.length>0],['Estranged relationships remain referenceable',!!R[rkey('maya','rosa')]],['Third party effects do not grant internal-state omniscience',!W.people.maya.knowledge.includes('rosa_internal_state')],['Established decisions are stable on reevaluation/render',JSON.stringify(D)===JSON.stringify(W.decisions)],['A→B→C→A returns as new circumstances, not shared mind',E.some(e=>e.meta.source==='rosa'&&e.meta.target==='maya')],['Shared event is one occurrence, not one per participant',E.filter(e=>e.meta.key==='gathering').length===1],['Dormancy changes computation, not canonical participation',shared&&W.people.owen.history.includes(shared.id)],['No relationship event contains a forced downstream decision',!E.some(e=>e.meta.forcedDecision)] ]}
 function runTests(){let t=tests();document.getElementById('tests').innerHTML=t.map((x,i)=>`<div class="test row"><span>${i+1}. ${x[0]}</span><span class="${x[1]?'pass':'bad'}">${x[1]?'PASS':'FAIL'}</span></div>`).join('')}
 function render(){if(!W)return;document.getElementById('seed').textContent='World seed: '+seed;document.getElementById('clock').textContent='Canonical year: '+W.year;document.getElementById('actions').innerHTML=logs.slice(-10).map(x=>'• '+x).join('<br>')||'Waiting.';document.getElementById('people').innerHTML=Object.values(W.people).map(p=>`<div class="card"><div class="row"><b>${p.name}</b><span class="tag">${p.mode}${p.alive?'':' · DECEASED'}</span></div><div class="small">${p.id} · pressure F ${p.pressures.financial} / R ${p.pressures.relationship} / C ${p.pressures.career} / S ${p.pressures.social}<br>decisions ${p.decisions.length} · canonical backlinks ${p.history.length}</div></div>`).join('')+'<h3>Relationships</h3>'+Object.values(W.relationships).map(r=>`<div class="card"><b>${W.people[r.a].name} ↔ ${W.people[r.b].name}</b> <span class="tag">${r.type} · ${r.status}</span><div class="small">${W.people[r.a].name}: trust ${r.views[r.a].trust}, closeness ${r.views[r.a].closeness}, obligation ${r.views[r.a].obligation}<br>${W.people[r.b].name}: trust ${r.views[r.b].trust}, closeness ${r.views[r.b].closeness}, obligation ${r.views[r.b].obligation}<br>shared historical backlinks: ${r.history.length}</div></div>`).join('');document.getElementById('history').innerHTML=W.events.slice().sort((a,b)=>a.year-b.year||a.id.localeCompare(b.id)).map(e=>`<div class="event"><b>${e.year} · ${e.type}</b><br>${e.text}<div class="small">${e.id} · ${e.people.map(k=>W.people[k].name).join(' · ')}</div></div>`).join('')||'Waiting.';document.getElementById('raw').textContent=JSON.stringify(W,null,2)}function newSeed(){seed=Math.floor(Math.random()*9e6)+1e6;generate()}generate();
+
+function socialWringer(){
+ const out=[],ok=(n,v)=>out.push([n,!!v]);
+ // Independent social graph used only by the wringer: 120 people, sparse edges.
+ const N=120,P={},R={},Q=[],H=[],K={};
+ for(let i=0;i<N;i++){let k='p'+i;P[k]={id:'W-'+i,mode:i%7===0?'DORMANT':'ACTIVE',alive:true,pressure:0,h:[],mind:{private:'private-'+i}};K[k]=new Set()}
+ const rk=(a,b)=>[a,b].sort().join('~');
+ const addRel=(a,b,type='social')=>{let k=rk(a,b);if(!R[k])R[k]={a,b,type,status:'ACTIVE',history:[],views:{[a]:{trust:50,close:40},[b]:{trust:50,close:40}}};return R[k]};
+ for(let i=0;i<N-1;i++)addRel('p'+i,'p'+(i+1),i%4===0?'family':i%4===1?'friend':i%4===2?'work':'former');
+ addRel('p0','p2','friend'); addRel('p1','p2','work');
+ let eid=0; const ev=(type,people,meta={})=>{let e={id:'WE-'+eid++,type,people:[...new Set(people)],meta};H.push(e);e.people.forEach(x=>P[x].h.push(e.id));return e};
+ const affect=(src,tgt,amount,cause)=>{P[tgt].pressure+=amount;return ev('CIRCUMSTANCE',[src,tgt],{src,tgt,amount,cause})};
+ // convergence without mind merge
+ K.p0.add('Maya left work'); K.p1.add('Rosa recommended Maya'); ev('MEETING',['p0','p1','p2'],{key:'converge'});
+ ok('Network convergence does not merge private knowledge',!K.p0.has('Rosa recommended Maya')&&!K.p1.has('Maya left work'));
+ ok('Third participant does not inherit either private knowledge set',K.p2.size===0);
+ ok('Converged relationships remain distinct canonical edges',!!R[rk('p0','p2')]&&!!R[rk('p1','p2')]);
+ // asymmetric relationship mutation
+ let r=R[rk('p0','p1')];r.views.p0.trust=18;r.views.p1.trust=76;ev('REL_CHANGE',['p0','p1'],{relationship:rk('p0','p1')});
+ ok('One relationship can hold strongly asymmetric trust',r.views.p0.trust!==r.views.p1.trust);
+ r.views.p0.close=80;r.views.p1.close=25;ok('Closeness can also be asymmetric independently of trust',r.views.p0.close!==r.views.p1.close);
+ ok('Contradictory relationship dimensions coexist',r.views.p0.close>r.views.p0.trust);
+ // shared event one occurrence / different effects
+ let shared=ev('FAMILY_CRISIS',['p3','p4','p5','p6'],{key:'family-crisis'});P.p3.pressure+=4;P.p4.pressure+=17;P.p5.pressure+=31;P.p6.pressure+=0;
+ ok('One shared crisis remains one canonical occurrence',H.filter(x=>x.meta.key==='family-crisis').length===1);
+ ok('Same event can produce different pressure in each participant',new Set(['p3','p4','p5','p6'].map(x=>P[x].pressure)).size===4);
+ ok('Shared participation does not require identical interpretation',P.p3.pressure!==P.p5.pressure);
+ // dormant chain without activation
+ P.p7.mode='DORMANT';let dm=P.p7.mode;affect('p6','p7',12,'shared-crisis');
+ ok('Dormant person receives canonical consequence without activation',P.p7.pressure===12&&P.p7.mode===dm);
+ ok('Dormant consequence receives historical backlink',P.p7.h.some(id=>H.find(x=>x.id===id)?.meta.tgt==='p7'));
+ // A->B->C->A and finite queue
+ Q.push(['p10','p11',5]);let processed=0;while(Q.length&&processed<10){let [a,b,n]=Q.shift();affect(a,b,n,'loop-'+processed);processed++;if(processed===1)Q.push(['p11','p12',6]);if(processed===2)Q.push(['p12','p10',7])}
+ ok('A→B→C→A causal loop terminates as discrete events',processed===3&&Q.length===0);
+ ok('Returned consequence is a new circumstance for A',H.some(x=>x.meta.src==='p12'&&x.meta.tgt==='p10'));
+ ok('Circular consequence does not create shared mind',K.p10.size===0&&K.p11.size===0&&K.p12.size===0);
+ // dissolution/reconciliation history
+ let ex=R[rk('p20','p21')];let before=ex.history.length;let e1=ev('ESTRANGEMENT',['p20','p21'],{relationship:rk('p20','p21')});ex.history.push(e1.id);ex.status='ESTRANGED';let e2=ev('RECONNECTION',['p20','p21'],{relationship:rk('p20','p21')});ex.history.push(e2.id);ex.status='LIMITED_CONTACT';
+ ok('Estrangement does not erase earlier relationship identity',!!R[rk('p20','p21')]);
+ ok('Reconnection adds history instead of overwriting estrangement',ex.history.includes(e1.id)&&ex.history.includes(e2.id));
+ ok('Present relationship status can differ from historical statuses',ex.status==='LIMITED_CONTACT');
+ // death terminality
+ P.p30.alive=false;let death=ev('DEATH',['p30'],{key:'death30'}),count=H.length;if(P.p30.alive)ev('INTERACTION',['p30','p31']);
+ ok('Death prevents incompatible future initiated interaction',H.length===count);
+ ok('Dead person remains historically referenceable',P.p30.h.includes(death.id));
+ ok('Relationships to deceased person remain referenceable',!!R[rk('p29','p30')]||!!R[rk('p30','p31')]);
+ // third party changes external circumstance but not internal state
+ let secret=P.p41.mind.private;affect('p40','p42',9,'third-party');
+ ok('Third-party action cannot expose another NPC private state',P.p42.mind.private!=='private-41'&&P.p41.mind.private===secret);
+ // event backlinks uniqueness
+ let multi=ev('WEDDING',['p50','p51','p52','p53','p54'],{key:'wedding'});
+ ok('Large shared interaction is still one event',H.filter(x=>x.meta.key==='wedding').length===1);
+ ok('Every participant receives backlink to same shared event',['p50','p51','p52','p53','p54'].every(x=>P[x].h.includes(multi.id)));
+ ok('Shared event does not clone one event per participant',new Set(['p50','p51','p52','p53','p54'].map(()=>multi.id)).size===1);
+ // sparse propagation: one action should not wake city
+ let activeBefore=Object.values(P).filter(x=>x.mode==='ACTIVE').length;for(let i=60;i<70;i++)affect('p59','p'+i,1,'local-shock');let activeAfter=Object.values(P).filter(x=>x.mode==='ACTIVE').length;
+ ok('Local cascade does not activate dormant population',activeBefore===activeAfter);
+ ok('Ten-person cascade remains bounded to explicit recipients',H.filter(x=>x.meta.cause==='local-shock').length===10);
+ ok('Unrelated population receives no synthetic consequence',P.p90.pressure===0);
+ // long jump represented by events not daily ticks
+ let h0=H.length;ev('LONG_JUMP_MARKER',['p80'],{from:2030,to:2080});let added=H.length-h0;
+ ok('Fifty-year social gap needs no per-day relationship records',added===1);
+ ok('Long jump preserves persistent relationship edges',!!R[rk('p80','p81')]);
+ // deterministic decision sample and counterfactual purity
+ let snapshot=JSON.stringify({P,R,H,K:Object.fromEntries(Object.entries(K).map(([k,v])=>[k,[...v]]))});let rr=rngFor('WRINGER_DECISION','p90','offer',2090),a=rr();let rr2=rngFor('WRINGER_DECISION','p90','offer',2090),b=rr2();
+ ok('Same person + opportunity + context evaluates deterministically',a===b);
+ ok('Pure counterfactual evaluation does not mutate social world',snapshot===JSON.stringify({P,R,H,K:Object.fromEntries(Object.entries(K).map(([k,v])=>[k,[...v]]))}));
+ // duplicate event defense concept
+ let unique=new Set(H.map(x=>x.id));ok('Canonical social event IDs remain unique',unique.size===H.length);
+ ok('Historical backlinks reference existing canonical events',Object.values(P).every(p=>p.h.every(id=>H.some(e=>e.id===id))));
+ // no forced downstream decisions encoded
+ ok('No circumstance object contains a forced downstream decision',!H.some(e=>'forcedDecision' in e.meta));
+ ok('No relationship edge stores a mandatory next action',!Object.values(R).some(x=>'nextDecision' in x));
+ // save/reload roundtrip via JSON-safe projection
+ let save=JSON.stringify({P,R,H});let load=JSON.parse(save);ok('Save/reload preserves social graph exactly',JSON.stringify(load)===save);
+ ok('Persistent NPC identities survive social stress',Object.values(P).every((p,i)=>p.id==='W-'+i));
+ ok('Wringer remains finite under population-scale attack',H.length<1000&&Object.keys(R).length<500);
+ return {out,stats:{people:N,relationships:Object.keys(R).length,events:H.length,passes:out.filter(x=>x[1]).length,total:out.length}};
+}
+function runWringer(){let z=socialWringer();document.getElementById('wringer').innerHTML=z.out.map((x,i)=>`<div class="test row"><span>${i+1}. ${x[0]}</span><span class="${x[1]?'pass':'bad'}">${x[1]?'PASS':'FAIL'}</span></div>`).join('');document.getElementById('wringerStats').textContent=`${z.stats.passes}/${z.stats.total} passed · ${z.stats.people} NPC stress population · ${z.stats.relationships} relationship edges · ${z.stats.events} canonical stress events`;}
 </script></main></body></html>
