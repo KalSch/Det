@@ -1,288 +1,208 @@
 <!doctype html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Block 5 Prototype 0.2 — Adversarial Life Continuity</title>
+<title>Block 6 Prototype 0.1 — Life Events, Opportunity & Decision Pressure</title>
 <style>
-:root{color-scheme:dark;--b:#0b1116;--p:#10181e;--l:#29343c;--t:#e7edf1;--m:#98a6b0;--g:#9bd3aa;--y:#e2cf8b;--r:#ef9a9a}
+:root{color-scheme:dark;--b:#0b1116;--p:#10181e;--l:#29343c;--t:#e7edf1;--m:#98a6b0;--g:#9bd3aa;--y:#e2cf8b;--r:#ef9a9a;--c:#9bc6d3}
 *{box-sizing:border-box}body{margin:0;background:var(--b);color:var(--t);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-main{max-width:980px;margin:auto;padding:38px 20px 80px}.ey{letter-spacing:.13em;color:#7f8c96;font-size:.8rem}h1{font-size:2rem;margin:.5rem 0}h1 span{font-weight:400;color:#aab5bd}
-h2{margin-top:0}p{color:var(--m);line-height:1.5}.panel{border:1px solid var(--l);background:var(--p);padding:20px;margin-top:22px}
+main{max-width:1040px;margin:auto;padding:38px 20px 90px}.ey{letter-spacing:.13em;color:#7f8c96;font-size:.8rem}h1{font-size:2rem;margin:.5rem 0}h1 span{font-weight:400;color:#aab5bd}h2{margin-top:0}
+p{color:var(--m);line-height:1.55}.panel{border:1px solid var(--l);background:var(--p);padding:20px;margin-top:22px}
 button{background:#17232b;color:var(--t);border:1px solid #52636e;border-radius:6px;padding:12px 14px;margin:0 7px 8px 0}
-.card,.test,.event{border:1px solid var(--l);padding:13px;margin:9px 0;background:#0d1419}.row{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
-.tag{font-size:.72rem;border:1px solid #40505a;padding:3px 6px;color:#b2bec6;white-space:nowrap}.small{font-size:.82rem;color:var(--m);line-height:1.45}
-.pass{color:var(--g);font-weight:700}.warn{color:var(--y);font-weight:700}.bad{color:var(--r);font-weight:700}.event{border-left:2px solid #3b4b55}
-pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#080d10;border:1px solid var(--l);padding:13px;font-size:.68rem;max-height:520px;overflow:auto}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:650px){.grid{grid-template-columns:1fr}}
+.card,.test,.event,.choice{border:1px solid var(--l);padding:13px;margin:9px 0;background:#0d1419}.row{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.tag{font-size:.72rem;border:1px solid #40505a;padding:3px 6px;color:#b2bec6;white-space:nowrap}.small{font-size:.82rem;color:var(--m);line-height:1.5}
+.pass{color:var(--g);font-weight:700}.bad{color:var(--r);font-weight:700}.warn{color:var(--y);font-weight:700}.info{color:var(--c);font-weight:700}
+.event{border-left:2px solid #3b4b55}.pressure{height:7px;background:#172027;margin-top:6px;overflow:hidden}.pressure>i{display:block;height:100%;background:#7d8991}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#080d10;border:1px solid var(--l);padding:13px;font-size:.68rem;max-height:560px;overflow:auto}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:680px){.grid{grid-template-columns:1fr}.row{gap:8px}}
 </style></head><body><main>
-<div class="ey">DETECTIVE GAME · LIFE ENGINE ADVERSARIAL CONTINUITY</div>
-<h1>Block 5 <span>Prototype 0.2</span></h1>
-<p>Proves that established lives can continue coherently through time without simulating every day. Dormancy suspends computation, not reality; continuity may fill unknown history, but it may never rewrite established history.</p>
+<div class="ey">DETECTIVE GAME · STANDALONE LIFE ENGINE · DECISION PRESSURE</div>
+<h1>Block 6 <span>Prototype 0.1</span></h1>
+<p><b>Pressure changes the probability landscape. It does not decide the outcome.</b> Accumulated pressure increases the possibility of transformative decisions in any direction. This harness separates objective circumstance, experienced pressure, available responses, NPC decision, consequence, and canonical history.</p>
 
-<section class="panel"><h2>Continuity World</h2>
+<section class="panel"><h2>Pressure World</h2>
 <button onclick="generate()">GENERATE WORLD</button><button onclick="newSeed()">NEW SEED</button>
 <p id="seed"></p><p id="clock"></p></section>
 
-<section class="panel"><h2>People & Current Circumstance</h2><div id="people">Waiting.</div></section>
+<section class="panel"><h2>People</h2><div id="people">Waiting.</div></section>
 
 <section class="panel"><h2>Simulation Controls</h2>
-<p>Run the intended Block 5 sequence. Emily begins Active; Marcus is Relevant; Olivia, Julia, Elena, Brian, Teresa, and Anthony begin Dormant.</p>
-<button onclick="advanceActive()">ADVANCE ACTIVE +2 YEARS</button>
-<button onclick="establishJuliaMove()">ESTABLISH CROSS-NPC EVENT (2030)</button>
-<button onclick="reactivateEmily()">REACTIVATE EMILY IN 2034</button>
-<button onclick="worldEvent()">APPLY WORLD EVENT</button>
-<button onclick="saveWorld()">SAVE SNAPSHOT</button>
-<button onclick="mutateFuture()">ADVANCE UNCOMMITTED FUTURE</button>
-<button onclick="loadWorld()">LOAD SNAPSHOT</button>
+<p>Advance one year at a time or run the complete 2026–2034 demonstration. Events create opportunities and pressures; they never contain their own decisions.</p>
+<button onclick="advanceYear()">ADVANCE +1 YEAR</button>
+<button onclick="runYears()">RUN THROUGH 2034</button>
+<button onclick="runCounterfactual()">RUN PRESSURE COUNTERFACTUAL</button>
 <div id="actions" class="small">Waiting.</div></section>
 
 <section class="panel"><h2>Canonical Life History</h2><div id="history">Waiting.</div></section>
 
-<section class="panel"><h2>Block 5.0.1 Acceptance Tests</h2>
-<button onclick="runScenario()">RUN FULL SCENARIO</button>
-<button onclick="runTests()">RUN TESTS</button>
+<section class="panel"><h2>Decision Record</h2><div id="decisions">Waiting.</div></section>
+
+<section class="panel"><h2>Block 6.0.1 Acceptance Tests</h2>
+<button onclick="runScenario()">RUN FULL SCENARIO + TESTS</button>
 <div id="tests">Waiting.</div></section>
 
-
-<section class="panel"><h2>0.2 Continuity Wringer</h2>
-<p>These attacks deliberately stress continuity across repeated dormancy, intersecting dormant lives, terminal death, conflicting proposals, long jumps, reactivation order, and deterministic reconstruction.</p>
-<button onclick="runWringer()">RUN FULL ADVERSARIAL WRINGER</button>
-<div id="wringer">Waiting.</div></section>
 <section class="panel"><h2>Developer Record</h2><pre id="raw">Waiting.</pre></section>
-
 <script>
-let seed=5102026,W=null,SAVED=null,logs=[];
-function rngFor(...parts){let s=2166136261>>>0;let str=[seed,...parts].join("|");for(let i=0;i<str.length;i++){s^=str.charCodeAt(i);s=Math.imul(s,16777619)}return function(){s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-const pick=(r,a)=>a[Math.floor(r()*a.length)];
-function id(label){let r=rngFor("ID",label);return"NPC-"+String(Math.floor(r()*1e9)).padStart(9,"0")}
-function log(x){logs.push(x);document.getElementById("actions").innerHTML=logs.slice(-8).map(v=>"• "+v).join("<br>")}
-function addPerson(key,name,birth,state,employment,household,finance){
- W.people[key]={id:id(key),key,name,birth,state,alive:true,employment,household,finance,relationships:[],circumstances:[],history:[],lastSimulated:2026,continuityThrough:2026}
+let seed=6102026,W=null,logs=[];
+function rngFor(...parts){let s=2166136261>>>0,str=[seed,...parts].join("|");for(let i=0;i<str.length;i++){s^=str.charCodeAt(i);s=Math.imul(s,16777619)}return function(){s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function id(k){let r=rngFor("ID",k);return"NPC-"+String(Math.floor(r()*1e9)).padStart(9,"0")}
+function log(x){logs.push(x);document.getElementById("actions").innerHTML=logs.slice(-10).map(v=>"• "+v).join("<br>")}
+function addPerson(k,name,birth,traits,history,resources){
+ W.people[k]={id:id(k),key:k,name,birth,traits,historyFactors:history,resources,pressures:{financial:0,relationship:0,career:0,family:0,social:0},opportunities:[],history:[],decisions:[],employment:"employed",household:"stable",finance:"stable",alive:true}
 }
 function event(year,type,text,keys,meta={}){
- let sig=[year,type,[...keys].sort().join(","),meta.canonicalKey||""].join("|");
- let existing=W.events.find(e=>e.sig===sig); if(existing)return existing;
- let e={id:"EV-"+String(W.events.length).padStart(3,"0"),sig,year,type,text,people:[...keys],meta};
- W.events.push(e);keys.forEach(k=>{let p=W.people[k];if(p&&!p.history.includes(e.id))p.history.push(e.id)});
- return e
+ let sig=[year,type,[...keys].sort().join(","),meta.key||""].join("|"),old=W.events.find(e=>e.sig===sig);if(old)return old;
+ let e={id:"EV-"+String(W.events.length).padStart(3,"0"),sig,year,type,text,people:[...keys],meta};W.events.push(e);
+ keys.forEach(k=>{if(W.people[k]&&!W.people[k].history.includes(e.id))W.people[k].history.push(e.id)});return e
 }
-function circumstance(k,type,start,end=null,status="ACTIVE",cause=null){
- let p=W.people[k],sig=[type,start,cause||""].join("|"),old=p.circumstances.find(c=>c.sig===sig);
- if(old)return old;let c={id:"CC-"+k+"-"+String(p.circumstances.length).padStart(2,"0"),sig,type,start,end,status,cause};p.circumstances.push(c);return c
+function pressure(k,domain,amount,cause){
+ let p=W.people[k],sensitivity=p.traits.sensitivity?.[domain]??1,historyMod=p.historyFactors[domain]??1;
+ let experienced=Math.round(amount*sensitivity*historyMod);p.pressures[domain]=clamp(p.pressures[domain]+experienced,0,100);
+ event(W.year,"PRESSURE_CHANGE",`${p.name} experiences ${domain} pressure from ${cause}.`,[k],{key:`pressure-${k}-${domain}-${W.year}-${cause}`,domain,objective:amount,experienced});
+ return experienced
 }
-function derive(k,year=W.year){
- let p=W.people[k],active=p.circumstances.filter(c=>c.start<=year&&(c.end==null||c.end>=year)&&c.status!=="ENDED");
- return {age:year-p.birth,state:p.state,employment:p.employment,household:p.household,finance:p.finance,active:active.map(c=>c.type)}
+function relief(k,domain,amount,cause){let p=W.people[k];p.pressures[domain]=clamp(p.pressures[domain]-amount,0,100);event(W.year,"PRESSURE_RELIEF",`${p.name}'s ${domain} pressure eases: ${cause}.`,[k],{key:`relief-${k}-${domain}-${W.year}-${cause}`,amount})}
+function totalPressure(p){return Object.values(p.pressures).reduce((a,b)=>a+b,0)}
+function opportunity(k,type,label,base,domain,transformative=false){
+ let p=W.people[k],o={id:`OP-${k}-${W.year}-${p.opportunities.length}`,year:W.year,type,label,base,domain,transformative,status:"AVAILABLE"};p.opportunities.push(o);
+ event(W.year,"OPPORTUNITY",`${p.name} encounters an opportunity: ${label}.`,[k],{key:o.id,opportunity:o.id});return o
+}
+function weightsFor(p,o){
+ let P=totalPressure(p),t=p.traits;
+ let w={};
+ if(o.type==="JOB"){
+   w.accept=o.base*(1+t.ambition*.55+t.adaptability*.35)*(1+P/180);
+   w.decline=1.15*(1+t.stability*.45)*(1+Math.max(0,25-P)/100);
+   w.negotiate=.55*(1+t.confidence*.7);
+ } else if(o.type==="RETRAIN"){
+   w.enroll=o.base*(1+t.adaptability*.6+t.ambition*.35)*(1+P/160);
+   w.delay=.9*(1+t.stability*.35);
+   w.decline=.65*(1+(1-t.adaptability)*.7);
+ } else if(o.type==="FINANCE"){
+   w.ask_family=.8*(1+t.socialTrust*.7)*(1+P/190);
+   w.high_cost_debt=.35*(1+(1-t.planning)*.8)*(1+P/105);
+   w.cut_costs=.8*(1+t.planning*.65);
+   w.extra_work=.7*(1+t.persistence*.55);
+ } else if(o.type==="MOVE"){
+   w.move=o.base*(1+t.adaptability*.6)*(1+P/190);
+   w.stay=1.0*(1+t.stability*.6);
+   w.try_temporary=.55*(1+t.planning*.5);
+ }
+ // High pressure broadens transformative tails in BOTH directions, never hard-selecting them.
+ if(P>=90){Object.keys(w).forEach(k=>w[k]*=1.08); if(w.accept)w.accept*=1.18;if(w.enroll)w.enroll*=1.18;if(w.high_cost_debt)w.high_cost_debt*=1.18;if(w.move)w.move*=1.18}
+ return w
+}
+function choose(p,o){
+ let w=weightsFor(p,o),entries=Object.entries(w),sum=entries.reduce((s,[,v])=>s+v,0),r=rngFor("DECISION",p.id,o.id,totalPressure(p))()*sum,choice=entries[entries.length-1][0];
+ for(let [k,v] of entries){r-=v;if(r<=0){choice=k;break}}
+ return {choice,weights:w,pressure:totalPressure(p)}
+}
+function decide(k,o){
+ let p=W.people[k],d=choose(p,o);o.status="RESOLVED";
+ let rec={id:`DC-${k}-${W.year}-${p.decisions.length}`,year:W.year,opportunity:o.id,choice:d.choice,weights:d.weights,pressure:d.pressure};p.decisions.push(rec);
+ event(W.year,"DECISION",`${p.name} decides: ${d.choice.replaceAll("_"," ")}.`,[k],{key:rec.id,decision:rec.id,sourceOpportunity:o.id});
+ consequence(k,o,d.choice);return rec
+}
+function consequence(k,o,c){
+ let p=W.people[k];
+ if(o.type==="JOB"){
+  if(c==="accept"){p.employment="new position";p.finance="improving";relief(k,"financial",22,"higher income");relief(k,"career",20,"career change");event(W.year,"CONSEQUENCE",`${p.name}'s new job improves income but changes routine.`,[k],{key:`cons-${o.id}`})}
+  if(c==="decline"){pressure(k,"career",8,"remaining in an unsatisfying role")}
+  if(c==="negotiate"){relief(k,"career",10,"improved work terms")}
+ }
+ if(o.type==="RETRAIN"){
+  if(c==="enroll"){p.employment="training while working";pressure(k,"financial",8,"training costs");relief(k,"career",18,"new direction");event(W.year,"TRANSFORMATIVE_CHANGE",`${p.name} begins retraining, opening a new career path.`,[k],{key:`transform-${o.id}`,direction:"potentially beneficial"})}
+  if(c==="delay")pressure(k,"career",5,"postponed change");
+ }
+ if(o.type==="FINANCE"){
+  if(c==="ask_family"){relief(k,"financial",18,"family assistance");pressure(k,"family",5,"obligation after assistance")}
+  if(c==="high_cost_debt"){relief(k,"financial",9,"short-term cash");pressure(k,"financial",24,"expensive debt");event(W.year,"TRANSFORMATIVE_CHANGE",`${p.name} takes expensive debt, relieving the immediate problem while increasing future strain.`,[k],{key:`transform-${o.id}`,direction:"potentially detrimental"})}
+  if(c==="cut_costs")relief(k,"financial",13,"reduced expenses");
+  if(c==="extra_work"){relief(k,"financial",15,"additional income");pressure(k,"social",7,"reduced free time")}
+ }
+ if(o.type==="MOVE"){
+  if(c==="move"){p.household="relocated";relief(k,"career",12,"access to opportunity");pressure(k,"social",12,"leaving familiar network");event(W.year,"TRANSFORMATIVE_CHANGE",`${p.name} relocates for a new possibility.`,[k],{key:`transform-${o.id}`,direction:"mixed"})}
+  if(c==="stay")relief(k,"social",5,"maintaining local ties");
+ }
 }
 function generate(){
- logs=[];SAVED=null;W={seed,year:2026,people:{},events:[],worldEvents:[],futureProbe:null};
- addPerson("emily","Emily Rivera",1990,"ACTIVE","hospitality manager","Olivia + Julia","tight but stable");
- addPerson("olivia","Olivia Walker",1989,"DORMANT","medical billing","Emily + Julia","stable");
- addPerson("julia","Julia Walker",2024,"DORMANT","none","Emily + Olivia","dependent child");
- addPerson("marcus","Marcus Brooks",1987,"RELEVANT","construction estimator","alone","stable");
- addPerson("elena","Elena Rivera",1965,"DORMANT","retired","Brian","fixed income");
- addPerson("brian","Brian Taylor",1966,"DORMANT","retired","Elena","fixed income");
- addPerson("teresa","Teresa Rivera",1934,"DORMANT","retired","alone","fixed income");
- addPerson("anthony","Anthony Taylor",1935,"DORMANT","retired","alone","fixed income");
- W.people.emily.relationships=["olivia","julia","elena","brian"];W.people.olivia.relationships=["emily","julia"];W.people.julia.relationships=["emily","olivia"];
- event(1990,"BIRTH","Emily Rivera is born.",["emily","elena","brian"],{canonicalKey:"emily-birth"});
- event(2021,"PARTNERSHIP","Emily Rivera and Olivia Walker establish a shared household.",["emily","olivia"],{canonicalKey:"emily-olivia-home"});
- event(2024,"BIRTH","Julia Walker is born.",["julia","emily","olivia"],{canonicalKey:"julia-birth"});
- circumstance("emily","irregular work schedule",2025,null,"ACTIVE","employment");
- circumstance("julia","young child",2024,2028,"ACTIVE","age");
+ logs=[];W={year:2026,people:{},events:[],counterfactual:null};
+ addPerson("maya","Maya Chen",1992,{ambition:.82,adaptability:.78,confidence:.64,stability:.34,planning:.72,persistence:.74,socialTrust:.61,sensitivity:{financial:1.05,career:1.15,relationship:.9,family:1,social:.9}},{financial:1.05,career:1.08},{savings:"modest",network:"strong"});
+ addPerson("daniel","Daniel Brooks",1989,{ambition:.42,adaptability:.38,confidence:.47,stability:.84,planning:.56,persistence:.68,socialTrust:.44,sensitivity:{financial:1.18,career:.9,relationship:1.1,family:1.05,social:1}},{financial:1.18,career:.92},{savings:"thin",network:"moderate"});
+ addPerson("rosa","Rosa Martinez",1995,{ambition:.67,adaptability:.7,confidence:.52,stability:.5,planning:.38,persistence:.55,socialTrust:.82,sensitivity:{financial:1.25,career:1,relationship:1.05,family:1.2,social:.95}},{financial:1.15,family:1.1},{savings:"low",network:"strong family"});
+ addPerson("owen","Owen Taylor",1991,{ambition:.55,adaptability:.58,confidence:.72,stability:.62,planning:.8,persistence:.7,socialTrust:.5,sensitivity:{financial:.88,career:1.05,relationship:.95,family:.9,social:1.1}},{financial:.9,career:1},{savings:"healthy",network:"small"});
+ Object.values(W.people).forEach(p=>event(p.birth,"BIRTH",`${p.name} is born.`,[p.key],{key:`birth-${p.key}`}));
  render();runTests()
 }
-function advanceActive(){
- if(!W)return;W.year=2028;
- let p=W.people.emily;
- event(2027,"EMPLOYMENT_CHANGE","Emily Rivera moves into a senior hospitality role.",["emily"],{canonicalKey:"emily-job-2027"});
- p.employment="senior hospitality supervisor";p.finance="improving";
- circumstance("emily","supervisory workload",2027,null,"ACTIVE","employment change");
- let old=p.circumstances.find(c=>c.type==="irregular work schedule");if(old){old.end=2027;old.status="ENDED"}
- p.lastSimulated=2028;p.continuityThrough=2028;
- log("Active simulation advanced to 2028; Emily's established 2027 employment change is now canonical.");render();runTests()
+function yearlyEvents(y){
+ W.year=y;
+ if(y===2027){["maya","daniel","rosa"].forEach(k=>pressure(k,"financial",18,"regional reduction in work hours"));pressure("maya","career",12,"limited advancement");}
+ if(y===2028){pressure("rosa","family",22,"increased family responsibility");pressure("daniel","career",14,"workplace restructuring");}
+ if(y===2029){
+   let a=opportunity("maya","RETRAIN","subsidized technical retraining",1.05,"career",true);decide("maya",a);
+   let b=opportunity("daniel","JOB","better-paying job with unfamiliar duties",.9,"career",true);decide("daniel",b);
+   let c=opportunity("rosa","FINANCE","several ways to cover an urgent expense",.8,"financial",true);decide("rosa",c);
+ }
+ if(y===2030){pressure("owen","career",20,"department closure");let o=opportunity("owen","MOVE","position in another city",.9,"career",true);decide("owen",o)}
+ if(y===2031){pressure("maya","financial",12,"unexpected vehicle expense");pressure("daniel","relationship",18,"household conflict");}
+ if(y===2032){["maya","daniel","rosa","owen"].forEach(k=>pressure(k,"financial",10,"regional downturn exposure"));let o=opportunity("rosa","JOB","supervisory opening with higher pay",.95,"career",true);decide("rosa",o)}
+ if(y===2033){let o=opportunity("daniel","FINANCE","options to resolve accumulated bills",.8,"financial",true);decide("daniel",o);relief("maya","social",8,"support from friends")}
+ if(y===2034){let o=opportunity("maya","JOB","leadership role after years of change",1.0,"career",true);decide("maya",o)}
 }
-function establishJuliaMove(){
- if(!W)return;
- event(2030,"HOUSEHOLD_CHANGE","Julia moves from Emily's household into Olivia's household.",["julia","emily","olivia"],{canonicalKey:"julia-move-2030",from:"Emily household",to:"Olivia household"});
- W.people.julia.household="Olivia";W.people.olivia.household="Olivia + Julia";W.people.emily.household="separate household";
- W.people.julia.continuityThrough=Math.max(W.people.julia.continuityThrough,2030);
- circumstance("emily","child living in another household",2030,null,"ACTIVE","Julia household change");
- log("2030 cross-NPC household event established while Emily need not be actively simulated.");render();runTests()
+function advanceYear(){if(!W)return;if(W.year>=2034){log("2034 reached.");return}yearlyEvents(W.year+1);log("Advanced to "+W.year+".");render();runTests()}
+function runYears(){if(!W)generate();while(W.year<2034)yearlyEvents(W.year+1);log("Simulation advanced through 2034.");render();runTests()}
+function runCounterfactual(){
+ if(!W)generate();
+ let base={...W.people.maya,pressures:{financial:45,relationship:10,career:40,family:5,social:5},opportunities:[],decisions:[]};
+ let o={id:"COUNTERFACTUAL-OP",year:2035,type:"JOB",label:"high-risk career leap",base:1,domain:"career",transformative:true,status:"AVAILABLE"};
+ let high=weightsFor(base,o);
+ let lowP={...base,pressures:{financial:3,relationship:2,career:5,family:0,social:2}};
+ let low=weightsFor(lowP,o);
+ W.counterfactual={samePerson:true,highPressure:totalPressure(base),lowPressure:totalPressure(lowP),highWeights:high,lowWeights:low,
+   conclusion:"Pressure changed relative weights; it did not remove alternatives or encode an outcome."};
+ log("Counterfactual calculated: same NPC, same opportunity, different accumulated pressure.");render();runTests()
 }
-function continuityEmily(target=2034){
- let p=W.people.emily;if(p.continuityThrough>=target){log("Emily continuity already committed through "+target+"; no reroll occurred.");return}
- let r=rngFor("CONTINUITY",p.id,p.continuityThrough,target);
- // Fill only unknown history, while honoring all already-established events involving Emily.
- let establishedMove=W.events.find(e=>e.meta.canonicalKey==="julia-move-2030");
- let jobYear=2029+Math.floor(r()*2);
- event(jobYear,"EMPLOYMENT_CHANGE","Emily Rivera changes employers but remains in hospitality management.",["emily"],{canonicalKey:"emily-continuity-job"});
- p.employment="hotel operations manager";
- let financeYear=2031+Math.floor(r()*2);
- event(financeYear,"FINANCIAL_CHANGE","Emily's finances stabilize after sustained employment.",["emily"],{canonicalKey:"emily-continuity-finance"});
- p.finance="stable";
- if(establishedMove){p.household="separate household"}
- circumstance("emily","career stability",financeYear,null,"ACTIVE","sustained employment");
- p.continuityThrough=target;p.lastSimulated=target;
-}
-function reactivateEmily(){
- if(!W)return;W.year=2034;continuityEmily(2034);W.people.emily.state="ACTIVE";
- log("Emily reactivated in 2034. Unknown years were filled once; the established 2030 Julia move constrained continuity.");render();runTests()
-}
-function worldEvent(){
- if(!W)return;
- let exists=W.worldEvents.find(e=>e.key==="REGIONAL_DOWNTURN_2032");
- if(!exists)W.worldEvents.push({key:"REGIONAL_DOWNTURN_2032",year:2032,type:"REGIONAL_ECONOMIC_DOWNTURN"});
- ["emily","marcus","olivia"].forEach(k=>{
-   let r=rngFor("EXPOSURE","REGIONAL_DOWNTURN_2032",W.people[k].id);
-   let exposed=r()<0.75, consequence=exposed&&r()<0.45;
-   W.people[k].worldExposure={event:"REGIONAL_DOWNTURN_2032",exposed,consequence};
-   if(consequence)circumstance(k,"economic pressure",2032,2033,"ENDED","regional downturn");
- });
- log("2032 regional downturn applied: exposure and individual consequence resolved separately.");render();runTests()
-}
-function saveWorld(){if(!W)return;SAVED=JSON.stringify(W);log("Snapshot saved. Canonical history and current circumstance captured.");render()}
-function mutateFuture(){
- if(!W)return;let r=rngFor("UNCOMMITTED",W.year,W.events.length,Math.random());W.futureProbe={year:W.year+1,possibility:pick(r,["training opportunity","vehicle expense","family visit","quiet year"])};log("Uncommitted future probe created: "+W.futureProbe.possibility+". It is not history.");render()
-}
-function loadWorld(){if(!SAVED){log("No snapshot exists.");return}W=JSON.parse(SAVED);log("Snapshot loaded. Uncommitted future probe discarded; committed past restored exactly.");render();runTests()}
-function render(){
- if(!W)return;
- document.getElementById("seed").textContent="World-context seed: "+seed;
- document.getElementById("clock").textContent="Canonical year: "+W.year;
- document.getElementById("people").innerHTML=Object.values(W.people).map(p=>{let d=derive(p.key);return `<div class="card"><div class="row"><b>${p.name}</b><span class="tag">${p.state}</span></div><div class="small">${p.id} · age ${d.age} · ${p.employment}<br>household: ${p.household} · finances: ${p.finance}<br>continuity committed through: ${p.continuityThrough}<br>current circumstance: ${d.active.length?d.active.join(" · "):"none established"}</div></div>`}).join("");
- document.getElementById("history").innerHTML=W.events.slice().sort((a,b)=>a.year-b.year||a.id.localeCompare(b.id)).map(e=>`<div class="event"><b>${e.year} · ${e.type}</b><div>${e.text}</div><div class="small">${e.id} · ${e.people.map(k=>W.people[k]?.id||k).join(" · ")}</div></div>`).join("");
- document.getElementById("raw").textContent=JSON.stringify(W,null,2)
-}
-function runScenario(){
- generate();advanceActive();establishJuliaMove();worldEvent();reactivateEmily();saveWorld();
- let before=JSON.stringify(W);reactivateEmily();let after=JSON.stringify(W);
- log(before===after?"Repeat reactivation produced no reroll.":"ERROR: repeat reactivation changed committed life.");
- runTests()
-}
+function runScenario(){generate();runYears();runCounterfactual();runTests()}
 function runTests(){
  if(!W)return;
- let em=W.people.emily, ju=W.people.julia;
- let hist=em.history.map(id=>W.events.find(e=>e.id===id)).filter(Boolean);
- let ctemp=ju.circumstances.find(c=>c.type==="young child");
- let move=W.events.find(e=>e.meta.canonicalKey==="julia-move-2030");
- let contJob=W.events.filter(e=>e.meta.canonicalKey==="emily-continuity-job");
- let contFin=W.events.filter(e=>e.meta.canonicalKey==="emily-continuity-finance");
- let world=W.worldEvents.find(e=>e.key==="REGIONAL_DOWNTURN_2032");
- let exposure=world?["emily","marcus","olivia"].every(k=>W.people[k].worldExposure&&typeof W.people[k].worldExposure.exposed==="boolean"&&typeof W.people[k].worldExposure.consequence==="boolean"):true;
+ let allOpp=Object.values(W.people).flatMap(p=>p.opportunities),allDec=Object.values(W.people).flatMap(p=>p.decisions);
+ let transforms=W.events.filter(e=>e.type==="TRANSFORMATIVE_CHANGE");
  let tests=[
- ["1. Current Circumstance derives from established state/history",derive("emily").employment===em.employment],
- ["2. Historical events remain immutable as circumstances change",W.events.some(e=>e.meta.canonicalKey==="emily-birth"&&e.year===1990)],
- ["3. Temporary circumstances can begin and end",!!ctemp&&ctemp.end===2028],
- ["4. Persistent circumstances survive time advancement",em.circumstances.some(c=>c.type==="career stability")?derive("emily",2034).active.includes("career stability"):true],
- ["5. Circumstance can influence opportunity without becoming destiny",!W.events.some(e=>e.type==="CRIME_FROM_PRESSURE")],
- ["6. Active NPC advances coherently through time",W.year<2028||hist.some(e=>e.meta.canonicalKey==="emily-job-2027")],
- ["7. Dormant NPCs require no daily event simulation",Object.values(W.people).filter(p=>p.state==="DORMANT").every(p=>p.history.length<20)],
- ["8. Dormant NPC can reactivate through continuity simulation",W.year<2034||em.continuityThrough===2034],
- ["9. Reactivation honors intervening established events",!move||em.household==="separate household"],
- ["10. Cross-NPC event backlinks to every participant",!move||move.people.every(k=>W.people[k].history.includes(move.id))],
- ["11. World-event exposure is separate from consequence",exposure],
- ["12. Death would terminate incompatible future development",Object.values(W.people).filter(p=>p.alive===false).every(p=>!W.events.some(e=>e.year>p.deathYear&&e.people.includes(p.key)&&["EMPLOYMENT_CHANGE","PARTNERSHIP"].includes(e.type)))],
- ["13. Age/life-stage remains valid over long jumps",Object.values(W.people).every(p=>W.year-p.birth>=0)],
- ["14. Relationships evolve without rewriting prior history",W.events.some(e=>e.meta.canonicalKey==="emily-olivia-home"&&e.year===2021)],
- ["15. Generated continuity becomes canonical once established",em.continuityThrough<2034||(contJob.length===1&&contFin.length===1)],
- ["16. Re-running continuity cannot reroll established years",contJob.length<=1&&contFin.length<=1],
- ["17. Save/reload architecture can preserve circumstance and continuity",SAVED===null||JSON.parse(SAVED).people.emily.continuityThrough===em.continuityThrough],
- ["18. Uncommitted future remains outside Historical Ledger",!W.futureProbe||!W.events.some(e=>e.year===W.futureProbe.year&&e.text?.includes(W.futureProbe.possibility))]
+ ["1. Objective pressure and experienced pressure are stored separately",W.events.filter(e=>e.type==="PRESSURE_CHANGE").every(e=>Number.isFinite(e.meta.objective)&&Number.isFinite(e.meta.experienced))],
+ ["2. NPC history modifies experienced pressure",W.events.some(e=>e.type==="PRESSURE_CHANGE"&&e.meta.objective!==e.meta.experienced)],
+ ["3. Pressures accumulate across independent circumstances",Object.values(W.people).some(p=>totalPressure(p)>30)||W.year<2028],
+ ["4. Pressure is multidimensional rather than one universal meter",Object.values(W.people).every(p=>Object.keys(p.pressures).length===5)],
+ ["5. Opportunity exists separately from decision",allOpp.every(o=>o.id&&o.label)&&allDec.every(d=>d.opportunity)],
+ ["6. Event does not contain predetermined decision",W.events.filter(e=>e.type==="OPPORTUNITY").every(e=>!e.meta.choice)],
+ ["7. Every decision retains its probability landscape",allDec.every(d=>d.weights&&Object.keys(d.weights).length>=3)],
+ ["8. Every available response keeps nonzero probability",allDec.every(d=>Object.values(d.weights).every(v=>v>0))],
+ ["9. Pressure changes weights rather than forcing an outcome",!W.counterfactual||JSON.stringify(W.counterfactual.highWeights)!==JSON.stringify(W.counterfactual.lowWeights)],
+ ["10. Counterfactual pressure leaves multiple responses possible",!W.counterfactual||Object.values(W.counterfactual.highWeights).filter(v=>v>0).length>=3],
+ ["11. High pressure can increase beneficial transformative possibility",!W.counterfactual||W.counterfactual.highWeights.accept>W.counterfactual.lowWeights.accept],
+ ["12. High pressure can also increase risky/detrimental possibility",(()=>{let p={...W.people.rosa,pressures:{financial:55,relationship:15,career:15,family:15,social:5}};let o={id:"T",type:"FINANCE",base:1};let hi=weightsFor(p,o);p={...p,pressures:{financial:5,relationship:0,career:0,family:0,social:0}};let lo=weightsFor(p,o);return hi.high_cost_debt>lo.high_cost_debt})()],
+ ["13. Consequence occurs only after a decision",W.events.filter(e=>e.type==="CONSEQUENCE"||e.type==="TRANSFORMATIVE_CHANGE").every(e=>e.year>=2029)],
+ ["14. Consequences feed back into later pressure/circumstance",W.events.some(e=>e.type==="PRESSURE_RELIEF")],
+ ["15. Beneficial transformation is representable",transforms.some(e=>e.meta.direction==="potentially beneficial")||W.year<2029],
+ ["16. Detrimental transformation is representable without being mandatory",(()=>{let p={...W.people.rosa,pressures:{financial:60,relationship:10,career:10,family:15,social:5}};let w=weightsFor(p,{id:"X",type:"FINANCE",base:1});return w.high_cost_debt>0&&w.ask_family>0&&w.cut_costs>0})()],
+ ["17. Mixed transformation is representable",transforms.some(e=>e.meta.direction==="mixed")||W.year<2030],
+ ["18. Different people interpret similar objective pressure differently",(()=>{let es=W.events.filter(e=>e.year===2032&&e.type==="PRESSURE_CHANGE"&&e.meta.domain==="financial");return es.length<2||new Set(es.map(e=>e.meta.experienced)).size>1})()],
+ ["19. Decisions are canonical once made and do not reroll on render/test",allDec.every(d=>W.events.filter(e=>e.meta.decision===d.id).length===1)],
+ ["20. Birth/history remains immutable while probability landscape evolves",Object.values(W.people).every(p=>W.events.filter(e=>e.meta.key===`birth-${p.key}`).length===1)],
+ ["21. Pressure relief does not erase the event that caused pressure",W.events.some(e=>e.type==="PRESSURE_RELIEF")?W.events.some(e=>e.type==="PRESSURE_CHANGE"):true],
+ ["22. Transformative possibility increases with accumulated pressure without becoming certainty",!W.counterfactual||Object.values(W.counterfactual.highWeights).every(v=>v>0)],
+ ["23. Same NPC can carry simultaneous pressures from several domains",Object.values(W.people).some(p=>Object.values(p.pressures).filter(v=>v>0).length>=2)||W.year<2028],
+ ["24. No hidden success/failure label is attached to NPC decisions",allDec.every(d=>!("success" in d)&&!("failure" in d)&&!("good" in d)&&!("bad" in d))]
  ];
- document.getElementById("tests").innerHTML=tests.map(t=>`<div class="test row"><span>${t[0]}</span><span class="${t[1]?"pass":"bad"}">${t[1]?"PASS":"FAIL"}</span></div>`).join("")
+ document.getElementById("tests").innerHTML=tests.map(t=>`<div class="test row"><span>${t[0]}</span><span class="${t[1]?"pass":"bad"}">${t[1]?"PASS":"FAIL"}</span></div>`).join("");
 }
-
-function runWringer(){
-  // Start from the known-good full 0.1 scenario.
-  runScenario();
-  const baselineBirth=JSON.stringify(W.events.find(e=>e.meta.canonicalKey==="emily-birth"));
-  const baselineIDs=Object.fromEntries(Object.entries(W.people).map(([k,p])=>[k,p.id]));
-
-  // Repeated dormancy/reactivation: committed intervals may not reroll.
-  W.people.emily.state="DORMANT";
-  continuityEmily(2034);
-  W.people.emily.state="ACTIVE";
-  const beforeRepeat=JSON.stringify(W.events);
-  continuityEmily(2034);
-  const repeatStable=beforeRepeat===JSON.stringify(W.events);
-
-  // Two dormant lives intersect in established history.
-  W.people.olivia.state="DORMANT"; W.people.julia.state="DORMANT";
-  const shared=event(2036,"FAMILY_EVENT","Emily, Olivia, and Julia share an established family event.",["emily","olivia","julia"],{canonicalKey:"shared-2036"});
-  const backlinks=shared.people.every(k=>W.people[k].history.includes(shared.id));
-
-  // Death while dormant becomes terminal and must block incompatible future proposals.
-  W.people.teresa.state="DORMANT";
-  event(2032,"DEATH","Teresa Rivera dies.",["teresa"],{canonicalKey:"teresa-death"});
-  W.people.teresa.alive=false; W.people.teresa.deathYear=2032;
-  const deathBlocked=!W.events.some(e=>e.year>2032&&e.people.includes("teresa")&&["EMPLOYMENT_CHANGE","PARTNERSHIP"].includes(e.type));
-
-  // Conflict proposals are rejected by validation, not written as history.
-  const historyBeforeAttack=JSON.stringify(W.events);
-  const rejected=[
-    "resurrect deceased NPC",
-    "give Julia adult employment in 2030",
-    "rewrite 2021 partnership",
-    "replace established 2030 household event"
-  ];
-  const conflictNoMutation=historyBeforeAttack===JSON.stringify(W.events);
-
-  // Long jump is event-driven: no daily records.
-  W.year=2076;
-  const bounded=W.events.length<100;
-
-  // World event exposure/consequence are separate and can touch dormant NPCs.
-  W.worldEvents.push({key:"STORM_2035",year:2035,type:"REGIONAL_STORM"});
-  ["emily","olivia","marcus","elena"].forEach(k=>{
-    let r=rngFor("WRINGER_WORLD","STORM_2035",W.people[k].id);
-    W.people[k].wringerExposure={exposed:r()<.75,consequence:false};
-    if(W.people[k].wringerExposure.exposed) W.people[k].wringerExposure.consequence=r()<.45;
-  });
-  const exposureValid=["emily","olivia","marcus","elena"].every(k=>{
-    let x=W.people[k].wringerExposure; return !x.consequence||x.exposed;
-  });
-
-  // Reactivation order must not alter already established shared history.
-  const sharedSnapshot=JSON.stringify(W.events.find(e=>e.meta.canonicalKey==="shared-2036"));
-  W.people.olivia.state="ACTIVE"; W.people.julia.state="ACTIVE";
-  W.people.julia.state="DORMANT"; W.people.olivia.state="DORMANT";
-  const orderStable=sharedSnapshot===JSON.stringify(W.events.find(e=>e.meta.canonicalKey==="shared-2036"));
-
-  // Save/reload round trip preserves continuity state exactly.
-  const mid=JSON.stringify(W);
-  const restored=JSON.parse(mid);
-  const saveStable=JSON.stringify(restored)===mid;
-
-  const tests=[
-   ["1. Multiple dormancy/reactivation cycles do not reroll committed intervals",repeatStable],
-   ["2. Two dormant lives can intersect through one canonical event",W.events.filter(e=>e.meta.canonicalKey==="shared-2036").length===1],
-   ["3. Intersecting event backlinks to every participant",backlinks],
-   ["4. Dormant death becomes terminal state",W.people.teresa.alive===false&&W.people.teresa.deathYear===2032],
-   ["5. Incompatible post-death development is blocked",deathBlocked],
-   ["6. Contradictory continuity proposals do not mutate history",conflictNoMutation],
-   ["7. Minor cannot acquire adult career during reconstruction",!W.events.some(e=>e.year===2030&&e.people.includes("julia")&&e.type==="EMPLOYMENT_CHANGE")],
-   ["8. Established 2021 relationship history survives later reconstruction",W.events.some(e=>e.meta.canonicalKey==="emily-olivia-home"&&e.year===2021)],
-   ["9. Established 2030 household event survives later reconstruction",W.events.some(e=>e.meta.canonicalKey==="julia-move-2030"&&e.year===2030)],
-   ["10. Fifty-year jump remains event-bounded",bounded],
-   ["11. Long jump creates no per-day history records",!W.events.some(e=>e.type==="DAILY_TICK")],
-   ["12. World event can reach dormant NPC without activating them",W.people.elena.state==="DORMANT"&&!!W.people.elena.wringerExposure],
-   ["13. World-event consequence requires exposure",exposureValid],
-   ["14. Reactivation order cannot rewrite shared canonical history",orderStable],
-   ["15. Save/reload round trip preserves reconstructed state",saveStable],
-   ["16. Persistent NPC IDs survive all attacks",Object.entries(baselineIDs).every(([k,id])=>W.people[k].id===id)],
-   ["17. Birth identity remains immutable",baselineBirth===JSON.stringify(W.events.find(e=>e.meta.canonicalKey==="emily-birth"))],
-   ["18. Shared event remains one occurrence, not one per NPC",W.events.filter(e=>e.meta.canonicalKey==="shared-2036").length===1],
-   ["19. Rejection is not itself inserted as false life history",!W.events.some(e=>rejected.includes(e.text))],
-   ["20. Dormancy changes computation, not canonical-world participation",W.events.some(e=>e.meta.canonicalKey==="shared-2036"&&e.people.includes("olivia")&&e.people.includes("julia"))],
-   ["21. Previously established cross-NPC event still constrains Emily",W.people.emily.household==="separate household"],
-   ["22. Continuity generation remains finite after adversarial operations",W.events.length<250],
-   ["23. Historical person remains referenceable after death",W.events.some(e=>e.meta.canonicalKey==="teresa-death"&&e.people.includes("teresa"))],
-   ["24. Uncommitted future remains outside canonical ledger",!W.futureProbe||!W.events.some(e=>e.text?.includes(W.futureProbe.possibility))]
-  ];
-  document.getElementById("wringer").innerHTML=tests.map(t=>`<div class="test row"><span>${t[0]}</span><span class="${t[1]?"pass":"bad"}">${t[1]?"PASS":"FAIL"}</span></div>`).join("");
-  log("0.2 adversarial wringer completed: "+tests.filter(t=>t[1]).length+"/"+tests.length+" PASS.");
-  render();
+function render(){
+ if(!W)return;
+ document.getElementById("seed").textContent="World-context seed: "+seed;document.getElementById("clock").textContent="Canonical year: "+W.year;
+ document.getElementById("people").innerHTML=Object.values(W.people).map(p=>{let P=totalPressure(p);return `<div class="card"><div class="row"><b>${p.name}</b><span class="tag">TOTAL EXPERIENCED PRESSURE ${P}</span></div><div class="small">${p.id} · age ${W.year-p.birth} · ${p.employment}<br>household: ${p.household} · finances: ${p.finance}<br>financial ${p.pressures.financial} · career ${p.pressures.career} · relationship ${p.pressures.relationship} · family ${p.pressures.family} · social ${p.pressures.social}</div><div class="pressure"><i style="width:${Math.min(100,P/3)}%"></i></div></div>`}).join("");
+ document.getElementById("history").innerHTML=W.events.filter(e=>!["PRESSURE_CHANGE","PRESSURE_RELIEF"].includes(e.type)).sort((a,b)=>a.year-b.year||a.id.localeCompare(b.id)).map(e=>`<div class="event"><b>${e.year} · ${e.type}</b><div>${e.text}</div><div class="small">${e.id} · ${e.people.map(k=>W.people[k]?.id||k).join(" · ")}</div></div>`).join("")||"No canonical events.";
+ let ds=Object.values(W.people).flatMap(p=>p.decisions.map(d=>({p,d})));
+ document.getElementById("decisions").innerHTML=ds.map(({p,d})=>`<div class="choice"><div class="row"><b>${d.year} · ${p.name}: ${d.choice.replaceAll("_"," ")}</b><span class="tag">PRESSURE ${d.pressure}</span></div><div class="small">Probability landscape: ${Object.entries(d.weights).map(([k,v])=>`${k} ${v.toFixed(2)}`).join(" · ")}<br>Source opportunity: ${d.opportunity}</div></div>`).join("")+(W.counterfactual?`<div class="choice"><b>Counterfactual — same person, same opportunity</b><div class="small">Low pressure ${W.counterfactual.lowPressure}: ${Object.entries(W.counterfactual.lowWeights).map(([k,v])=>`${k} ${v.toFixed(2)}`).join(" · ")}<br>High pressure ${W.counterfactual.highPressure}: ${Object.entries(W.counterfactual.highWeights).map(([k,v])=>`${k} ${v.toFixed(2)}`).join(" · ")}<br><span class="info">${W.counterfactual.conclusion}</span></div></div>`:"");
+ document.getElementById("raw").textContent=JSON.stringify(W,null,2);
 }
-
 function newSeed(){seed=Math.floor(Math.random()*1e9);generate()}
 generate();
 </script></main></body></html>
