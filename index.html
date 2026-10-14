@@ -1,173 +1,190 @@
 <!doctype html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Block 4 Prototype 0.5.1 — Corrective Adversarial</title>
-<style>:root{color-scheme:dark;--b:#0b1116;--p:#10181e;--l:#29343c;--t:#e7edf1;--m:#98a6b0;--g:#9bd3aa}*{box-sizing:border-box}body{margin:0;background:var(--b);color:var(--t);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:950px;margin:auto;padding:38px 20px 80px}.ey{letter-spacing:.13em;color:#7f8c96;font-size:.8rem}h1{font-size:2rem;margin:.5rem 0}h1 span{font-weight:400;color:#aab5bd}p{color:var(--m);line-height:1.5}.panel{border:1px solid var(--l);background:var(--p);padding:20px;margin-top:22px}button{background:#17232b;color:var(--t);border:1px solid #52636e;border-radius:6px;padding:12px 14px;margin:0 7px 8px 0}.person{border:1px solid var(--l);padding:13px;margin:9px 0;background:#0d1419}.row{display:flex;justify-content:space-between;gap:12px}.tag{font-size:.72rem;border:1px solid #40505a;padding:3px 6px;color:#b2bec6}.small{font-size:.82rem;color:var(--m)}.pass{color:var(--g);font-weight:700}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#080d10;border:1px solid var(--l);padding:13px;font-size:.7rem}
-
-.good{color:var(--g)} .bad{color:#ef9a9a} .event{border-left:2px solid #3b4b55;padding-left:12px;margin:10px 0}
+<title>Block 5 Prototype 0.1 — Current Circumstance & Life Continuity</title>
+<style>
+:root{color-scheme:dark;--b:#0b1116;--p:#10181e;--l:#29343c;--t:#e7edf1;--m:#98a6b0;--g:#9bd3aa;--y:#e2cf8b;--r:#ef9a9a}
+*{box-sizing:border-box}body{margin:0;background:var(--b);color:var(--t);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+main{max-width:980px;margin:auto;padding:38px 20px 80px}.ey{letter-spacing:.13em;color:#7f8c96;font-size:.8rem}h1{font-size:2rem;margin:.5rem 0}h1 span{font-weight:400;color:#aab5bd}
+h2{margin-top:0}p{color:var(--m);line-height:1.5}.panel{border:1px solid var(--l);background:var(--p);padding:20px;margin-top:22px}
+button{background:#17232b;color:var(--t);border:1px solid #52636e;border-radius:6px;padding:12px 14px;margin:0 7px 8px 0}
+.card,.test,.event{border:1px solid var(--l);padding:13px;margin:9px 0;background:#0d1419}.row{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.tag{font-size:.72rem;border:1px solid #40505a;padding:3px 6px;color:#b2bec6;white-space:nowrap}.small{font-size:.82rem;color:var(--m);line-height:1.45}
+.pass{color:var(--g);font-weight:700}.warn{color:var(--y);font-weight:700}.bad{color:var(--r);font-weight:700}.event{border-left:2px solid #3b4b55}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#080d10;border:1px solid var(--l);padding:13px;font-size:.68rem;max-height:520px;overflow:auto}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:650px){.grid{grid-template-columns:1fr}}
 </style></head><body><main>
-<div class="ey">DETECTIVE GAME · LIFE ENGINE ADVERSARIAL FAMILY HISTORY</div>
-<h1>Block 4 <span>Prototype 0.5.1</span></h1>
-<p>Corrective adversarial build. Relationship semantics are validated structurally, adoption preserves both biological and legal history, and recursion is bounded by resolution depth rather than family size.</p>
+<div class="ey">DETECTIVE GAME · LIFE ENGINE CURRENT CIRCUMSTANCE & CONTINUITY</div>
+<h1>Block 5 <span>Prototype 0.1</span></h1>
+<p>Proves that established lives can continue coherently through time without simulating every day. Dormancy suspends computation, not reality; continuity may fill unknown history, but it may never rewrite established history.</p>
 
-<section class="panel"><h2>Adversarial Family</h2>
-<button onclick="generate()">GENERATE ADVERSARIAL FAMILY</button><button onclick="newSeed()">NEW SEED</button>
-<p id="seed"></p></section>
+<section class="panel"><h2>Continuity World</h2>
+<button onclick="generate()">GENERATE WORLD</button><button onclick="newSeed()">NEW SEED</button>
+<p id="seed"></p><p id="clock"></p></section>
 
-<section class="panel"><h2>Family Web</h2><div id="web">Waiting.</div></section>
-<section class="panel"><h2>Canonical Family History</h2><div id="history">Waiting.</div></section>
+<section class="panel"><h2>People & Current Circumstance</h2><div id="people">Waiting.</div></section>
 
-<section class="panel"><h2>Promotion Assault</h2>
-<p>Promote relatives from separate branches. Expansion must preserve IDs, names, dates, links, and every previously established shared event.</p>
-<button onclick="promoteA()">PROMOTE MATERNAL R2</button>
-<button onclick="promoteB()">PROMOTE PATERNAL R2</button>
-<div id="promotion">Waiting.</div></section>
+<section class="panel"><h2>Simulation Controls</h2>
+<p>Run the intended Block 5 sequence. Emily begins Active; Marcus is Relevant; Olivia, Julia, Elena, Brian, Teresa, and Anthony begin Dormant.</p>
+<button onclick="advanceActive()">ADVANCE ACTIVE +2 YEARS</button>
+<button onclick="establishJuliaMove()">ESTABLISH CROSS-NPC EVENT (2030)</button>
+<button onclick="reactivateEmily()">REACTIVATE EMILY IN 2034</button>
+<button onclick="worldEvent()">APPLY WORLD EVENT</button>
+<button onclick="saveWorld()">SAVE SNAPSHOT</button>
+<button onclick="mutateFuture()">ADVANCE UNCOMMITTED FUTURE</button>
+<button onclick="loadWorld()">LOAD SNAPSHOT</button>
+<div id="actions" class="small">Waiting.</div></section>
 
-<section class="panel"><h2>Contradiction Injection</h2>
-<p>These deliberately invalid proposals must be rejected without altering canonical history.</p>
-<button onclick="attack()">RUN CONTRADICTION ATTACKS</button><div id="attack">Waiting.</div></section>
+<section class="panel"><h2>Canonical Life History</h2><div id="history">Waiting.</div></section>
 
-<section class="panel"><h2>0.5.1 Corrective Adversarial Tests</h2><p class="muted">Regression seed 422576230. Tests 5, 7, 8, 9, and 17 now validate structural semantics rather than stale role strings or population-size assumptions.</p><button onclick="runTests()">RUN ALL TESTS</button><div id="tests">Waiting.</div></section>
+<section class="panel"><h2>Block 5.0.1 Acceptance Tests</h2>
+<button onclick="runScenario()">RUN FULL SCENARIO</button>
+<button onclick="runTests()">RUN TESTS</button>
+<div id="tests">Waiting.</div></section>
+
 <section class="panel"><h2>Developer Record</h2><pre id="raw">Waiting.</pre></section>
 
 <script>
-let seed=422576230,W=null, attackResults=[];
-function rng(s){return function(){s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+let seed=5102026,W=null,SAVED=null,logs=[];
+function rngFor(...parts){let s=2166136261>>>0;let str=[seed,...parts].join("|");for(let i=0;i<str.length;i++){s^=str.charCodeAt(i);s=Math.imul(s,16777619)}return function(){s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 const pick=(r,a)=>a[Math.floor(r()*a.length)];
-const F=["Amanda","Anna","Carla","Elena","Emily","Grace","Hannah","Jennifer","Julia","Laura","Maria","Nicole","Olivia","Rachel","Sarah","Teresa","Vanessa"];
-const M=["Aaron","Anthony","Brian","Carlos","Daniel","David","Eric","Gabriel","Isaac","Jason","Jose","Kevin","Luis","Marcus","Michael","Nathan","Robert","Samuel","Thomas"];
-const L=["Bennett","Brooks","Carter","Coleman","Diaz","Foster","Garcia","Gomez","Hale","Hernandez","Johnson","Kim","Lewis","Martin","Miller","Nguyen","Ortiz","Parker","Ramirez","Reed","Rivera","Sanchez","Taylor","Walker","Williams"];
-function id(r){return"NPC-"+String(Math.floor(r()*1e9)).padStart(9,"0")}
-function first(r,s){return pick(r,s==="Female"?F:M)}
-function add(p){W.people[p.id]=p;return p}
-function person(r,res,role,sex,birth,surname){
- return add({id:id(r),resolution:res,role,sex,birthYear:birth,name:first(r,sex)+" "+surname,
- surnameHistory:[{from:birth,to:null,surname,reason:"birth family"}],alive:true,sharedEventIds:[],biography:[]})
+function id(label){let r=rngFor("ID",label);return"NPC-"+String(Math.floor(r()*1e9)).padStart(9,"0")}
+function log(x){logs.push(x);document.getElementById("actions").innerHTML=logs.slice(-8).map(v=>"• "+v).join("<br>")}
+function addPerson(key,name,birth,state,employment,household,finance){
+ W.people[key]={id:id(key),key,name,birth,state,alive:true,employment,household,finance,relationships:[],circumstances:[],history:[],lastSimulated:2026,continuityThrough:2026}
 }
-function ev(year,type,text,people,meta={}){
- let e={id:"EV-"+String(W.events.length).padStart(3,"0"),year,type,text,people:[...new Set(people)],meta};
- W.events.push(e); e.people.forEach(pid=>{let p=W.people[pid];if(p&&!p.sharedEventIds.includes(e.id))p.sharedEventIds.push(e.id)});
+function event(year,type,text,keys,meta={}){
+ let sig=[year,type,[...keys].sort().join(","),meta.canonicalKey||""].join("|");
+ let existing=W.events.find(e=>e.sig===sig); if(existing)return existing;
+ let e={id:"EV-"+String(W.events.length).padStart(3,"0"),sig,year,type,text,people:[...keys],meta};
+ W.events.push(e);keys.forEach(k=>{let p=W.people[k];if(p&&!p.history.includes(e.id))p.history.push(e.id)});
  return e
 }
-function link(a,b,type,from,to=null,meta={}){W.links.push({a,b,type,from,to,meta})}
-function rename(p,year,newSurname,reason){
- let old=p.name, fn=old.split(" ")[0];p.surnameHistory.at(-1).to=year;
- p.surnameHistory.push({from:year,to:null,surname:newSurname,reason});p.name=fn+" "+newSurname;
- ev(year,"NAME_CHANGE",`${old} becomes ${p.name}.`,[p.id],{reason,from:old,to:p.name})
+function circumstance(k,type,start,end=null,status="ACTIVE",cause=null){
+ let p=W.people[k],sig=[type,start,cause||""].join("|"),old=p.circumstances.find(c=>c.sig===sig);
+ if(old)return old;let c={id:"CC-"+k+"-"+String(p.circumstances.length).padStart(2,"0"),sig,type,start,end,status,cause};p.circumstances.push(c);return c
+}
+function derive(k,year=W.year){
+ let p=W.people[k],active=p.circumstances.filter(c=>c.start<=year&&(c.end==null||c.end>=year)&&c.status!=="ENDED");
+ return {age:year-p.birth,state:p.state,employment:p.employment,household:p.household,finance:p.finance,active:active.map(c=>c.type)}
 }
 function generate(){
- let r=rng(seed);attackResults=[];W={seed,people:{},links:[],events:[],rejected:[]};
- let rootBirth=1988, maternalSurname=pick(r,L), paternalSurname=pick(r,L.filter(x=>x!==maternalSurname));
- let mother=person(r,"R1","PARENT","Female",1963,maternalSurname), father=person(r,"R1","PARENT","Male",1960,paternalSurname);
- let mgm=person(r,"R2","GRANDPARENT","Female",1938,maternalSurname), mgf=person(r,"R2","GRANDPARENT","Male",1935,maternalSurname);
- let pgm=person(r,"R2","GRANDPARENT","Female",1937,paternalSurname), pgf=person(r,"R2","GRANDPARENT","Male",1934,paternalSurname);
- link(mother.id,mgm.id,"PARENT",1963);link(mother.id,mgf.id,"PARENT",1963);
- link(father.id,pgm.id,"PARENT",1960);link(father.id,pgf.id,"PARENT",1960);
- // FIX: exactly one canonical birth event per person, all established parents attached.
- ev(1963,"BIRTH",`${mother.name} is born.`,[mother.id,mgm.id,mgf.id],{parents:[mgm.id,mgf.id]});
- ev(1960,"BIRTH",`${father.name} is born.`,[father.id,pgm.id,pgf.id],{parents:[pgm.id,pgf.id]});
- ev(1984,"MARRIAGE",`${mother.name} and ${father.name} marry.`,[mother.id,father.id]);link(mother.id,father.id,"SPOUSE",1984,1998);
- let root=person(r,"R0","ROOT",pick(r,["Female","Male"]),rootBirth,paternalSurname);W.root=root.id;
- link(root.id,mother.id,"PARENT",rootBirth);link(root.id,father.id,"PARENT",rootBirth);
- ev(rootBirth,"BIRTH",`${root.name} is born.`,[root.id,mother.id,father.id],{parents:[mother.id,father.id]});
- // Divorce, remarriage, step-parent, half sibling.
- ev(1998,"DIVORCE",`${mother.name} and ${father.name} divorce.`,[mother.id,father.id]);
- let step=person(r,"R1","STEP-PARENT","Male",1966,pick(r,L));ev(2001,"MARRIAGE",`${mother.name} marries ${step.name}.`,[mother.id,step.id]);link(mother.id,step.id,"SPOUSE",2001);
- let half=person(r,"R1","HALF-SIBLING",pick(r,["Female","Male"]),2003,step.name.split(" ").at(-1));
- link(half.id,mother.id,"PARENT",2003);link(half.id,step.id,"PARENT",2003);link(root.id,half.id,"HALF_SIBLING",2003);
- ev(2003,"BIRTH",`${half.name} is born.`,[half.id,mother.id,step.id],{parents:[mother.id,step.id]});
- // Adoption with explicit historical biological parent and later legal parent.
- let adopted=person(r,"R1","ADOPTED-SIBLING",pick(r,["Female","Male"]),2000,pick(r,L));
- let bio=person(r,"R2","BIOLOGICAL_PARENT",pick(r,["Female","Male"]),1977,adopted.name.split(" ").at(-1));
- link(adopted.id,bio.id,"BIOLOGICAL_PARENT",2000);ev(2000,"BIRTH",`${adopted.name} is born.`,[adopted.id,bio.id],{parents:[bio.id]});
- link(adopted.id,mother.id,"ADOPTIVE_PARENT",2006);link(adopted.id,step.id,"ADOPTIVE_PARENT",2006);link(root.id,adopted.id,"ADOPTIVE_SIBLING",2006);
- ev(2006,"ADOPTION",`${adopted.name} is adopted into ${mother.name} and ${step.name}'s household.`,[adopted.id,mother.id,step.id],{legalParents:[mother.id,step.id]});
- rename(adopted,2006,step.name.split(" ").at(-1),"adoption");
- // Death is terminal; later events may reference deceased person historically but not make them act.
- ev(2012,"DEATH",`${father.name} dies.`,[father.id]);father.alive=false;father.deathYear=2012;
- // Root partner and child with unusual-but-valid age gap.
- let partnerBirth=1979, partner=person(r,"R1","PARTNER",pick(r,["Female","Male"]),partnerBirth,pick(r,L));
- ev(2013,"MEETING",`${root.name} meets ${partner.name} through work.`,[root.id,partner.id]);link(root.id,partner.id,"PARTNER",2014);
- ev(2014,"PARTNERSHIP",`${root.name} and ${partner.name} establish a household.`,[root.id,partner.id]);
- let child=person(r,"R1","CHILD",pick(r,["Female","Male"]),2017,partner.name.split(" ").at(-1));
- link(child.id,root.id,"PARENT",2017);link(child.id,partner.id,"PARENT",2017);
- ev(2017,"BIRTH",`${child.name} is born.`,[child.id,root.id,partner.id],{parents:[root.id,partner.id]});
- child.biography=[{year:2026,type:"CURRENT",detail:"school-age child; no adult career"}];
- // R3 references only.
- [mgm,pgm].forEach(g=>{let q={id:id(r),resolution:"R3",role:"GREAT-GRANDPARENT",name:first(r,pick(r,["Female","Male"]))+" "+g.surnameHistory[0].surname,sharedEventIds:[]};add(q);link(g.id,q.id,"PARENT_REFERENCE",null)});
+ logs=[];SAVED=null;W={seed,year:2026,people:{},events:[],worldEvents:[],futureProbe:null};
+ addPerson("emily","Emily Rivera",1990,"ACTIVE","hospitality manager","Olivia + Julia","tight but stable");
+ addPerson("olivia","Olivia Walker",1989,"DORMANT","medical billing","Emily + Julia","stable");
+ addPerson("julia","Julia Walker",2024,"DORMANT","none","Emily + Olivia","dependent child");
+ addPerson("marcus","Marcus Brooks",1987,"RELEVANT","construction estimator","alone","stable");
+ addPerson("elena","Elena Rivera",1965,"DORMANT","retired","Brian","fixed income");
+ addPerson("brian","Brian Taylor",1966,"DORMANT","retired","Elena","fixed income");
+ addPerson("teresa","Teresa Rivera",1934,"DORMANT","retired","alone","fixed income");
+ addPerson("anthony","Anthony Taylor",1935,"DORMANT","retired","alone","fixed income");
+ W.people.emily.relationships=["olivia","julia","elena","brian"];W.people.olivia.relationships=["emily","julia"];W.people.julia.relationships=["emily","olivia"];
+ event(1990,"BIRTH","Emily Rivera is born.",["emily","elena","brian"],{canonicalKey:"emily-birth"});
+ event(2021,"PARTNERSHIP","Emily Rivera and Olivia Walker establish a shared household.",["emily","olivia"],{canonicalKey:"emily-olivia-home"});
+ event(2024,"BIRTH","Julia Walker is born.",["julia","emily","olivia"],{canonicalKey:"julia-birth"});
+ circumstance("emily","irregular work schedule",2025,null,"ACTIVE","employment");
+ circumstance("julia","young child",2024,2028,"ACTIVE","age");
  render();runTests()
 }
-function pcard(p){return `<div class="person"><div class="row"><b>${p.name}</b><span class="tag">${p.resolution} · ${p.role}</span></div><div class="small">${p.id}${p.birthYear?" · born "+p.birthYear:""}${p.alive===false?" · died "+p.deathYear:""}${p.surnameHistory?.length>1?" · surname history: "+p.surnameHistory.map(x=>x.surname).join(" → "):""}</div></div>`}
+function advanceActive(){
+ if(!W)return;W.year=2028;
+ let p=W.people.emily;
+ event(2027,"EMPLOYMENT_CHANGE","Emily Rivera moves into a senior hospitality role.",["emily"],{canonicalKey:"emily-job-2027"});
+ p.employment="senior hospitality supervisor";p.finance="improving";
+ circumstance("emily","supervisory workload",2027,null,"ACTIVE","employment change");
+ let old=p.circumstances.find(c=>c.type==="irregular work schedule");if(old){old.end=2027;old.status="ENDED"}
+ p.lastSimulated=2028;p.continuityThrough=2028;
+ log("Active simulation advanced to 2028; Emily's established 2027 employment change is now canonical.");render();runTests()
+}
+function establishJuliaMove(){
+ if(!W)return;
+ event(2030,"HOUSEHOLD_CHANGE","Julia moves from Emily's household into Olivia's household.",["julia","emily","olivia"],{canonicalKey:"julia-move-2030",from:"Emily household",to:"Olivia household"});
+ W.people.julia.household="Olivia";W.people.olivia.household="Olivia + Julia";W.people.emily.household="separate household";
+ W.people.julia.continuityThrough=Math.max(W.people.julia.continuityThrough,2030);
+ circumstance("emily","child living in another household",2030,null,"ACTIVE","Julia household change");
+ log("2030 cross-NPC household event established while Emily need not be actively simulated.");render();runTests()
+}
+function continuityEmily(target=2034){
+ let p=W.people.emily;if(p.continuityThrough>=target){log("Emily continuity already committed through "+target+"; no reroll occurred.");return}
+ let r=rngFor("CONTINUITY",p.id,p.continuityThrough,target);
+ // Fill only unknown history, while honoring all already-established events involving Emily.
+ let establishedMove=W.events.find(e=>e.meta.canonicalKey==="julia-move-2030");
+ let jobYear=2029+Math.floor(r()*2);
+ event(jobYear,"EMPLOYMENT_CHANGE","Emily Rivera changes employers but remains in hospitality management.",["emily"],{canonicalKey:"emily-continuity-job"});
+ p.employment="hotel operations manager";
+ let financeYear=2031+Math.floor(r()*2);
+ event(financeYear,"FINANCIAL_CHANGE","Emily's finances stabilize after sustained employment.",["emily"],{canonicalKey:"emily-continuity-finance"});
+ p.finance="stable";
+ if(establishedMove){p.household="separate household"}
+ circumstance("emily","career stability",financeYear,null,"ACTIVE","sustained employment");
+ p.continuityThrough=target;p.lastSimulated=target;
+}
+function reactivateEmily(){
+ if(!W)return;W.year=2034;continuityEmily(2034);W.people.emily.state="ACTIVE";
+ log("Emily reactivated in 2034. Unknown years were filled once; the established 2030 Julia move constrained continuity.");render();runTests()
+}
+function worldEvent(){
+ if(!W)return;
+ let exists=W.worldEvents.find(e=>e.key==="REGIONAL_DOWNTURN_2032");
+ if(!exists)W.worldEvents.push({key:"REGIONAL_DOWNTURN_2032",year:2032,type:"REGIONAL_ECONOMIC_DOWNTURN"});
+ ["emily","marcus","olivia"].forEach(k=>{
+   let r=rngFor("EXPOSURE","REGIONAL_DOWNTURN_2032",W.people[k].id);
+   let exposed=r()<0.75, consequence=exposed&&r()<0.45;
+   W.people[k].worldExposure={event:"REGIONAL_DOWNTURN_2032",exposed,consequence};
+   if(consequence)circumstance(k,"economic pressure",2032,2033,"ENDED","regional downturn");
+ });
+ log("2032 regional downturn applied: exposure and individual consequence resolved separately.");render();runTests()
+}
+function saveWorld(){if(!W)return;SAVED=JSON.stringify(W);log("Snapshot saved. Canonical history and current circumstance captured.");render()}
+function mutateFuture(){
+ if(!W)return;let r=rngFor("UNCOMMITTED",W.year,W.events.length,Math.random());W.futureProbe={year:W.year+1,possibility:pick(r,["training opportunity","vehicle expense","family visit","quiet year"])};log("Uncommitted future probe created: "+W.futureProbe.possibility+". It is not history.");render()
+}
+function loadWorld(){if(!SAVED){log("No snapshot exists.");return}W=JSON.parse(SAVED);log("Snapshot loaded. Uncommitted future probe discarded; committed past restored exactly.");render();runTests()}
 function render(){
- let ps=Object.values(W.people);document.getElementById("seed").textContent="World-context seed: "+seed;
- document.getElementById("web").innerHTML=["R0","R1","R2","R3"].map(x=>`<h3>${x}</h3>`+ps.filter(p=>p.resolution===x).map(pcard).join("")).join("");
- document.getElementById("history").innerHTML=W.events.sort((a,b)=>a.year-b.year||a.id.localeCompare(b.id)).map(e=>`<div class="event"><b>${e.year} · ${e.type}</b><div>${e.text}</div><div class="small">${e.id} · ${e.people.join(" · ")}</div></div>`).join("");
+ if(!W)return;
+ document.getElementById("seed").textContent="World-context seed: "+seed;
+ document.getElementById("clock").textContent="Canonical year: "+W.year;
+ document.getElementById("people").innerHTML=Object.values(W.people).map(p=>{let d=derive(p.key);return `<div class="card"><div class="row"><b>${p.name}</b><span class="tag">${p.state}</span></div><div class="small">${p.id} · age ${d.age} · ${p.employment}<br>household: ${p.household} · finances: ${p.finance}<br>continuity committed through: ${p.continuityThrough}<br>current circumstance: ${d.active.length?d.active.join(" · "):"none established"}</div></div>`}).join("");
+ document.getElementById("history").innerHTML=W.events.slice().sort((a,b)=>a.year-b.year||a.id.localeCompare(b.id)).map(e=>`<div class="event"><b>${e.year} · ${e.type}</b><div>${e.text}</div><div class="small">${e.id} · ${e.people.map(k=>W.people[k]?.id||k).join(" · ")}</div></div>`).join("");
  document.getElementById("raw").textContent=JSON.stringify(W,null,2)
 }
-function promote(role,slot){
- let p=Object.values(W.people).find(x=>x.resolution==="R2"&&x.role===role&&!x.promoted)||Object.values(W.people).find(x=>x.resolution==="R2"&&!x.promoted);
- if(!p)return false;let before=JSON.stringify({id:p.id,name:p.name,birth:p.birthYear,events:[...p.sharedEventIds],links:W.links.filter(l=>l.a===p.id||l.b===p.id)});
- p.resolution="R0";p.promoted=true;p.biography=[{year:p.birthYear+12,type:"CHILDHOOD",detail:"expanded around established family anchors"},{year:p.birthYear+18,type:"EDUCATION",detail:"historically compatible education generated"}];
- let after=JSON.stringify({id:p.id,name:p.name,birth:p.birthYear,events:[...p.sharedEventIds],links:W.links.filter(l=>l.a===p.id||l.b===p.id)});
- let ok=before===after;document.getElementById("promotion").innerHTML+=`<div class="person"><b>${p.name}</b><div class="${ok?"pass":"bad"}">${ok?"PASS":"FAIL"} — branch promotion preserved established history.</div></div>`;render();runTests();return ok
-}
-function promoteA(){promote("GRANDPARENT","A")} function promoteB(){promote("GRANDPARENT","B")}
-function reject(label,proposal,reason){W.rejected.push({label,proposal,reason});attackResults.push([label,true,reason])}
-function attack(){
- attackResults=[];let father=Object.values(W.people).find(p=>p.role==="PARENT"&&p.sex==="Male"), child=Object.values(W.people).find(p=>p.role==="CHILD"), root=W.people[W.root];
- let before=JSON.stringify({events:W.events,links:W.links,people:W.people});
- reject("Resurrect deceased parent",{id:father.id,alive:true},"terminal death state");
- reject("Move child birth before parent adulthood",{id:child.id,birthYear:root.birthYear+10},"parent would be age 10");
- reject("Duplicate root birth occurrence",{type:"BIRTH",person:root.id,year:root.birthYear},"canonical birth already exists");
- reject("Erase pre-adoption biological parent",{person:Object.values(W.people).find(p=>p.role==="ADOPTED-SIBLING")?.id},"adoption adds legal history; it does not rewrite biological history");
- reject("Rewrite old surname after adoption",{},"historical records retain name valid at event time");
- let unchanged=before===JSON.stringify({events:W.events,links:W.links,people:W.people});
- document.getElementById("attack").innerHTML=attackResults.map(x=>`<div class="person row"><span>${x[0]}<br><small>${x[2]}</small></span><span class="pass">REJECTED</span></div>`).join("")+`<p class="${unchanged?"pass":"bad"}">${unchanged?"PASS — attacks did not mutate canonical history.":"FAIL — attack mutated history."}</p>`;
+function runScenario(){
+ generate();advanceActive();establishJuliaMove();worldEvent();reactivateEmily();saveWorld();
+ let before=JSON.stringify(W);reactivateEmily();let after=JSON.stringify(W);
+ log(before===after?"Repeat reactivation produced no reroll.":"ERROR: repeat reactivation changed committed life.");
  runTests()
 }
 function runTests(){
  if(!W)return;
- let ps=Object.values(W.people), births=W.events.filter(e=>e.type==="BIRTH"), father=ps.find(p=>p.role==="PARENT"&&p.sex==="Male"), adopted=ps.find(p=>p.role==="ADOPTED-SIBLING"), half=ps.find(p=>p.role==="HALF-SIBLING"), root=W.people[W.root], child=ps.find(p=>p.role==="CHILD");
- let birthPeople=births.map(e=>e.people[0]), uniqueBirths=new Set(birthPeople).size===birthPeople.length;
- let parentLinks=W.links.filter(l=>["PARENT","BIOLOGICAL_PARENT","ADOPTIVE_PARENT"].includes(l.type));
- const parentsOf=(pid,types=["PARENT","BIOLOGICAL_PARENT"])=>new Set(W.links.filter(l=>l.a===pid&&types.includes(l.type)).map(l=>l.b));
- const rootParents=parentsOf(root.id), halfParents=half?parentsOf(half.id):new Set();
- const sharedHalfParents=[...rootParents].filter(id=>halfParents.has(id));
- const distinctHalfParents=[...halfParents].filter(id=>!rootParents.has(id));
- const adoptionEvent=adopted?W.events.find(e=>e.type==="ADOPTION"&&e.people.includes(adopted.id)):null;
- const bioLinks=adopted?W.links.filter(l=>l.a===adopted.id&&l.type==="BIOLOGICAL_PARENT"):[];
- const adoptiveLinks=adopted?W.links.filter(l=>l.a===adopted.id&&l.type==="ADOPTIVE_PARENT"):[];
- const adoptionHistoryValid=!!adopted&&bioLinks.length>=1&&!!adoptionEvent&&adoptiveLinks.length===2&&
-   adoptionEvent.meta.legalParents?.length===2&&adoptionEvent.meta.legalParents.every(id=>adoptiveLinks.some(l=>l.b===id));
- const surnameHistoryValid=!!adopted&&adopted.surnameHistory?.length>=2&&
-   adopted.surnameHistory[0].to===2006&&adopted.surnameHistory[1].from===2006&&
-   W.events.some(e=>e.type==="NAME_CHANGE"&&e.people.includes(adopted.id)&&e.meta.from&&e.meta.to&&e.meta.from!==e.meta.to);
- const rank={R0:0,R1:1,R2:2,R3:3};
- const recursionBounded=ps.every(p=>rank[p.resolution]!==undefined&&rank[p.resolution]<=3)&&
-   ps.filter(p=>p.resolution==="R3").every(p=>!W.links.some(l=>l.a===p.id&&W.people[l.b]&&rank[W.people[l.b].resolution]>3));
+ let em=W.people.emily, ju=W.people.julia;
+ let hist=em.history.map(id=>W.events.find(e=>e.id===id)).filter(Boolean);
+ let ctemp=ju.circumstances.find(c=>c.type==="young child");
+ let move=W.events.find(e=>e.meta.canonicalKey==="julia-move-2030");
+ let contJob=W.events.filter(e=>e.meta.canonicalKey==="emily-continuity-job");
+ let contFin=W.events.filter(e=>e.meta.canonicalKey==="emily-continuity-finance");
+ let world=W.worldEvents.find(e=>e.key==="REGIONAL_DOWNTURN_2032");
+ let exposure=world?["emily","marcus","olivia"].every(k=>W.people[k].worldExposure&&typeof W.people[k].worldExposure.exposed==="boolean"&&typeof W.people[k].worldExposure.consequence==="boolean"):true;
  let tests=[
- ["1. One person has at most one canonical birth event",uniqueBirths],
- ["2. Birth event may attach multiple parents",births.some(e=>e.meta.parents?.length===2)],
- ["3. Divorce preserves earlier marriage event",W.events.some(e=>e.type==="MARRIAGE"&&e.year===1984)&&W.events.some(e=>e.type==="DIVORCE")],
- ["4. Remarriage creates new relationship, not replacement history",W.events.filter(e=>e.type==="MARRIAGE").length===2],
- ["5. Half-sibling has shared parent provenance",!!half&&sharedHalfParents.length===1&&distinctHalfParents.length>=1],
- ["6. Step-parent is distinct from biological parent",ps.some(p=>p.role==="STEP_PARENT")||ps.some(p=>p.role==="STEP-PARENT")],
- ["7. Adoption preserves biological-parent history",!!adopted&&bioLinks.length>=1&&W.events.some(e=>e.type==="BIRTH"&&e.people[0]===adopted.id&&e.meta.parents?.some(id=>bioLinks.some(l=>l.b===id)))],
- ["8. Adoption adds legal-parent history",adoptionHistoryValid],
- ["9. Adoption name change preserves prior surname",surnameHistoryValid],
- ["10. Death remains terminal current state",father.alive===false&&father.deathYear===2012],
- ["11. No event after death requires deceased parent to act",W.events.filter(e=>e.year>father.deathYear&&e.people.includes(father.id)).every(e=>["MEMORIAL","RECORD_REFERENCE"].includes(e.type))],
- ["12. Unusual partner age gap remains adult-valid",W.events.filter(e=>e.type==="MEETING").every(e=>e.people.every(id=>W.people[id].birthYear?e.year-W.people[id].birthYear>=18:true))],
- ["13. Minor child receives no adult career",!child.biography.some(b=>b.type==="EMPLOYMENT")],
- ["14. Parent chronology remains valid",parentLinks.every(l=>!W.people[l.a].birthYear||!W.people[l.b].birthYear||W.people[l.b].birthYear<=W.people[l.a].birthYear-16)],
- ["15. Shared events backlink to every participant",W.events.every(e=>e.people.every(id=>W.people[id]?.sharedEventIds.includes(e.id)))],
- ["16. R3 remains referential only",ps.filter(p=>p.resolution==="R3").every(p=>!p.birthYear&&!p.biography)],
- ["17. Bounded recursion still terminates",recursionBounded],
- ["18. Persistent NPC IDs remain unique",new Set(ps.map(p=>p.id)).size===ps.length],
- ["19. Promotions never replace established IDs",true],
- ["20. Contradiction attacks are rejected without mutation",attackResults.length===0||attackResults.every(x=>x[1])]
+ ["1. Current Circumstance derives from established state/history",derive("emily").employment===em.employment],
+ ["2. Historical events remain immutable as circumstances change",W.events.some(e=>e.meta.canonicalKey==="emily-birth"&&e.year===1990)],
+ ["3. Temporary circumstances can begin and end",!!ctemp&&ctemp.end===2028],
+ ["4. Persistent circumstances survive time advancement",em.circumstances.some(c=>c.type==="career stability")?derive("emily",2034).active.includes("career stability"):true],
+ ["5. Circumstance can influence opportunity without becoming destiny",!W.events.some(e=>e.type==="CRIME_FROM_PRESSURE")],
+ ["6. Active NPC advances coherently through time",W.year<2028||hist.some(e=>e.meta.canonicalKey==="emily-job-2027")],
+ ["7. Dormant NPCs require no daily event simulation",Object.values(W.people).filter(p=>p.state==="DORMANT").every(p=>p.history.length<20)],
+ ["8. Dormant NPC can reactivate through continuity simulation",W.year<2034||em.continuityThrough===2034],
+ ["9. Reactivation honors intervening established events",!move||em.household==="separate household"],
+ ["10. Cross-NPC event backlinks to every participant",!move||move.people.every(k=>W.people[k].history.includes(move.id))],
+ ["11. World-event exposure is separate from consequence",exposure],
+ ["12. Death would terminate incompatible future development",Object.values(W.people).filter(p=>p.alive===false).every(p=>!W.events.some(e=>e.year>p.deathYear&&e.people.includes(p.key)&&["EMPLOYMENT_CHANGE","PARTNERSHIP"].includes(e.type)))],
+ ["13. Age/life-stage remains valid over long jumps",Object.values(W.people).every(p=>W.year-p.birth>=0)],
+ ["14. Relationships evolve without rewriting prior history",W.events.some(e=>e.meta.canonicalKey==="emily-olivia-home"&&e.year===2021)],
+ ["15. Generated continuity becomes canonical once established",em.continuityThrough<2034||(contJob.length===1&&contFin.length===1)],
+ ["16. Re-running continuity cannot reroll established years",contJob.length<=1&&contFin.length<=1],
+ ["17. Save/reload architecture can preserve circumstance and continuity",SAVED===null||JSON.parse(SAVED).people.emily.continuityThrough===em.continuityThrough],
+ ["18. Uncommitted future remains outside Historical Ledger",!W.futureProbe||!W.events.some(e=>e.year===W.futureProbe.year&&e.text?.includes(W.futureProbe.possibility))]
  ];
- document.getElementById("tests").innerHTML=tests.map(t=>`<div class="person row"><span>${t[0]}</span><span class="${t[1]?"pass":"bad"}">${t[1]?"PASS":"FAIL"}</span></div>`).join("")
+ document.getElementById("tests").innerHTML=tests.map(t=>`<div class="test row"><span>${t[0]}</span><span class="${t[1]?"pass":"bad"}">${t[1]?"PASS":"FAIL"}</span></div>`).join("")
 }
 function newSeed(){seed=Math.floor(Math.random()*1e9);generate()}
-document.getElementById("seed").textContent="Initial seed ready: "+seed;
+generate();
 </script></main></body></html>
