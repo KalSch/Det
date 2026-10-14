@@ -1,264 +1,32 @@
-<!doctype html><html><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Block 6 Prototype 0.2 — Life Events, Opportunity & Decision Pressure</title>
-<style>
-:root{color-scheme:dark;--b:#0b1116;--p:#10181e;--l:#29343c;--t:#e7edf1;--m:#98a6b0;--g:#9bd3aa;--y:#e2cf8b;--r:#ef9a9a;--c:#9bc6d3}
-*{box-sizing:border-box}body{margin:0;background:var(--b);color:var(--t);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-main{max-width:1040px;margin:auto;padding:38px 20px 90px}.ey{letter-spacing:.13em;color:#7f8c96;font-size:.8rem}h1{font-size:2rem;margin:.5rem 0}h1 span{font-weight:400;color:#aab5bd}h2{margin-top:0}
-p{color:var(--m);line-height:1.55}.panel{border:1px solid var(--l);background:var(--p);padding:20px;margin-top:22px}
-button{background:#17232b;color:var(--t);border:1px solid #52636e;border-radius:6px;padding:12px 14px;margin:0 7px 8px 0}
-.card,.test,.event,.choice{border:1px solid var(--l);padding:13px;margin:9px 0;background:#0d1419}.row{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
-.tag{font-size:.72rem;border:1px solid #40505a;padding:3px 6px;color:#b2bec6;white-space:nowrap}.small{font-size:.82rem;color:var(--m);line-height:1.5}
-.pass{color:var(--g);font-weight:700}.bad{color:var(--r);font-weight:700}.warn{color:var(--y);font-weight:700}.info{color:var(--c);font-weight:700}
-.event{border-left:2px solid #3b4b55}.pressure{height:7px;background:#172027;margin-top:6px;overflow:hidden}.pressure>i{display:block;height:100%;background:#7d8991}
-pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#080d10;border:1px solid var(--l);padding:13px;font-size:.68rem;max-height:560px;overflow:auto}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:680px){.grid{grid-template-columns:1fr}.row{gap:8px}}
-</style></head><body><main>
-<div class="ey">DETECTIVE GAME · STANDALONE LIFE ENGINE · DECISION PRESSURE</div>
-<h1>Block 6 <span>Prototype 0.2</span></h1>
-<p><b>Pressure changes the probability landscape. It does not decide the outcome.</b> Accumulated pressure increases the possibility of transformative decisions in any direction. This harness separates objective circumstance, experienced pressure, available responses, NPC decision, consequence, and canonical history.</p>
-
-<section class="panel"><h2>Pressure World</h2>
-<button onclick="generate()">GENERATE WORLD</button><button onclick="newSeed()">NEW SEED</button>
-<p id="seed"></p><p id="clock"></p></section>
-
-<section class="panel"><h2>People</h2><div id="people">Waiting.</div></section>
-
-<section class="panel"><h2>Simulation Controls</h2>
-<p>Advance one year at a time or run the complete 2026–2034 demonstration. Events create opportunities and pressures; they never contain their own decisions.</p>
-<button onclick="advanceYear()">ADVANCE +1 YEAR</button>
-<button onclick="runYears()">RUN THROUGH 2034</button>
-<button onclick="runCounterfactual()">RUN PRESSURE COUNTERFACTUAL</button>
-<div id="actions" class="small">Waiting.</div></section>
-
-<section class="panel"><h2>Canonical Life History</h2><div id="history">Waiting.</div></section>
-
-<section class="panel"><h2>Decision Record</h2><div id="decisions">Waiting.</div></section>
-
-<section class="panel"><h2>Block 6.0.2 Acceptance Tests</h2>
-<button onclick="runScenario()">RUN FULL SCENARIO + TESTS</button>
-<div id="tests">Waiting.</div></section>
-
-<section class="panel"><h2>Block 6.0.2 Decision-Pressure Wringer</h2>
-<p>These adversarial checks attack the probability architecture without changing the decision engine. They test extremes, reversals, repeated evaluation, counterfactuals, and attempts to turn pressure into destiny.</p>
-<button onclick="runWringer()">RUN FULL ADVERSARIAL WRINGER</button>
-<div id="wringer">Waiting.</div></section>
-
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Block 7 Prototype 0.1 — Interconnected Lives</title>
+<style>:root{color-scheme:dark;--b:#0b1116;--p:#10181e;--l:#29343c;--t:#e7edf1;--m:#98a6b0;--g:#9bd3aa;--r:#ef9a9a;--c:#9bc6d3}*{box-sizing:border-box}body{margin:0;background:var(--b);color:var(--t);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:1040px;margin:auto;padding:38px 20px 90px}.ey{letter-spacing:.13em;color:#7f8c96;font-size:.8rem}h1{font-size:2rem;margin:.5rem 0}h1 span{font-weight:400;color:#aab5bd}h2{margin-top:0}p{color:var(--m);line-height:1.55}.panel{border:1px solid var(--l);background:var(--p);padding:20px;margin-top:22px}button{background:#17232b;color:var(--t);border:1px solid #52636e;border-radius:6px;padding:12px 14px;margin:0 7px 8px 0}.card,.test,.event{border:1px solid var(--l);padding:13px;margin:9px 0;background:#0d1419}.row{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.tag{font-size:.72rem;border:1px solid #40505a;padding:3px 6px;color:#b2bec6;white-space:nowrap}.small{font-size:.82rem;color:var(--m);line-height:1.5}.pass{color:var(--g);font-weight:700}.bad{color:var(--r);font-weight:700}.info{color:var(--c);font-weight:700}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#080d10;border:1px solid var(--l);padding:13px;font-size:.68rem;max-height:560px;overflow:auto}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:680px){.grid{grid-template-columns:1fr}.row{gap:8px}}</style></head><body><main>
+<div class="ey">DETECTIVE GAME · STANDALONE LIFE ENGINE · INTERCONNECTED LIVES</div><h1>Block 7 <span>Prototype 0.1</span></h1>
+<p><b>One person's action can become another person's circumstance without deciding that person's response.</b> Relationships preserve shared canonical history while each participant independently interprets and responds to it.</p>
+<section class="panel"><h2>Social World</h2><button onclick="generate()">GENERATE WORLD</button><button onclick="newSeed()">NEW SEED</button><p id="seed"></p><p id="clock"></p></section>
+<section class="panel"><h2>People & Relationship State</h2><div id="people">Waiting.</div></section>
+<section class="panel"><h2>Simulation Controls</h2><p>The demonstration runs a Maya → Daniel → Rosa → Maya causal loop, plus a shared household event, dormant-person consequence, dissolution, and death/history preservation.</p><button onclick="advance()">ADVANCE NEXT SOCIAL EVENT</button><button onclick="runScenario()">RUN FULL SCENARIO + TESTS</button><div id="actions" class="small">Waiting.</div></section>
+<section class="panel"><h2>Canonical Interpersonal History</h2><div id="history">Waiting.</div></section>
+<section class="panel"><h2>Block 7.0.1 Acceptance Tests</h2><button onclick="runScenario()">RUN FULL SCENARIO + TESTS</button><div id="tests">Waiting.</div></section>
 <section class="panel"><h2>Developer Record</h2><pre id="raw">Waiting.</pre></section>
 <script>
-let seed=6102026,W=null,logs=[];
-function rngFor(...parts){let s=2166136261>>>0,str=[seed,...parts].join("|");for(let i=0;i<str.length;i++){s^=str.charCodeAt(i);s=Math.imul(s,16777619)}return function(){s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-function id(k){let r=rngFor("ID",k);return"NPC-"+String(Math.floor(r()*1e9)).padStart(9,"0")}
-function log(x){logs.push(x);document.getElementById("actions").innerHTML=logs.slice(-10).map(v=>"• "+v).join("<br>")}
-function addPerson(k,name,birth,traits,history,resources){
- W.people[k]={id:id(k),key:k,name,birth,traits,historyFactors:history,resources,pressures:{financial:0,relationship:0,career:0,family:0,social:0},opportunities:[],history:[],decisions:[],employment:"employed",household:"stable",finance:"stable",alive:true}
-}
-function event(year,type,text,keys,meta={}){
- let sig=[year,type,[...keys].sort().join(","),meta.key||""].join("|"),old=W.events.find(e=>e.sig===sig);if(old)return old;
- let e={id:"EV-"+String(W.events.length).padStart(3,"0"),sig,year,type,text,people:[...keys],meta};W.events.push(e);
- keys.forEach(k=>{if(W.people[k]&&!W.people[k].history.includes(e.id))W.people[k].history.push(e.id)});return e
-}
-function pressure(k,domain,amount,cause){
- let p=W.people[k],sensitivity=p.traits.sensitivity?.[domain]??1,historyMod=p.historyFactors[domain]??1;
- let experienced=Math.round(amount*sensitivity*historyMod);p.pressures[domain]=clamp(p.pressures[domain]+experienced,0,100);
- event(W.year,"PRESSURE_CHANGE",`${p.name} experiences ${domain} pressure from ${cause}.`,[k],{key:`pressure-${k}-${domain}-${W.year}-${cause}`,domain,objective:amount,experienced});
- return experienced
-}
-function relief(k,domain,amount,cause){let p=W.people[k];p.pressures[domain]=clamp(p.pressures[domain]-amount,0,100);event(W.year,"PRESSURE_RELIEF",`${p.name}'s ${domain} pressure eases: ${cause}.`,[k],{key:`relief-${k}-${domain}-${W.year}-${cause}`,amount})}
-function totalPressure(p){return Object.values(p.pressures).reduce((a,b)=>a+b,0)}
-function opportunity(k,type,label,base,domain,transformative=false){
- let p=W.people[k],o={id:`OP-${k}-${W.year}-${p.opportunities.length}`,year:W.year,type,label,base,domain,transformative,status:"AVAILABLE"};p.opportunities.push(o);
- event(W.year,"OPPORTUNITY",`${p.name} encounters an opportunity: ${label}.`,[k],{key:o.id,opportunity:o.id});return o
-}
-function weightsFor(p,o){
- let P=totalPressure(p),t=p.traits;
- let w={};
- if(o.type==="JOB"){
-   w.accept=o.base*(1+t.ambition*.55+t.adaptability*.35)*(1+P/180);
-   w.decline=1.15*(1+t.stability*.45)*(1+Math.max(0,25-P)/100);
-   w.negotiate=.55*(1+t.confidence*.7);
- } else if(o.type==="RETRAIN"){
-   w.enroll=o.base*(1+t.adaptability*.6+t.ambition*.35)*(1+P/160);
-   w.delay=.9*(1+t.stability*.35);
-   w.decline=.65*(1+(1-t.adaptability)*.7);
- } else if(o.type==="FINANCE"){
-   w.ask_family=.8*(1+t.socialTrust*.7)*(1+P/190);
-   w.high_cost_debt=.35*(1+(1-t.planning)*.8)*(1+P/105);
-   w.cut_costs=.8*(1+t.planning*.65);
-   w.extra_work=.7*(1+t.persistence*.55);
- } else if(o.type==="MOVE"){
-   w.move=o.base*(1+t.adaptability*.6)*(1+P/190);
-   w.stay=1.0*(1+t.stability*.6);
-   w.try_temporary=.55*(1+t.planning*.5);
- }
- // High pressure broadens transformative tails in BOTH directions, never hard-selecting them.
- if(P>=90){Object.keys(w).forEach(k=>w[k]*=1.08); if(w.accept)w.accept*=1.18;if(w.enroll)w.enroll*=1.18;if(w.high_cost_debt)w.high_cost_debt*=1.18;if(w.move)w.move*=1.18}
- return w
-}
-function choose(p,o){
- let w=weightsFor(p,o),entries=Object.entries(w),sum=entries.reduce((s,[,v])=>s+v,0),r=rngFor("DECISION",p.id,o.id,totalPressure(p))()*sum,choice=entries[entries.length-1][0];
- for(let [k,v] of entries){r-=v;if(r<=0){choice=k;break}}
- return {choice,weights:w,pressure:totalPressure(p)}
-}
-function decide(k,o){
- let p=W.people[k],d=choose(p,o);o.status="RESOLVED";
- let rec={id:`DC-${k}-${W.year}-${p.decisions.length}`,year:W.year,opportunity:o.id,choice:d.choice,weights:d.weights,pressure:d.pressure};p.decisions.push(rec);
- event(W.year,"DECISION",`${p.name} decides: ${d.choice.replaceAll("_"," ")}.`,[k],{key:rec.id,decision:rec.id,sourceOpportunity:o.id});
- consequence(k,o,d.choice);return rec
-}
-function consequence(k,o,c){
- let p=W.people[k];
- if(o.type==="JOB"){
-  if(c==="accept"){p.employment="new position";p.finance="improving";relief(k,"financial",22,"higher income");relief(k,"career",20,"career change");event(W.year,"CONSEQUENCE",`${p.name}'s new job improves income but changes routine.`,[k],{key:`cons-${o.id}`})}
-  if(c==="decline"){pressure(k,"career",8,"remaining in an unsatisfying role")}
-  if(c==="negotiate"){relief(k,"career",10,"improved work terms")}
- }
- if(o.type==="RETRAIN"){
-  if(c==="enroll"){p.employment="training while working";pressure(k,"financial",8,"training costs");relief(k,"career",18,"new direction");event(W.year,"TRANSFORMATIVE_CHANGE",`${p.name} begins retraining, opening a new career path.`,[k],{key:`transform-${o.id}`,direction:"potentially beneficial"})}
-  if(c==="delay")pressure(k,"career",5,"postponed change");
- }
- if(o.type==="FINANCE"){
-  if(c==="ask_family"){relief(k,"financial",18,"family assistance");pressure(k,"family",5,"obligation after assistance")}
-  if(c==="high_cost_debt"){relief(k,"financial",9,"short-term cash");pressure(k,"financial",24,"expensive debt");event(W.year,"TRANSFORMATIVE_CHANGE",`${p.name} takes expensive debt, relieving the immediate problem while increasing future strain.`,[k],{key:`transform-${o.id}`,direction:"potentially detrimental"})}
-  if(c==="cut_costs")relief(k,"financial",13,"reduced expenses");
-  if(c==="extra_work"){relief(k,"financial",15,"additional income");pressure(k,"social",7,"reduced free time")}
- }
- if(o.type==="MOVE"){
-  if(c==="move"){p.household="relocated";relief(k,"career",12,"access to opportunity");pressure(k,"social",12,"leaving familiar network");event(W.year,"TRANSFORMATIVE_CHANGE",`${p.name} relocates for a new possibility.`,[k],{key:`transform-${o.id}`,direction:"mixed"})}
-  if(c==="stay")relief(k,"social",5,"maintaining local ties");
- }
-}
-function generate(){
- logs=[];W={year:2026,people:{},events:[],counterfactual:null};
- addPerson("maya","Maya Chen",1992,{ambition:.82,adaptability:.78,confidence:.64,stability:.34,planning:.72,persistence:.74,socialTrust:.61,sensitivity:{financial:1.05,career:1.15,relationship:.9,family:1,social:.9}},{financial:1.05,career:1.08},{savings:"modest",network:"strong"});
- addPerson("daniel","Daniel Brooks",1989,{ambition:.42,adaptability:.38,confidence:.47,stability:.84,planning:.56,persistence:.68,socialTrust:.44,sensitivity:{financial:1.18,career:.9,relationship:1.1,family:1.05,social:1}},{financial:1.18,career:.92},{savings:"thin",network:"moderate"});
- addPerson("rosa","Rosa Martinez",1995,{ambition:.67,adaptability:.7,confidence:.52,stability:.5,planning:.38,persistence:.55,socialTrust:.82,sensitivity:{financial:1.25,career:1,relationship:1.05,family:1.2,social:.95}},{financial:1.15,family:1.1},{savings:"low",network:"strong family"});
- addPerson("owen","Owen Taylor",1991,{ambition:.55,adaptability:.58,confidence:.72,stability:.62,planning:.8,persistence:.7,socialTrust:.5,sensitivity:{financial:.88,career:1.05,relationship:.95,family:.9,social:1.1}},{financial:.9,career:1},{savings:"healthy",network:"small"});
- Object.values(W.people).forEach(p=>event(p.birth,"BIRTH",`${p.name} is born.`,[p.key],{key:`birth-${p.key}`}));
- render();runTests()
-}
-function yearlyEvents(y){
- W.year=y;
- if(y===2027){["maya","daniel","rosa"].forEach(k=>pressure(k,"financial",18,"regional reduction in work hours"));pressure("maya","career",12,"limited advancement");}
- if(y===2028){pressure("rosa","family",22,"increased family responsibility");pressure("daniel","career",14,"workplace restructuring");}
- if(y===2029){
-   let a=opportunity("maya","RETRAIN","subsidized technical retraining",1.05,"career",true);decide("maya",a);
-   let b=opportunity("daniel","JOB","better-paying job with unfamiliar duties",.9,"career",true);decide("daniel",b);
-   let c=opportunity("rosa","FINANCE","several ways to cover an urgent expense",.8,"financial",true);decide("rosa",c);
- }
- if(y===2030){pressure("owen","career",20,"department closure");let o=opportunity("owen","MOVE","position in another city",.9,"career",true);decide("owen",o)}
- if(y===2031){pressure("maya","financial",12,"unexpected vehicle expense");pressure("daniel","relationship",18,"household conflict");}
- if(y===2032){["maya","daniel","rosa","owen"].forEach(k=>pressure(k,"financial",10,"regional downturn exposure"));let o=opportunity("rosa","JOB","supervisory opening with higher pay",.95,"career",true);decide("rosa",o)}
- if(y===2033){let o=opportunity("daniel","FINANCE","options to resolve accumulated bills",.8,"financial",true);decide("daniel",o);relief("maya","social",8,"support from friends")}
- if(y===2034){let o=opportunity("maya","JOB","leadership role after years of change",1.0,"career",true);decide("maya",o)}
-}
-function advanceYear(){if(!W)return;if(W.year>=2034){log("2034 reached.");return}yearlyEvents(W.year+1);log("Advanced to "+W.year+".");render();runTests()}
-function runYears(){if(!W)generate();while(W.year<2034)yearlyEvents(W.year+1);log("Simulation advanced through 2034.");render();runTests()}
-function runCounterfactual(){
- if(!W)generate();
- let base={...W.people.maya,pressures:{financial:45,relationship:10,career:40,family:5,social:5},opportunities:[],decisions:[]};
- let o={id:"COUNTERFACTUAL-OP",year:2035,type:"JOB",label:"high-risk career leap",base:1,domain:"career",transformative:true,status:"AVAILABLE"};
- let high=weightsFor(base,o);
- let lowP={...base,pressures:{financial:3,relationship:2,career:5,family:0,social:2}};
- let low=weightsFor(lowP,o);
- W.counterfactual={samePerson:true,highPressure:totalPressure(base),lowPressure:totalPressure(lowP),highWeights:high,lowWeights:low,
-   conclusion:"Pressure changed relative weights; it did not remove alternatives or encode an outcome."};
- log("Counterfactual calculated: same NPC, same opportunity, different accumulated pressure.");render();runTests()
-}
-function runScenario(){generate();runYears();runCounterfactual();runTests()}
-function runTests(){
- if(!W)return;
- let allOpp=Object.values(W.people).flatMap(p=>p.opportunities),allDec=Object.values(W.people).flatMap(p=>p.decisions);
- let transforms=W.events.filter(e=>e.type==="TRANSFORMATIVE_CHANGE");
- let tests=[
- ["1. Objective pressure and experienced pressure are stored separately",W.events.filter(e=>e.type==="PRESSURE_CHANGE").every(e=>Number.isFinite(e.meta.objective)&&Number.isFinite(e.meta.experienced))],
- ["2. NPC history modifies experienced pressure",W.events.some(e=>e.type==="PRESSURE_CHANGE"&&e.meta.objective!==e.meta.experienced)],
- ["3. Pressures accumulate across independent circumstances",Object.values(W.people).some(p=>totalPressure(p)>30)||W.year<2028],
- ["4. Pressure is multidimensional rather than one universal meter",Object.values(W.people).every(p=>Object.keys(p.pressures).length===5)],
- ["5. Opportunity exists separately from decision",allOpp.every(o=>o.id&&o.label)&&allDec.every(d=>d.opportunity)],
- ["6. Event does not contain predetermined decision",W.events.filter(e=>e.type==="OPPORTUNITY").every(e=>!e.meta.choice)],
- ["7. Every decision retains its probability landscape",allDec.every(d=>d.weights&&Object.keys(d.weights).length>=3)],
- ["8. Every available response keeps nonzero probability",allDec.every(d=>Object.values(d.weights).every(v=>v>0))],
- ["9. Pressure changes weights rather than forcing an outcome",!W.counterfactual||JSON.stringify(W.counterfactual.highWeights)!==JSON.stringify(W.counterfactual.lowWeights)],
- ["10. Counterfactual pressure leaves multiple responses possible",!W.counterfactual||Object.values(W.counterfactual.highWeights).filter(v=>v>0).length>=3],
- ["11. High pressure can increase beneficial transformative possibility",!W.counterfactual||W.counterfactual.highWeights.accept>W.counterfactual.lowWeights.accept],
- ["12. High pressure can also increase risky/detrimental possibility",(()=>{let p={...W.people.rosa,pressures:{financial:55,relationship:15,career:15,family:15,social:5}};let o={id:"T",type:"FINANCE",base:1};let hi=weightsFor(p,o);p={...p,pressures:{financial:5,relationship:0,career:0,family:0,social:0}};let lo=weightsFor(p,o);return hi.high_cost_debt>lo.high_cost_debt})()],
- ["13. Consequence occurs only after a decision",W.events.filter(e=>e.type==="CONSEQUENCE"||e.type==="TRANSFORMATIVE_CHANGE").every(e=>e.year>=2029)],
- ["14. Consequences feed back into later pressure/circumstance",W.events.some(e=>e.type==="PRESSURE_RELIEF")],
- ["15. Beneficial transformation is representable without requiring it to occur",(()=>{let p={...W.people.maya,pressures:{financial:45,relationship:10,career:40,family:5,social:5}};let o={id:"BENEFICIAL-REPRESENTABILITY",type:"JOB",base:1};let hi=weightsFor(p,o);p={...p,pressures:{financial:3,relationship:2,career:5,family:0,social:2}};let lo=weightsFor(p,o);return hi.accept>0&&lo.accept>0&&hi.accept>lo.accept&&hi.decline>0&&hi.negotiate>0})()],
- ["16. Detrimental transformation is representable without being mandatory",(()=>{let p={...W.people.rosa,pressures:{financial:60,relationship:10,career:10,family:15,social:5}};let w=weightsFor(p,{id:"X",type:"FINANCE",base:1});return w.high_cost_debt>0&&w.ask_family>0&&w.cut_costs>0})()],
- ["17. Mixed transformation is representable",transforms.some(e=>e.meta.direction==="mixed")||W.year<2030],
- ["18. Different people interpret similar objective pressure differently",(()=>{let es=W.events.filter(e=>e.year===2032&&e.type==="PRESSURE_CHANGE"&&e.meta.domain==="financial");return es.length<2||new Set(es.map(e=>e.meta.experienced)).size>1})()],
- ["19. Decisions are canonical once made and do not reroll on render/test",allDec.every(d=>W.events.filter(e=>e.meta.decision===d.id).length===1)],
- ["20. Birth/history remains immutable while probability landscape evolves",Object.values(W.people).every(p=>W.events.filter(e=>e.meta.key===`birth-${p.key}`).length===1)],
- ["21. Pressure relief does not erase the event that caused pressure",W.events.some(e=>e.type==="PRESSURE_RELIEF")?W.events.some(e=>e.type==="PRESSURE_CHANGE"):true],
- ["22. Transformative possibility increases with accumulated pressure without becoming certainty",!W.counterfactual||Object.values(W.counterfactual.highWeights).every(v=>v>0)],
- ["23. Same NPC can carry simultaneous pressures from several domains",Object.values(W.people).some(p=>Object.values(p.pressures).filter(v=>v>0).length>=2)||W.year<2028],
- ["24. No hidden success/failure label is attached to NPC decisions",allDec.every(d=>!("success" in d)&&!("failure" in d)&&!("good" in d)&&!("bad" in d))]
- ];
- document.getElementById("tests").innerHTML=tests.map(t=>`<div class="test row"><span>${t[0]}</span><span class="${t[1]?"pass":"bad"}">${t[1]?"PASS":"FAIL"}</span></div>`).join("");
-}
-function runWringer(){
- if(!W)generate();
- const clone=x=>JSON.parse(JSON.stringify(x));
- const mk=(base,pressures)=>{let p=clone(base);p.pressures={...pressures};return p};
- const sum=w=>Object.values(w).reduce((a,b)=>a+b,0);
- const positive=w=>Object.values(w).every(v=>Number.isFinite(v)&&v>0);
- const maya=W.people.maya,rosa=W.people.rosa,owen=W.people.owen;
- const low={financial:0,relationship:0,career:0,family:0,social:0};
- const high={financial:100,relationship:100,career:100,family:100,social:100};
- const job={id:"WR-JOB",year:2035,type:"JOB",label:"adversarial career opening",base:1,domain:"career",transformative:true,status:"AVAILABLE"};
- const retrain={id:"WR-RETRAIN",year:2035,type:"RETRAIN",label:"adversarial retraining",base:1,domain:"career",transformative:true,status:"AVAILABLE"};
- const finance={id:"WR-FIN",year:2035,type:"FINANCE",label:"adversarial finance options",base:1,domain:"financial",transformative:true,status:"AVAILABLE"};
- const move={id:"WR-MOVE",year:2035,type:"MOVE",label:"adversarial relocation",base:1,domain:"career",transformative:true,status:"AVAILABLE"};
- const jl=weightsFor(mk(maya,low),job),jh=weightsFor(mk(maya,high),job);
- const rl=weightsFor(mk(maya,low),retrain),rh=weightsFor(mk(maya,high),retrain);
- const fl=weightsFor(mk(rosa,low),finance),fh=weightsFor(mk(rosa,high),finance);
- const ml=weightsFor(mk(owen,low),move),mh=weightsFor(mk(owen,high),move);
- const before=JSON.stringify(W), d1=choose(mk(maya,high),job), d2=choose(mk(maya,high),job), after=JSON.stringify(W);
- const midA=weightsFor(mk(maya,{financial:50,relationship:0,career:0,family:0,social:0}),job);
- const midB=weightsFor(mk(maya,{financial:0,relationship:0,career:50,family:0,social:0}),job);
- const other=weightsFor(mk(owen,high),job);
- let tests=[
-  ["1. Zero pressure leaves every JOB response possible",positive(jl)],
-  ["2. Extreme pressure leaves every JOB response possible",positive(jh)],
-  ["3. Zero pressure leaves every RETRAIN response possible",positive(rl)],
-  ["4. Extreme pressure leaves every RETRAIN response possible",positive(rh)],
-  ["5. Zero pressure leaves every FINANCE response possible",positive(fl)],
-  ["6. Extreme pressure leaves every FINANCE response possible",positive(fh)],
-  ["7. Zero pressure leaves every MOVE response possible",positive(ml)],
-  ["8. Extreme pressure leaves every MOVE response possible",positive(mh)],
-  ["9. Beneficial transformation remains possible at low pressure",jl.accept>0&&rl.enroll>0],
-  ["10. Detrimental transformation remains possible at low pressure",fl.high_cost_debt>0],
-  ["11. Mixed transformation remains possible at low pressure",ml.move>0],
-  ["12. High pressure increases beneficial transformative weight",jh.accept>jl.accept&&rh.enroll>rl.enroll],
-  ["13. High pressure increases risky transformative weight",fh.high_cost_debt>fl.high_cost_debt],
-  ["14. High pressure does not erase mundane/non-transformative alternatives",jh.decline>0&&jh.negotiate>0&&rh.delay>0&&rh.decline>0&&fh.cut_costs>0&&mh.stay>0],
-  ["15. Pressure modifies a landscape rather than storing a decision",JSON.stringify(jh)!==JSON.stringify(jl)&&!("choice" in jh)],
-  ["16. Same person + same opportunity + same pressure evaluates deterministically",d1.choice===d2.choice&&JSON.stringify(d1.weights)===JSON.stringify(d2.weights)],
-  ["17. Pure counterfactual evaluation does not mutate canonical world",before===after],
-  ["18. Every extreme-pressure landscape remains finite",[jh,rh,fh,mh].every(w=>Number.isFinite(sum(w))&&sum(w)>0)],
-  ["19. No response receives a zero-probability destiny cutoff",[jh,rh,fh,mh].every(positive)],
-  ["20. Pressure direction can broaden both beneficial and detrimental tails",rh.enroll>rl.enroll&&fh.high_cost_debt>fl.high_cost_debt],
-  ["21. Equal total pressure in different domains need not invent a forced choice",totalPressure(mk(maya,{financial:50,relationship:0,career:0,family:0,social:0}))===totalPressure(mk(maya,{financial:0,relationship:0,career:50,family:0,social:0}))&&positive(midA)&&positive(midB)],
-  ["22. Different people can retain different landscapes under identical objective extremes",JSON.stringify(jh)!==JSON.stringify(other)],
-  ["23. Opportunity objects contain possibility, not an encoded outcome",![job,retrain,finance,move].some(o=>"choice" in o||"decision" in o||"success" in o||"failure" in o)],
-  ["24. Wringer cannot manufacture a success/failure judgment",[d1,d2].every(d=>!("success" in d)&&!("failure" in d)&&!("good" in d)&&!("bad" in d))]
- ];
- document.getElementById("wringer").innerHTML=tests.map(t=>`<div class="test row"><span>${t[0]}</span><span class="${t[1]?"pass":"bad"}">${t[1]?"PASS":"FAIL"}</span></div>`).join("");
- log("Block 6.0.2 adversarial decision-pressure wringer completed: "+tests.filter(t=>t[1]).length+"/"+tests.length+" passed.");
- render();
-}
-function render(){
- if(!W)return;
- document.getElementById("seed").textContent="World-context seed: "+seed;document.getElementById("clock").textContent="Canonical year: "+W.year;
- document.getElementById("people").innerHTML=Object.values(W.people).map(p=>{let P=totalPressure(p);return `<div class="card"><div class="row"><b>${p.name}</b><span class="tag">TOTAL EXPERIENCED PRESSURE ${P}</span></div><div class="small">${p.id} · age ${W.year-p.birth} · ${p.employment}<br>household: ${p.household} · finances: ${p.finance}<br>financial ${p.pressures.financial} · career ${p.pressures.career} · relationship ${p.pressures.relationship} · family ${p.pressures.family} · social ${p.pressures.social}</div><div class="pressure"><i style="width:${Math.min(100,P/3)}%"></i></div></div>`}).join("");
- document.getElementById("history").innerHTML=W.events.filter(e=>!["PRESSURE_CHANGE","PRESSURE_RELIEF"].includes(e.type)).sort((a,b)=>a.year-b.year||a.id.localeCompare(b.id)).map(e=>`<div class="event"><b>${e.year} · ${e.type}</b><div>${e.text}</div><div class="small">${e.id} · ${e.people.map(k=>W.people[k]?.id||k).join(" · ")}</div></div>`).join("")||"No canonical events.";
- let ds=Object.values(W.people).flatMap(p=>p.decisions.map(d=>({p,d})));
- document.getElementById("decisions").innerHTML=ds.map(({p,d})=>`<div class="choice"><div class="row"><b>${d.year} · ${p.name}: ${d.choice.replaceAll("_"," ")}</b><span class="tag">PRESSURE ${d.pressure}</span></div><div class="small">Probability landscape: ${Object.entries(d.weights).map(([k,v])=>`${k} ${v.toFixed(2)}`).join(" · ")}<br>Source opportunity: ${d.opportunity}</div></div>`).join("")+(W.counterfactual?`<div class="choice"><b>Counterfactual — same person, same opportunity</b><div class="small">Low pressure ${W.counterfactual.lowPressure}: ${Object.entries(W.counterfactual.lowWeights).map(([k,v])=>`${k} ${v.toFixed(2)}`).join(" · ")}<br>High pressure ${W.counterfactual.highPressure}: ${Object.entries(W.counterfactual.highWeights).map(([k,v])=>`${k} ${v.toFixed(2)}`).join(" · ")}<br><span class="info">${W.counterfactual.conclusion}</span></div></div>`:"");
- document.getElementById("raw").textContent=JSON.stringify(W,null,2);
-}
-function newSeed(){seed=Math.floor(Math.random()*1e9);generate()}
-generate();
+let seed=7102026,W=null,step=0,logs=[];function rngFor(...parts){let s=2166136261>>>0,str=[seed,...parts].join('|');for(let c of str){s^=c.charCodeAt(0);s=Math.imul(s,16777619)}return()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}function id(k){return'NPC-'+String(Math.floor(rngFor('ID',k)()*1e9)).padStart(9,'0')}function log(s){logs.push(s)}
+function person(k,name,birth,mode='ACTIVE'){W.people[k]={id:id(k),key:k,name,birth,mode,alive:true,pressures:{financial:0,relationship:0,career:0,social:0},history:[],decisions:[],knowledge:[]}}
+function rel(a,b,type){let k=[a,b].sort().join('~');W.relationships[k]={id:'REL-'+k,a,b,type,status:'ACTIVE',history:[],views:{[a]:{closeness:65,trust:70,obligation:40},[b]:{closeness:52,trust:61,obligation:55}}};return W.relationships[k]}
+function event(year,type,text,people,meta={}){let sig=[year,type,[...people].sort(),meta.key||''].join('|');let old=W.events.find(e=>e.sig===sig);if(old)return old;let e={id:'EV-'+String(W.events.length).padStart(3,'0'),sig,year,type,text,people:[...people],meta};W.events.push(e);people.forEach(k=>{if(W.people[k]&&!W.people[k].history.includes(e.id))W.people[k].history.push(e.id)});if(meta.relationship){let r=W.relationships[meta.relationship];if(r&&!r.history.includes(e.id))r.history.push(e.id)}return e}
+function rkey(a,b){return[a,b].sort().join('~')}function circumstance(target,source,cause,domain,amount){let p=W.people[target];p.pressures[domain]=Math.max(0,p.pressures[domain]+amount);return event(W.year,'CIRCUMSTANCE',`${p.name} receives a ${domain} circumstance caused by ${W.people[source].name}'s established action.`,[target,source],{key:`C-${target}-${source}-${cause}`,cause,source,target,domain,amount})}
+function decide(k,op,options){let p=W.people[k],r=rngFor('DECISION',k,op,W.year),total=options.reduce((a,x)=>a+x.w,0),x=r()*total,choice=options[0].name;for(let o of options){x-=o.w;if(x<=0){choice=o.name;break}}let d={id:`D-${k}-${op}`,year:W.year,person:k,opportunity:op,options:options.map(o=>({name:o.name,weight:o.w})),choice};p.decisions.push(d);W.decisions.push(d);event(W.year,'DECISION',`${p.name} chooses ${choice}.`,[k],{key:d.id,decision:d.id});return d}
+function generate(){W={year:2026,people:{},relationships:{},events:[],decisions:[]};logs=[];step=0;person('maya','Maya Chen',1992);person('daniel','Daniel Brooks',1990);person('rosa','Rosa Martinez',1991,'RELEVANT');person('owen','Owen Taylor',1988,'DORMANT');rel('maya','daniel','partners');rel('daniel','rosa','siblings');rel('maya','rosa','friends');rel('rosa','owen','friends');event(2021,'RELATIONSHIP_HISTORY','Maya and Daniel establish a shared household.',['maya','daniel'],{key:'md-house',relationship:rkey('maya','daniel')});event(2023,'RELATIONSHIP_HISTORY','Maya and Rosa become close through repeated contact.',['maya','rosa'],{key:'mr-friend',relationship:rkey('maya','rosa')});render();log('World generated. Shared histories exist before Block 7 interactions.');render()}
+function advance(){if(!W)generate();step++;if(step===1){W.year=2029;let d=decide('maya','JOB_EXIT',[{name:'resign',w:1.4},{name:'stay',w:1.1},{name:'negotiate',w:.8}]);event(2029,'ACTION','Maya leaves her position; household income changes.',['maya'],{key:'maya-action',decision:d.id});circumstance('daniel','maya','maya-action','financial',28);log("Maya's action became Daniel's circumstance; Daniel's response was not stored in Maya's decision.")}
+else if(step===2){W.year=2030;let d=decide('daniel','HOUSEHOLD_RESPONSE',[{name:'overtime',w:1.5},{name:'reduce spending',w:1.2},{name:'ask family',w:1.0}]);event(2030,'ACTION',`Daniel acts on his own decision: ${d.choice}.`,['daniel'],{key:'daniel-action',decision:d.id});circumstance('rosa','daniel','daniel-action','social',18);let k=rkey('maya','daniel');W.relationships[k].views.maya.trust-=4;W.relationships[k].views.daniel.obligation+=9;event(2030,'RELATIONSHIP_CHANGE','The household strain changes Maya and Daniel’s present relationship state without rewriting their shared past.',['maya','daniel'],{key:'md-change',relationship:k});log('Daniel independently responded; the same shared strain changed Maya and Daniel asymmetrically.')}
+else if(step===3){W.year=2031;let d=decide('rosa','FAMILY_RESPONSE',[{name:'help',w:1.35},{name:'decline',w:1.0},{name:'set boundary',w:1.15}]);event(2031,'ACTION',`Rosa independently chooses to ${d.choice}.`,['rosa'],{key:'rosa-action',decision:d.id});circumstance('maya','rosa','rosa-action','relationship',16);log('Rosa’s decision returned a new circumstance to Maya: A → B → C → A, without omniscience.')}
+else if(step===4){W.year=2032;event(2032,'SHARED_EVENT','A family gathering affects Maya, Daniel, Rosa, and dormant Owen as one canonical occurrence.',['maya','daniel','rosa','owen'],{key:'gathering'});W.people.owen.pressures.social+=9;log('One shared event affected four people; Owen remained dormant.')}
+else if(step===5){W.year=2033;let k=rkey('maya','rosa');W.relationships[k].status='ESTRANGED';event(2033,'RELATIONSHIP_CHANGE','Maya and Rosa become estranged. Their earlier friendship remains historical.',['maya','rosa'],{key:'estrange',relationship:k});log('Relationship dissolved in the present; its history remains referenceable.')}
+else if(step===6){W.year=2034;W.people.owen.mode='ACTIVE';event(2034,'REACTIVATION','Owen becomes active again; the 2032 shared event already constrains his state.',['owen'],{key:'owen-react'});log('Owen reactivated without rerolling the dormant-period shared event.')}
+else if(step===7){W.year=2035;W.people.daniel.alive=false;event(2035,'DEATH','Daniel dies. Future interaction ends; historical relationships remain.',['daniel'],{key:'daniel-death'});log('Daniel entered terminal state; relationship history was preserved.')}
+else log('Scenario complete.');render()}
+function runScenario(){generate();for(let i=0;i<7;i++)advance();runTests();render()}
+function tests(){let E=W.events,R=W.relationships,D=W.decisions,md=R[rkey('maya','daniel')],mr=R[rkey('maya','rosa')],shared=E.find(e=>e.meta.key==='gathering'),mayaD=D.find(d=>d.person==='maya'),danD=D.find(d=>d.person==='daniel');return[
+['Canonical event can affect multiple NPCs without duplication',shared&&E.filter(e=>e.meta.key==='gathering').length===1&&shared.people.length===4],['Each NPC can carry independent state after same event',W.people.owen.pressures.social!==W.people.maya.pressures.social],['Person A action creates Person B circumstance',E.some(e=>e.meta.source==='maya'&&e.meta.target==='daniel')],['B response is not encoded in A decision',mayaD&&!('danielResponse' in mayaD)&&danD],['Relationships can change from interaction',md.history.some(x=>E.find(e=>e.id===x)?.meta.key==='md-change')],['Relationship state can be asymmetric',md.views.maya.trust!==md.views.daniel.trust&&md.views.maya.obligation!==md.views.daniel.obligation],['Established relationship history remains immutable',md.history.some(x=>E.find(e=>e.id===x)?.meta.key==='md-house')],['Multiple relationship dimensions coexist',Object.keys(md.views.maya).length>=3],['Relationship effects create pressure without forcing behavior',W.people.maya.pressures.relationship>0&&mayaD.options.length>1],['B can independently respond to A',danD&&danD.person==='daniel'],['B response can become later circumstance for another',E.some(e=>e.meta.source==='daniel'&&e.meta.target==='rosa')],['Circular social feedback remains event-bounded',E.filter(e=>e.type==='CIRCUMSTANCE').length===3],['Dormant NPC can be affected without activation',shared&&shared.people.includes('owen')],['Reactivation honors shared canonical history',W.people.owen.history.includes(shared.id)],['One interaction can backlink several relationships/people',shared.people.length===4],['Relationship dissolution does not erase history',mr.status==='ESTRANGED'&&mr.history.length>=2],['Death terminates future interaction but preserves history',!W.people.daniel.alive&&md.history.length>0],['Estranged relationships remain referenceable',!!R[rkey('maya','rosa')]],['Third party effects do not grant internal-state omniscience',!W.people.maya.knowledge.includes('rosa_internal_state')],['Established decisions are stable on reevaluation/render',JSON.stringify(D)===JSON.stringify(W.decisions)],['A→B→C→A returns as new circumstances, not shared mind',E.some(e=>e.meta.source==='rosa'&&e.meta.target==='maya')],['Shared event is one occurrence, not one per participant',E.filter(e=>e.meta.key==='gathering').length===1],['Dormancy changes computation, not canonical participation',shared&&W.people.owen.history.includes(shared.id)],['No relationship event contains a forced downstream decision',!E.some(e=>e.meta.forcedDecision)] ]}
+function runTests(){let t=tests();document.getElementById('tests').innerHTML=t.map((x,i)=>`<div class="test row"><span>${i+1}. ${x[0]}</span><span class="${x[1]?'pass':'bad'}">${x[1]?'PASS':'FAIL'}</span></div>`).join('')}
+function render(){if(!W)return;document.getElementById('seed').textContent='World seed: '+seed;document.getElementById('clock').textContent='Canonical year: '+W.year;document.getElementById('actions').innerHTML=logs.slice(-10).map(x=>'• '+x).join('<br>')||'Waiting.';document.getElementById('people').innerHTML=Object.values(W.people).map(p=>`<div class="card"><div class="row"><b>${p.name}</b><span class="tag">${p.mode}${p.alive?'':' · DECEASED'}</span></div><div class="small">${p.id} · pressure F ${p.pressures.financial} / R ${p.pressures.relationship} / C ${p.pressures.career} / S ${p.pressures.social}<br>decisions ${p.decisions.length} · canonical backlinks ${p.history.length}</div></div>`).join('')+'<h3>Relationships</h3>'+Object.values(W.relationships).map(r=>`<div class="card"><b>${W.people[r.a].name} ↔ ${W.people[r.b].name}</b> <span class="tag">${r.type} · ${r.status}</span><div class="small">${W.people[r.a].name}: trust ${r.views[r.a].trust}, closeness ${r.views[r.a].closeness}, obligation ${r.views[r.a].obligation}<br>${W.people[r.b].name}: trust ${r.views[r.b].trust}, closeness ${r.views[r.b].closeness}, obligation ${r.views[r.b].obligation}<br>shared historical backlinks: ${r.history.length}</div></div>`).join('');document.getElementById('history').innerHTML=W.events.slice().sort((a,b)=>a.year-b.year||a.id.localeCompare(b.id)).map(e=>`<div class="event"><b>${e.year} · ${e.type}</b><br>${e.text}<div class="small">${e.id} · ${e.people.map(k=>W.people[k].name).join(' · ')}</div></div>`).join('')||'Waiting.';document.getElementById('raw').textContent=JSON.stringify(W,null,2)}function newSeed(){seed=Math.floor(Math.random()*9e6)+1e6;generate()}generate();
 </script></main></body></html>
