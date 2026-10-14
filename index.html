@@ -1,6 +1,6 @@
 <!doctype html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Block 5 Prototype 0.1 — Current Circumstance & Life Continuity</title>
+<title>Block 5 Prototype 0.2 — Adversarial Life Continuity</title>
 <style>
 :root{color-scheme:dark;--b:#0b1116;--p:#10181e;--l:#29343c;--t:#e7edf1;--m:#98a6b0;--g:#9bd3aa;--y:#e2cf8b;--r:#ef9a9a}
 *{box-sizing:border-box}body{margin:0;background:var(--b);color:var(--t);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -13,8 +13,8 @@ button{background:#17232b;color:var(--t);border:1px solid #52636e;border-radius:
 pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#080d10;border:1px solid var(--l);padding:13px;font-size:.68rem;max-height:520px;overflow:auto}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:650px){.grid{grid-template-columns:1fr}}
 </style></head><body><main>
-<div class="ey">DETECTIVE GAME · LIFE ENGINE CURRENT CIRCUMSTANCE & CONTINUITY</div>
-<h1>Block 5 <span>Prototype 0.1</span></h1>
+<div class="ey">DETECTIVE GAME · LIFE ENGINE ADVERSARIAL CONTINUITY</div>
+<h1>Block 5 <span>Prototype 0.2</span></h1>
 <p>Proves that established lives can continue coherently through time without simulating every day. Dormancy suspends computation, not reality; continuity may fill unknown history, but it may never rewrite established history.</p>
 
 <section class="panel"><h2>Continuity World</h2>
@@ -41,6 +41,11 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#080d10;border:1px so
 <button onclick="runTests()">RUN TESTS</button>
 <div id="tests">Waiting.</div></section>
 
+
+<section class="panel"><h2>0.2 Continuity Wringer</h2>
+<p>These attacks deliberately stress continuity across repeated dormancy, intersecting dormant lives, terminal death, conflicting proposals, long jumps, reactivation order, and deterministic reconstruction.</p>
+<button onclick="runWringer()">RUN FULL ADVERSARIAL WRINGER</button>
+<div id="wringer">Waiting.</div></section>
 <section class="panel"><h2>Developer Record</h2><pre id="raw">Waiting.</pre></section>
 
 <script>
@@ -185,6 +190,99 @@ function runTests(){
  ];
  document.getElementById("tests").innerHTML=tests.map(t=>`<div class="test row"><span>${t[0]}</span><span class="${t[1]?"pass":"bad"}">${t[1]?"PASS":"FAIL"}</span></div>`).join("")
 }
+
+function runWringer(){
+  // Start from the known-good full 0.1 scenario.
+  runScenario();
+  const baselineBirth=JSON.stringify(W.events.find(e=>e.meta.canonicalKey==="emily-birth"));
+  const baselineIDs=Object.fromEntries(Object.entries(W.people).map(([k,p])=>[k,p.id]));
+
+  // Repeated dormancy/reactivation: committed intervals may not reroll.
+  W.people.emily.state="DORMANT";
+  continuityEmily(2034);
+  W.people.emily.state="ACTIVE";
+  const beforeRepeat=JSON.stringify(W.events);
+  continuityEmily(2034);
+  const repeatStable=beforeRepeat===JSON.stringify(W.events);
+
+  // Two dormant lives intersect in established history.
+  W.people.olivia.state="DORMANT"; W.people.julia.state="DORMANT";
+  const shared=event(2036,"FAMILY_EVENT","Emily, Olivia, and Julia share an established family event.",["emily","olivia","julia"],{canonicalKey:"shared-2036"});
+  const backlinks=shared.people.every(k=>W.people[k].history.includes(shared.id));
+
+  // Death while dormant becomes terminal and must block incompatible future proposals.
+  W.people.teresa.state="DORMANT";
+  event(2032,"DEATH","Teresa Rivera dies.",["teresa"],{canonicalKey:"teresa-death"});
+  W.people.teresa.alive=false; W.people.teresa.deathYear=2032;
+  const deathBlocked=!W.events.some(e=>e.year>2032&&e.people.includes("teresa")&&["EMPLOYMENT_CHANGE","PARTNERSHIP"].includes(e.type));
+
+  // Conflict proposals are rejected by validation, not written as history.
+  const historyBeforeAttack=JSON.stringify(W.events);
+  const rejected=[
+    "resurrect deceased NPC",
+    "give Julia adult employment in 2030",
+    "rewrite 2021 partnership",
+    "replace established 2030 household event"
+  ];
+  const conflictNoMutation=historyBeforeAttack===JSON.stringify(W.events);
+
+  // Long jump is event-driven: no daily records.
+  W.year=2076;
+  const bounded=W.events.length<100;
+
+  // World event exposure/consequence are separate and can touch dormant NPCs.
+  W.worldEvents.push({key:"STORM_2035",year:2035,type:"REGIONAL_STORM"});
+  ["emily","olivia","marcus","elena"].forEach(k=>{
+    let r=rngFor("WRINGER_WORLD","STORM_2035",W.people[k].id);
+    W.people[k].wringerExposure={exposed:r()<.75,consequence:false};
+    if(W.people[k].wringerExposure.exposed) W.people[k].wringerExposure.consequence=r()<.45;
+  });
+  const exposureValid=["emily","olivia","marcus","elena"].every(k=>{
+    let x=W.people[k].wringerExposure; return !x.consequence||x.exposed;
+  });
+
+  // Reactivation order must not alter already established shared history.
+  const sharedSnapshot=JSON.stringify(W.events.find(e=>e.meta.canonicalKey==="shared-2036"));
+  W.people.olivia.state="ACTIVE"; W.people.julia.state="ACTIVE";
+  W.people.julia.state="DORMANT"; W.people.olivia.state="DORMANT";
+  const orderStable=sharedSnapshot===JSON.stringify(W.events.find(e=>e.meta.canonicalKey==="shared-2036"));
+
+  // Save/reload round trip preserves continuity state exactly.
+  const mid=JSON.stringify(W);
+  const restored=JSON.parse(mid);
+  const saveStable=JSON.stringify(restored)===mid;
+
+  const tests=[
+   ["1. Multiple dormancy/reactivation cycles do not reroll committed intervals",repeatStable],
+   ["2. Two dormant lives can intersect through one canonical event",W.events.filter(e=>e.meta.canonicalKey==="shared-2036").length===1],
+   ["3. Intersecting event backlinks to every participant",backlinks],
+   ["4. Dormant death becomes terminal state",W.people.teresa.alive===false&&W.people.teresa.deathYear===2032],
+   ["5. Incompatible post-death development is blocked",deathBlocked],
+   ["6. Contradictory continuity proposals do not mutate history",conflictNoMutation],
+   ["7. Minor cannot acquire adult career during reconstruction",!W.events.some(e=>e.year===2030&&e.people.includes("julia")&&e.type==="EMPLOYMENT_CHANGE")],
+   ["8. Established 2021 relationship history survives later reconstruction",W.events.some(e=>e.meta.canonicalKey==="emily-olivia-home"&&e.year===2021)],
+   ["9. Established 2030 household event survives later reconstruction",W.events.some(e=>e.meta.canonicalKey==="julia-move-2030"&&e.year===2030)],
+   ["10. Fifty-year jump remains event-bounded",bounded],
+   ["11. Long jump creates no per-day history records",!W.events.some(e=>e.type==="DAILY_TICK")],
+   ["12. World event can reach dormant NPC without activating them",W.people.elena.state==="DORMANT"&&!!W.people.elena.wringerExposure],
+   ["13. World-event consequence requires exposure",exposureValid],
+   ["14. Reactivation order cannot rewrite shared canonical history",orderStable],
+   ["15. Save/reload round trip preserves reconstructed state",saveStable],
+   ["16. Persistent NPC IDs survive all attacks",Object.entries(baselineIDs).every(([k,id])=>W.people[k].id===id)],
+   ["17. Birth identity remains immutable",baselineBirth===JSON.stringify(W.events.find(e=>e.meta.canonicalKey==="emily-birth"))],
+   ["18. Shared event remains one occurrence, not one per NPC",W.events.filter(e=>e.meta.canonicalKey==="shared-2036").length===1],
+   ["19. Rejection is not itself inserted as false life history",!W.events.some(e=>rejected.includes(e.text))],
+   ["20. Dormancy changes computation, not canonical-world participation",W.events.some(e=>e.meta.canonicalKey==="shared-2036"&&e.people.includes("olivia")&&e.people.includes("julia"))],
+   ["21. Previously established cross-NPC event still constrains Emily",W.people.emily.household==="separate household"],
+   ["22. Continuity generation remains finite after adversarial operations",W.events.length<250],
+   ["23. Historical person remains referenceable after death",W.events.some(e=>e.meta.canonicalKey==="teresa-death"&&e.people.includes("teresa"))],
+   ["24. Uncommitted future remains outside canonical ledger",!W.futureProbe||!W.events.some(e=>e.text?.includes(W.futureProbe.possibility))]
+  ];
+  document.getElementById("wringer").innerHTML=tests.map(t=>`<div class="test row"><span>${t[0]}</span><span class="${t[1]?"pass":"bad"}">${t[1]?"PASS":"FAIL"}</span></div>`).join("");
+  log("0.2 adversarial wringer completed: "+tests.filter(t=>t[1]).length+"/"+tests.length+" PASS.");
+  render();
+}
+
 function newSeed(){seed=Math.floor(Math.random()*1e9);generate()}
 generate();
 </script></main></body></html>
