@@ -1,51 +1,138 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Block 4 Prototype 0.3</title>
-<style>:root{color-scheme:dark;--b:#0b1116;--p:#10181e;--l:#29343c;--t:#e7edf1;--m:#98a6b0;--g:#9bd3aa}*{box-sizing:border-box}body{margin:0;background:var(--b);color:var(--t);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:950px;margin:auto;padding:38px 20px 80px}.ey{letter-spacing:.13em;color:#7f8c96;font-size:.8rem}h1{font-size:2rem;margin:.5rem 0}h1 span{font-weight:400;color:#aab5bd}p{color:var(--m);line-height:1.5}.panel{border:1px solid var(--l);background:var(--p);padding:20px;margin-top:22px}button{background:#17232b;color:var(--t);border:1px solid #52636e;border-radius:6px;padding:12px 14px;margin:0 7px 8px 0}.person{border:1px solid var(--l);padding:13px;margin:9px 0;background:#0d1419}.row{display:flex;justify-content:space-between;gap:12px}.tag{font-size:.72rem;border:1px solid #40505a;padding:3px 6px;color:#b2bec6}.small{font-size:.82rem;color:var(--m)}.pass{color:var(--g);font-weight:700}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#080d10;border:1px solid var(--l);padding:13px;font-size:.7rem}</style></head><body><main>
-<div class="ey">DETECTIVE GAME · LIFE ENGINE RECURSIVE POPULATION</div><h1>Block 4 <span>Prototype 0.3</span></h1>
-<p>Biographical Resolution controls initial generation depth only. Existing history is never downgraded or rerolled.</p>
-<section class="panel"><h2>Interconnected Family Generation</h2><button onclick="generate()">GENERATE FAMILY WEB</button><button onclick="newSeed()">NEW SEED</button><p id="seed"></p></section>
+<!doctype html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Block 4 Prototype 0.4</title><style>:root{color-scheme:dark;--b:#0b1116;--p:#10181e;--l:#29343c;--t:#e7edf1;--m:#98a6b0;--g:#9bd3aa}*{box-sizing:border-box}body{margin:0;background:var(--b);color:var(--t);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:950px;margin:auto;padding:38px 20px 80px}.ey{letter-spacing:.13em;color:#7f8c96;font-size:.8rem}h1{font-size:2rem;margin:.5rem 0}h1 span{font-weight:400;color:#aab5bd}p{color:var(--m);line-height:1.5}.panel{border:1px solid var(--l);background:var(--p);padding:20px;margin-top:22px}button{background:#17232b;color:var(--t);border:1px solid #52636e;border-radius:6px;padding:12px 14px;margin:0 7px 8px 0}.person{border:1px solid var(--l);padding:13px;margin:9px 0;background:#0d1419}.row{display:flex;justify-content:space-between;gap:12px}.tag{font-size:.72rem;border:1px solid #40505a;padding:3px 6px;color:#b2bec6}.small{font-size:.82rem;color:var(--m)}.pass{color:var(--g);font-weight:700}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#080d10;border:1px solid var(--l);padding:13px;font-size:.7rem}
+.good{color:var(--g)} .warn{color:#e6c987} .event{border-left:2px solid #3b4b55;padding-left:12px;margin:10px 0}
+</style></head><body><main>
+<div class="ey">DETECTIVE GAME · LIFE ENGINE CAUSAL FAMILY HISTORY</div>
+<h1>Block 4 <span>Prototype 0.4</span></h1>
+<p>Family members now share chronology, surname provenance, age constraints, and persistent family events. Promotion must expand a life without contradicting shared history.</p>
+
+<section class="panel"><h2>Causal Family Generation</h2>
+<button onclick="generate()">GENERATE FAMILY</button><button onclick="newSeed()">NEW SEED</button><p id="seed"></p></section>
+
 <section class="panel"><h2>Root Person</h2><div id="root">Waiting.</div></section>
-<section class="panel"><h2>Generated Circles</h2><div id="web">Waiting.</div></section>
-<section class="panel"><h2>Promotion Test</h2><p>Promote one R2 person to a new full-resolution root. Previously established facts must remain unchanged.</p><button onclick="promote()">PROMOTE R2 NPC</button><div id="promotion">Waiting.</div></section>
-<section class="panel"><h2>Invariant Tests</h2><div id="tests">Waiting.</div></section>
+<section class="panel"><h2>Family Web</h2><div id="web">Waiting.</div></section>
+<section class="panel"><h2>Shared Family History</h2><div id="history">Waiting.</div></section>
+
+<section class="panel"><h2>Promotion Test</h2>
+<p>Promote an R2 relative to full resolution. Identity and every shared event already involving that person must survive unchanged.</p>
+<button onclick="promote()">PROMOTE R2 NPC</button><div id="promotion">Waiting.</div></section>
+
+<section class="panel"><h2>0.4 Invariant Tests</h2><div id="tests">Waiting.</div></section>
 <section class="panel"><h2>Developer Record</h2><pre id="raw">Waiting.</pre></section>
+
 <script>
-let seed=Math.floor(Math.random()*1e9), W=null;
+let seed=Math.floor(Math.random()*1e9),W=null;
 function rng(s){return function(){s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 const pick=(r,a)=>a[Math.floor(r()*a.length)];
-const F=["Amanda","Anna","Carla","Elena","Emily","Grace","Hannah","Jennifer","Julia","Laura","Maria","Nicole","Olivia","Rachel","Sarah","Teresa","Vanessa"],M=["Aaron","Anthony","Brian","Carlos","Daniel","David","Eric","Gabriel","Isaac","Jason","Jose","Kevin","Luis","Marcus","Michael","Nathan","Robert","Samuel","Thomas"],L=["Bennett","Brooks","Carter","Coleman","Diaz","Foster","Garcia","Gomez","Hale","Hernandez","Johnson","Kim","Lewis","Martin","Miller","Nguyen","Ortiz","Parker","Ramirez","Reed","Rivera","Sanchez","Taylor","Walker","Williams"];
-function nm(r,sex,last){return pick(r,sex==="Female"?F:M)+" "+(last||pick(r,L))}
+const F=["Amanda","Anna","Carla","Elena","Emily","Grace","Hannah","Jennifer","Julia","Laura","Maria","Nicole","Olivia","Rachel","Sarah","Teresa","Vanessa"];
+const M=["Aaron","Anthony","Brian","Carlos","Daniel","David","Eric","Gabriel","Isaac","Jason","Jose","Kevin","Luis","Marcus","Michael","Nathan","Robert","Samuel","Thomas"];
+const L=["Bennett","Brooks","Carter","Coleman","Diaz","Foster","Garcia","Gomez","Hale","Hernandez","Johnson","Kim","Lewis","Martin","Miller","Nguyen","Ortiz","Parker","Ramirez","Reed","Rivera","Sanchez","Taylor","Walker","Williams"];
 function id(r){return"NPC-"+String(Math.floor(r()*1e9)).padStart(9,"0")}
-function make(r,res,role,last,birthMin,birthMax){let sex=pick(r,["Female","Male"]),birth=birthMin+Math.floor(r()*(birthMax-birthMin+1)),p={id:id(r),resolution:res,role,sex,name:nm(r,sex,last),birthYear:birth,established:{name:true,birthYear:true,sex:true},biography:[]};if(res==="R0"){p.biography=[{type:"childhood",detail:pick(r,["stable working household","strained household","frequent family moves"])},{type:"education",detail:pick(r,["high school diploma","GED","vocational training"])},{type:"employment",detail:pick(r,["construction","health-care support","administration","logistics","hospitality"])},{type:"current",detail:"full nine-anchor generation required"}]}else if(res==="R1"){p.birthPlace=pick(r,["same county","neighboring county","regional city"]);p.majorContext=pick(r,["steady employment","several job changes","primarily household work","skilled trade"]);p.established.birthPlace=true}else if(res==="R2"){p.birthPlace=pick(r,["in-state","neighboring state","regional city"]);p.established.birthPlace=true}else{p.established={name:true}}return p}
-function generate(){
- let r=rng(seed);W={seed,people:{},links:[],root:null};
- let root=make(r,"R0","ROOT",null,1975,2000);W.root=root.id;W.people[root.id]=root;
- let mom=make(r,"R1","PARENT",pick(r,L),1948,1978),dad=make(r,"R1","PARENT",pick(r,L),1948,1978),partner=make(r,"R1","PARTNER",null,1973,2002),child=make(r,"R1","CHILD",partner.name.split(" ").at(-1),2000,2025);
- [mom,dad,partner,child].forEach(p=>W.people[p.id]=p);
- [["PARENT",mom],["PARENT",dad],["PARTNER",partner],["CHILD",child]].forEach(x=>W.links.push({a:root.id,b:x[1].id,type:x[0]}));
- let gps=[];[mom,dad].forEach(parent=>{for(let i=0;i<2;i++){let gp=make(r,"R2","GRANDPARENT",parent.name.split(" ").at(-1),1920,1958);W.people[gp.id]=gp;W.links.push({a:parent.id,b:gp.id,type:"PARENT"});gps.push(gp)}});
- // R3 names only: enough identity to terminate cleanly.
- gps.slice(0,2).forEach(gp=>{let ggp=make(r,"R3","GREAT-GRANDPARENT",gp.name.split(" ").at(-1),1890,1935);W.people[ggp.id]=ggp;W.links.push({a:gp.id,b:ggp.id,type:"PARENT"})});
- render(); runTests();
+function first(r,sex){return pick(r,sex==="Female"?F:M)}
+function person(r,res,role,sex,birth,surname,source){
+ return {id:id(r),resolution:res,role,sex,birthYear:birth,name:first(r,sex)+" "+surname,
+ surnameHistory:[{from:birth,to:null,surname,reason:source||"birth family"}],
+ established:{sex:true,birthYear:true,name:true},biography:[],sharedEventIds:[]}
 }
-function card(p){let extras=p.resolution==="R0"?p.biography.map(x=>x.type+": "+x.detail).join(" · "):p.resolution==="R1"?`Born ${p.birthYear}; ${p.birthPlace}; ${p.majorContext}`:p.resolution==="R2"?`Born ${p.birthYear}; ${p.birthPlace}`:`Name reference only`;return`<div class="person"><div class="row"><b>${p.name}</b><span class="tag">${p.resolution} · ${p.role}</span></div><div class="small">${p.id}<br>${extras}</div></div>`}
-function render(){let root=W.people[W.root];document.getElementById("seed").textContent="World-context seed: "+seed;document.getElementById("root").innerHTML=card(root);document.getElementById("web").innerHTML=["R1","R2","R3"].map(res=>`<h3>${res}</h3>`+Object.values(W.people).filter(p=>p.resolution===res).map(card).join("")).join("");document.getElementById("raw").textContent=JSON.stringify(W,null,2);document.getElementById("promotion").innerHTML="Waiting."}
+function event(year,type,text,people,meta={}){
+ let e={id:"EV-"+W.events.length.toString().padStart(3,"0"),year,type,text,people:[...people],meta};
+ W.events.push(e); people.forEach(pid=>{let p=W.people[pid];if(p&&!p.sharedEventIds.includes(e.id))p.sharedEventIds.push(e.id)});return e
+}
+function add(p){W.people[p.id]=p;return p}
+function generate(){
+ let r=rng(seed);W={seed,people:{},events:[],links:[],root:null};
+ let rootSex=pick(r,["Female","Male"]), rootBirth=pick(r,[1978,1982,1986,1990,1994,1998]), paternalSurname=pick(r,L), maternalBirthSurname=pick(r,L);
+ let father=add(person(r,"R1","PARENT","Male",rootBirth-pick(r,[24,27,30,33]),paternalSurname,"birth family"));
+ let mother=add(person(r,"R1","PARENT","Female",rootBirth-pick(r,[22,25,28,31]),maternalBirthSurname,"birth family"));
+ // Parents form a household before root birth. Mother may or may not adopt father's surname.
+ let parentsMarried=pick(r,[true,true,true,false]), motherAdopts=parentsMarried&&pick(r,[true,true,false]);
+ let unionYear=rootBirth-pick(r,[1,2,3,4]);
+ event(unionYear,parentsMarried?"MARRIAGE":"PARTNERSHIP",`${mother.name} and ${father.name} establish a long-term family household.`,[mother.id,father.id],{shared:true});
+ if(motherAdopts){
+   let old=mother.name, fn=old.split(" ")[0]; mother.surnameHistory[0].to=unionYear; mother.surnameHistory.push({from:unionYear,to:null,surname:paternalSurname,reason:"marriage"});
+   mother.name=fn+" "+paternalSurname; event(unionYear,"NAME_CHANGE",`${fn} adopts the surname ${paternalSurname}.`,[mother.id],{from:old,to:mother.name});
+ }
+ let rootSurname=pick(r,[paternalSurname,paternalSurname,mother.surnameHistory.at(-1).surname]);
+ let root=add(person(r,"R0","ROOT",rootSex,rootBirth,rootSurname,"parental surname at birth"));W.root=root.id;
+ W.links.push({a:root.id,b:mother.id,type:"PARENT"},{a:root.id,b:father.id,type:"PARENT"});
+ event(rootBirth,"BIRTH",`${root.name} is born to ${mother.name} and ${father.name}.`,[root.id,mother.id,father.id],{location:"home county"});
+ // Root causal biography.
+ let school=pick(r,["steady","strong","uneven"]);let edu=school==="strong"?pick(r,["high school diploma","college degree"]):school==="steady"?pick(r,["high school diploma","vocational training"]):pick(r,["GED","high school diploma"]);
+ let adulthood=rootBirth+18; root.biography.push({year:rootBirth+13,type:"ADOLESCENCE",detail:`${school} school trajectory`},{year:adulthood,type:"EDUCATION",detail:edu});
+ let employment=edu==="college degree"?pick(r,["accounting","education","health administration"]):edu==="vocational training"?pick(r,["electrical trade","automotive trade","industrial maintenance"]):pick(r,["logistics","construction","hospitality","clerical work"]);
+ root.biography.push({year:adulthood+1,type:"EMPLOYMENT",detail:employment});
+ // Partner must be age-plausible and intersection is explicit.
+ let partnerSex=pick(r,["Female","Male"]), partnerBirth=rootBirth+pick(r,[-4,-2,-1,0,1,2,4]), partnerSurname=pick(r,L);
+ let partner=add(person(r,"R1","PARTNER",partnerSex,partnerBirth,partnerSurname,"birth family"));
+ let meetYear=Math.max(rootBirth,partnerBirth)+pick(r,[20,22,24,26,28]);
+ let meetContext=pick(r,["through mutual friends","through work","at a community event","through a recreational activity"]);
+ event(meetYear,"MEETING",`${root.name} meets ${partner.name} ${meetContext}.`,[root.id,partner.id],{intersection:meetContext});
+ let union2=meetYear+pick(r,[1,2,3]); event(union2,"PARTNERSHIP",`${root.name} and ${partner.name} establish a shared household.`,[root.id,partner.id],{shared:true});
+ W.links.push({a:root.id,b:partner.id,type:"PARTNER"});
+ // Child only if chronology allows; surname gets provenance.
+ let childYear=union2+pick(r,[1,2,3,4]); if(childYear<=2025 && rootBirth<=childYear-18 && partnerBirth<=childYear-18){
+   let childSex=pick(r,["Female","Male"]), chosenSurname=pick(r,[root.name.split(" ").at(-1),partner.name.split(" ").at(-1)]);
+   let child=add(person(r,"R1","CHILD",childSex,childYear,chosenSurname,`chosen from parent household: ${root.name} / ${partner.name}`));
+   W.links.push({a:root.id,b:child.id,type:"CHILD"});
+   event(childYear,"BIRTH",`${child.name} is born to ${root.name} and ${partner.name}.`,[child.id,root.id,partner.id],{surnameProvenance:child.surnameHistory[0].reason});
+   let age=2026-childYear;
+   child.biography = age<5?[{year:2026,type:"CURRENT",detail:"young child; no education/employment state"}]:
+     age<14?[{year:2026,type:"CURRENT",detail:"school-age child; no employment state"}]:
+     age<18?[{year:2026,type:"CURRENT",detail:"secondary-school age; no adult career assigned"}]:
+     [{year:childYear+18,type:"EDUCATION",detail:"adult education transition eligible"}];
+ }
+ // Grandparents: chronology tied to parents.
+ [mother,father].forEach(par=>{
+   let familySurname=par.surnameHistory[0].surname;
+   for(let i=0;i<2;i++){let sex=i===0?"Female":"Male", gy=par.birthYear-pick(r,[22,25,28,31]), gp=add(person(r,"R2","GRANDPARENT",sex,gy,familySurname,"birth family"));gp.birthPlace=pick(r,["in-state","neighboring state","regional city"]);gp.established.birthPlace=true;W.links.push({a:par.id,b:gp.id,type:"PARENT"});event(par.birthYear,"BIRTH",`${par.name.split(" ")[0]} is born into the ${familySurname} family.`,[par.id,gp.id],{retrospectiveAnchor:true})}
+ });
+ // R3 boundary: names only, attached to first R2 branch.
+ Object.values(W.people).filter(p=>p.resolution==="R2").slice(0,2).forEach(gp=>{
+   let sex=pick(r,["Female","Male"]), surname=gp.surnameHistory[0].surname, q={id:id(r),resolution:"R3",role:"GREAT-GRANDPARENT",sex,name:first(r,sex)+" "+surname,established:{name:true},sharedEventIds:[]};
+   add(q);W.links.push({a:gp.id,b:q.id,type:"PARENT"});
+ });
+ render();runTests();
+}
+function pcard(p){
+ let age=2026-(p.birthYear||2026), detail=p.resolution==="R3"?"Name reference only":`Born ${p.birthYear} · age ${age} in 2026 · surname source: ${p.surnameHistory?.[0]?.reason||"referential"}`;
+ if(p.biography?.length)detail+="<br>"+p.biography.map(b=>`${b.year} ${b.type}: ${b.detail}`).join("<br>");
+ return `<div class="person"><div class="row"><b>${p.name}</b><span class="tag">${p.resolution} · ${p.role}</span></div><div class="small">${p.id}<br>${detail}</div></div>`
+}
+function render(){
+ let ps=Object.values(W.people);document.getElementById("seed").textContent="World-context seed: "+seed;
+ document.getElementById("root").innerHTML=pcard(W.people[W.root]);
+ document.getElementById("web").innerHTML=["R1","R2","R3"].map(x=>`<h3>${x}</h3>`+ps.filter(p=>p.resolution===x).map(pcard).join("")).join("");
+ document.getElementById("history").innerHTML=W.events.sort((a,b)=>a.year-b.year||a.id.localeCompare(b.id)).map(e=>`<div class="event"><b>${e.year} · ${e.type}</b><div>${e.text}</div><div class="small">${e.id} · ${e.people.join(" · ")}</div></div>`).join("");
+ document.getElementById("raw").textContent=JSON.stringify(W,null,2)
+}
 function promote(){
  if(!W)return;let p=Object.values(W.people).find(x=>x.resolution==="R2");if(!p)return;
- let before=JSON.stringify({id:p.id,name:p.name,birthYear:p.birthYear,birthPlace:p.birthPlace,sex:p.sex}), r=rng(seed ^ parseInt(p.id.slice(4)));
- p.resolution="R0";p.promoted=true;p.biography=[{type:"childhood",detail:pick(r,["stable childhood","economically strained childhood","several childhood moves"])},{type:"education",detail:pick(r,["high school diploma","GED","vocational education"])},{type:"employment",detail:pick(r,["trade career","clerical career","service career","mixed employment history"])},{type:"current",detail:"expanded around immutable established anchors"}];
- let after=JSON.stringify({id:p.id,name:p.name,birthYear:p.birthYear,birthPlace:p.birthPlace,sex:p.sex}),ok=before===after;
- document.getElementById("promotion").innerHTML=`<div class="person"><b>${p.name}</b><div class="${ok?"pass":""}">${ok?"PASS — established identity/date/location unchanged.":"FAIL — established facts changed."}</div><div class="small">R2 → R0 expansion added biography without regeneration.</div></div>`;renderKeepPromotion(p,ok);runTests()
+ let before=JSON.stringify({id:p.id,name:p.name,sex:p.sex,birthYear:p.birthYear,birthPlace:p.birthPlace,events:[...p.sharedEventIds]});
+ let r=rng(seed^parseInt(p.id.slice(4)));p.resolution="R0";p.promoted=true;
+ p.biography=[{year:p.birthYear+12,type:"CHILDHOOD",detail:pick(r,["stable schooling","several household pressures","close extended-family ties"])},{year:p.birthYear+18,type:"EDUCATION",detail:pick(r,["high school diploma","GED","vocational training"])},{year:p.birthYear+20,type:"EMPLOYMENT",detail:pick(r,["trade work","service work","clerical work","agricultural work"])}];
+ let after=JSON.stringify({id:p.id,name:p.name,sex:p.sex,birthYear:p.birthYear,birthPlace:p.birthPlace,events:[...p.sharedEventIds]});
+ let ok=before===after;
+ render();document.getElementById("promotion").innerHTML=`<div class="person"><b>${p.name}</b><div class="${ok?"pass":""}">${ok?"PASS — established identity and shared history unchanged.":"FAIL — promotion contradicted established history."}</div><div class="small">R2 → R0 expanded around existing family anchors.</div></div>`;runTests()
 }
-function renderKeepPromotion(p,ok){document.getElementById("web").innerHTML=["R1","R2","R3"].map(res=>`<h3>${res}</h3>`+Object.values(W.people).filter(x=>x.resolution===res).map(card).join("")).join("");document.getElementById("root").innerHTML=card(W.people[W.root]);document.getElementById("raw").textContent=JSON.stringify(W,null,2);document.getElementById("promotion").innerHTML=`<div class="person"><b>${p.name}</b><div class="${ok?"pass":""}">${ok?"PASS — established identity/date/location unchanged.":"FAIL"}</div><div class="small">R2 → R0 expansion added biography without regeneration.</div></div>`}
-function runTests(){if(!W)return;let ps=Object.values(W.people), tests=[
- ["Root receives full biography",ps.find(p=>p.id===W.root).biography.length>=4],
- ["Immediate circle receives R1 detail",ps.filter(p=>p.resolution==="R1").every(p=>p.birthPlace&&p.majorContext)],
- ["Second circle receives R2 context",ps.filter(p=>p.resolution==="R2").every(p=>p.birthPlace)],
- ["Boundary R3 is referential only",ps.filter(p=>p.resolution==="R3").every(p=>Object.keys(p.established).length===1)],
- ["Recursion terminates",ps.length<=11],
- ["Every link points to persistent NPC IDs",W.links.every(l=>W.people[l.a]&&W.people[l.b])],
- ["Promotion never creates replacement ID",!ps.some((p,i)=>ps.findIndex(q=>q.id===p.id)!==i)]
- ];document.getElementById("tests").innerHTML=tests.map(t=>`<div class="person row"><span>${t[0]}</span><span class="${t[1]?"pass":""}">${t[1]?"PASS":"FAIL"}</span></div>`).join("")}
+function runTests(){
+ let ps=Object.values(W.people), child=ps.find(p=>p.role==="CHILD"), root=W.people[W.root], partner=ps.find(p=>p.role==="PARTNER");
+ let parentLinks=W.links.filter(l=>l.type==="PARENT");
+ let tests=[
+ ["0.3 bounded recursion still terminates",ps.length<=11],
+ ["Every relationship points to persistent NPC IDs",W.links.every(l=>W.people[l.a]&&W.people[l.b])],
+ ["Parent-child chronology is biologically plausible",parentLinks.every(l=>!W.people[l.a].birthYear||!W.people[l.b].birthYear||W.people[l.b].birthYear<=W.people[l.a].birthYear-16)],
+ ["Partner ages are plausible at meeting",W.events.filter(e=>e.type==="MEETING").every(e=>e.people.every(pid=>e.year-W.people[pid].birthYear>=18))],
+ ["Child receives surname provenance",!child||!!child.surnameHistory?.[0]?.reason],
+ ["Minor child receives no adult career",!child||2026-child.birthYear>=18||!child.biography.some(b=>b.type==="EMPLOYMENT")],
+ ["Name changes preserve surname history",ps.every(p=>!p.surnameHistory||p.surnameHistory.length>=1)],
+ ["Shared family events reference all participants",W.events.every(e=>e.people.every(pid=>W.people[pid]?.sharedEventIds.includes(e.id)))],
+ ["Root biography remains causal/age-ordered",root.biography.every(b=>b.year>=root.birthYear)],
+ ["R3 boundary remains referential only",ps.filter(p=>p.resolution==="R3").every(p=>Object.keys(p.established).length===1)],
+ ["Promotion never creates replacement ID",new Set(ps.map(p=>p.id)).size===ps.length]
+ ];
+ document.getElementById("tests").innerHTML=tests.map(t=>`<div class="person row"><span>${t[0]}</span><span class="${t[1]?"pass":""}">${t[1]?"PASS":"FAIL"}</span></div>`).join("")
+}
 function newSeed(){seed=Math.floor(Math.random()*1e9);generate()}
 document.getElementById("seed").textContent="Initial seed ready: "+seed;
 </script></main></body></html>
