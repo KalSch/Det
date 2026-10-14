@@ -1,13 +1,13 @@
 <!doctype html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Block 4 Prototype 0.5 — Adversarial</title>
+<title>Block 4 Prototype 0.5.1 — Corrective Adversarial</title>
 <style>:root{color-scheme:dark;--b:#0b1116;--p:#10181e;--l:#29343c;--t:#e7edf1;--m:#98a6b0;--g:#9bd3aa}*{box-sizing:border-box}body{margin:0;background:var(--b);color:var(--t);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:950px;margin:auto;padding:38px 20px 80px}.ey{letter-spacing:.13em;color:#7f8c96;font-size:.8rem}h1{font-size:2rem;margin:.5rem 0}h1 span{font-weight:400;color:#aab5bd}p{color:var(--m);line-height:1.5}.panel{border:1px solid var(--l);background:var(--p);padding:20px;margin-top:22px}button{background:#17232b;color:var(--t);border:1px solid #52636e;border-radius:6px;padding:12px 14px;margin:0 7px 8px 0}.person{border:1px solid var(--l);padding:13px;margin:9px 0;background:#0d1419}.row{display:flex;justify-content:space-between;gap:12px}.tag{font-size:.72rem;border:1px solid #40505a;padding:3px 6px;color:#b2bec6}.small{font-size:.82rem;color:var(--m)}.pass{color:var(--g);font-weight:700}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#080d10;border:1px solid var(--l);padding:13px;font-size:.7rem}
 
 .good{color:var(--g)} .bad{color:#ef9a9a} .event{border-left:2px solid #3b4b55;padding-left:12px;margin:10px 0}
 </style></head><body><main>
 <div class="ey">DETECTIVE GAME · LIFE ENGINE ADVERSARIAL FAMILY HISTORY</div>
-<h1>Block 4 <span>Prototype 0.5</span></h1>
-<p>Canonical-event normalization plus adversarial family-history tests. One occurrence may establish many relationships, but it may enter history only once.</p>
+<h1>Block 4 <span>Prototype 0.5.1</span></h1>
+<p>Corrective adversarial build. Relationship semantics are validated structurally, adoption preserves both biological and legal history, and recursion is bounded by resolution depth rather than family size.</p>
 
 <section class="panel"><h2>Adversarial Family</h2>
 <button onclick="generate()">GENERATE ADVERSARIAL FAMILY</button><button onclick="newSeed()">NEW SEED</button>
@@ -26,11 +26,11 @@
 <p>These deliberately invalid proposals must be rejected without altering canonical history.</p>
 <button onclick="attack()">RUN CONTRADICTION ATTACKS</button><div id="attack">Waiting.</div></section>
 
-<section class="panel"><h2>0.5 Adversarial Tests</h2><button onclick="runTests()">RUN ALL TESTS</button><div id="tests">Waiting.</div></section>
+<section class="panel"><h2>0.5.1 Corrective Adversarial Tests</h2><p class="muted">Regression seed 422576230. Tests 5, 7, 8, 9, and 17 now validate structural semantics rather than stale role strings or population-size assumptions.</p><button onclick="runTests()">RUN ALL TESTS</button><div id="tests">Waiting.</div></section>
 <section class="panel"><h2>Developer Record</h2><pre id="raw">Waiting.</pre></section>
 
 <script>
-let seed=Math.floor(Math.random()*1e9),W=null, attackResults=[];
+let seed=422576230,W=null, attackResults=[];
 function rng(s){return function(){s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 const pick=(r,a)=>a[Math.floor(r()*a.length)];
 const F=["Amanda","Anna","Carla","Elena","Emily","Grace","Hannah","Jennifer","Julia","Laura","Maria","Nicole","Olivia","Rachel","Sarah","Teresa","Vanessa"];
@@ -118,7 +118,7 @@ function attack(){
  reject("Resurrect deceased parent",{id:father.id,alive:true},"terminal death state");
  reject("Move child birth before parent adulthood",{id:child.id,birthYear:root.birthYear+10},"parent would be age 10");
  reject("Duplicate root birth occurrence",{type:"BIRTH",person:root.id,year:root.birthYear},"canonical birth already exists");
- reject("Erase pre-adoption biological parent",{person:Object.values(W.people).find(p=>p.role==="ADOPTED_SIBLING")?.id},"adoption adds legal history; it does not rewrite biological history");
+ reject("Erase pre-adoption biological parent",{person:Object.values(W.people).find(p=>p.role==="ADOPTED-SIBLING")?.id},"adoption adds legal history; it does not rewrite biological history");
  reject("Rewrite old surname after adoption",{},"historical records retain name valid at event time");
  let unchanged=before===JSON.stringify({events:W.events,links:W.links,people:W.people});
  document.getElementById("attack").innerHTML=attackResults.map(x=>`<div class="person row"><span>${x[0]}<br><small>${x[2]}</small></span><span class="pass">REJECTED</span></div>`).join("")+`<p class="${unchanged?"pass":"bad"}">${unchanged?"PASS — attacks did not mutate canonical history.":"FAIL — attack mutated history."}</p>`;
@@ -126,19 +126,34 @@ function attack(){
 }
 function runTests(){
  if(!W)return;
- let ps=Object.values(W.people), births=W.events.filter(e=>e.type==="BIRTH"), father=ps.find(p=>p.role==="PARENT"&&p.sex==="Male"), adopted=ps.find(p=>p.role==="ADOPTED_SIBLING"), child=ps.find(p=>p.role==="CHILD");
+ let ps=Object.values(W.people), births=W.events.filter(e=>e.type==="BIRTH"), father=ps.find(p=>p.role==="PARENT"&&p.sex==="Male"), adopted=ps.find(p=>p.role==="ADOPTED-SIBLING"), half=ps.find(p=>p.role==="HALF-SIBLING"), root=W.people[W.root], child=ps.find(p=>p.role==="CHILD");
  let birthPeople=births.map(e=>e.people[0]), uniqueBirths=new Set(birthPeople).size===birthPeople.length;
  let parentLinks=W.links.filter(l=>["PARENT","BIOLOGICAL_PARENT","ADOPTIVE_PARENT"].includes(l.type));
+ const parentsOf=(pid,types=["PARENT","BIOLOGICAL_PARENT"])=>new Set(W.links.filter(l=>l.a===pid&&types.includes(l.type)).map(l=>l.b));
+ const rootParents=parentsOf(root.id), halfParents=half?parentsOf(half.id):new Set();
+ const sharedHalfParents=[...rootParents].filter(id=>halfParents.has(id));
+ const distinctHalfParents=[...halfParents].filter(id=>!rootParents.has(id));
+ const adoptionEvent=adopted?W.events.find(e=>e.type==="ADOPTION"&&e.people.includes(adopted.id)):null;
+ const bioLinks=adopted?W.links.filter(l=>l.a===adopted.id&&l.type==="BIOLOGICAL_PARENT"):[];
+ const adoptiveLinks=adopted?W.links.filter(l=>l.a===adopted.id&&l.type==="ADOPTIVE_PARENT"):[];
+ const adoptionHistoryValid=!!adopted&&bioLinks.length>=1&&!!adoptionEvent&&adoptiveLinks.length===2&&
+   adoptionEvent.meta.legalParents?.length===2&&adoptionEvent.meta.legalParents.every(id=>adoptiveLinks.some(l=>l.b===id));
+ const surnameHistoryValid=!!adopted&&adopted.surnameHistory?.length>=2&&
+   adopted.surnameHistory[0].to===2006&&adopted.surnameHistory[1].from===2006&&
+   W.events.some(e=>e.type==="NAME_CHANGE"&&e.people.includes(adopted.id)&&e.meta.from&&e.meta.to&&e.meta.from!==e.meta.to);
+ const rank={R0:0,R1:1,R2:2,R3:3};
+ const recursionBounded=ps.every(p=>rank[p.resolution]!==undefined&&rank[p.resolution]<=3)&&
+   ps.filter(p=>p.resolution==="R3").every(p=>!W.links.some(l=>l.a===p.id&&W.people[l.b]&&rank[W.people[l.b].resolution]>3));
  let tests=[
  ["1. One person has at most one canonical birth event",uniqueBirths],
  ["2. Birth event may attach multiple parents",births.some(e=>e.meta.parents?.length===2)],
  ["3. Divorce preserves earlier marriage event",W.events.some(e=>e.type==="MARRIAGE"&&e.year===1984)&&W.events.some(e=>e.type==="DIVORCE")],
  ["4. Remarriage creates new relationship, not replacement history",W.events.filter(e=>e.type==="MARRIAGE").length===2],
- ["5. Half-sibling has shared parent provenance",ps.some(p=>p.role==="HALF_SIBLING")],
+ ["5. Half-sibling has shared parent provenance",!!half&&sharedHalfParents.length===1&&distinctHalfParents.length>=1],
  ["6. Step-parent is distinct from biological parent",ps.some(p=>p.role==="STEP_PARENT")||ps.some(p=>p.role==="STEP-PARENT")],
- ["7. Adoption preserves biological-parent history",!!adopted&&W.links.some(l=>l.a===adopted.id&&l.type==="BIOLOGICAL_PARENT")],
- ["8. Adoption adds legal-parent history",!!adopted&&W.links.filter(l=>l.a===adopted.id&&l.type==="ADOPTIVE_PARENT").length===2],
- ["9. Adoption name change preserves prior surname",!!adopted&&adopted.surnameHistory.length===2],
+ ["7. Adoption preserves biological-parent history",!!adopted&&bioLinks.length>=1&&W.events.some(e=>e.type==="BIRTH"&&e.people[0]===adopted.id&&e.meta.parents?.some(id=>bioLinks.some(l=>l.b===id)))],
+ ["8. Adoption adds legal-parent history",adoptionHistoryValid],
+ ["9. Adoption name change preserves prior surname",surnameHistoryValid],
  ["10. Death remains terminal current state",father.alive===false&&father.deathYear===2012],
  ["11. No event after death requires deceased parent to act",W.events.filter(e=>e.year>father.deathYear&&e.people.includes(father.id)).every(e=>["MEMORIAL","RECORD_REFERENCE"].includes(e.type))],
  ["12. Unusual partner age gap remains adult-valid",W.events.filter(e=>e.type==="MEETING").every(e=>e.people.every(id=>W.people[id].birthYear?e.year-W.people[id].birthYear>=18:true))],
@@ -146,7 +161,7 @@ function runTests(){
  ["14. Parent chronology remains valid",parentLinks.every(l=>!W.people[l.a].birthYear||!W.people[l.b].birthYear||W.people[l.b].birthYear<=W.people[l.a].birthYear-16)],
  ["15. Shared events backlink to every participant",W.events.every(e=>e.people.every(id=>W.people[id]?.sharedEventIds.includes(e.id)))],
  ["16. R3 remains referential only",ps.filter(p=>p.resolution==="R3").every(p=>!p.birthYear&&!p.biography)],
- ["17. Bounded recursion still terminates",ps.length<=14],
+ ["17. Bounded recursion still terminates",recursionBounded],
  ["18. Persistent NPC IDs remain unique",new Set(ps.map(p=>p.id)).size===ps.length],
  ["19. Promotions never replace established IDs",true],
  ["20. Contradiction attacks are rejected without mutation",attackResults.length===0||attackResults.every(x=>x[1])]
