@@ -1,6 +1,6 @@
 <!doctype html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Block 6 Prototype 0.1 — Life Events, Opportunity & Decision Pressure</title>
+<title>Block 6 Prototype 0.2 — Life Events, Opportunity & Decision Pressure</title>
 <style>
 :root{color-scheme:dark;--b:#0b1116;--p:#10181e;--l:#29343c;--t:#e7edf1;--m:#98a6b0;--g:#9bd3aa;--y:#e2cf8b;--r:#ef9a9a;--c:#9bc6d3}
 *{box-sizing:border-box}body{margin:0;background:var(--b);color:var(--t);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -15,7 +15,7 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#080d10;border:1px so
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:680px){.grid{grid-template-columns:1fr}.row{gap:8px}}
 </style></head><body><main>
 <div class="ey">DETECTIVE GAME · STANDALONE LIFE ENGINE · DECISION PRESSURE</div>
-<h1>Block 6 <span>Prototype 0.1</span></h1>
+<h1>Block 6 <span>Prototype 0.2</span></h1>
 <p><b>Pressure changes the probability landscape. It does not decide the outcome.</b> Accumulated pressure increases the possibility of transformative decisions in any direction. This harness separates objective circumstance, experienced pressure, available responses, NPC decision, consequence, and canonical history.</p>
 
 <section class="panel"><h2>Pressure World</h2>
@@ -35,9 +35,14 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#080d10;border:1px so
 
 <section class="panel"><h2>Decision Record</h2><div id="decisions">Waiting.</div></section>
 
-<section class="panel"><h2>Block 6.0.1 Acceptance Tests</h2>
+<section class="panel"><h2>Block 6.0.2 Acceptance Tests</h2>
 <button onclick="runScenario()">RUN FULL SCENARIO + TESTS</button>
 <div id="tests">Waiting.</div></section>
+
+<section class="panel"><h2>Block 6.0.2 Decision-Pressure Wringer</h2>
+<p>These adversarial checks attack the probability architecture without changing the decision engine. They test extremes, reversals, repeated evaluation, counterfactuals, and attempts to turn pressure into destiny.</p>
+<button onclick="runWringer()">RUN FULL ADVERSARIAL WRINGER</button>
+<div id="wringer">Waiting.</div></section>
 
 <section class="panel"><h2>Developer Record</h2><pre id="raw">Waiting.</pre></section>
 <script>
@@ -181,7 +186,7 @@ function runTests(){
  ["12. High pressure can also increase risky/detrimental possibility",(()=>{let p={...W.people.rosa,pressures:{financial:55,relationship:15,career:15,family:15,social:5}};let o={id:"T",type:"FINANCE",base:1};let hi=weightsFor(p,o);p={...p,pressures:{financial:5,relationship:0,career:0,family:0,social:0}};let lo=weightsFor(p,o);return hi.high_cost_debt>lo.high_cost_debt})()],
  ["13. Consequence occurs only after a decision",W.events.filter(e=>e.type==="CONSEQUENCE"||e.type==="TRANSFORMATIVE_CHANGE").every(e=>e.year>=2029)],
  ["14. Consequences feed back into later pressure/circumstance",W.events.some(e=>e.type==="PRESSURE_RELIEF")],
- ["15. Beneficial transformation is representable",transforms.some(e=>e.meta.direction==="potentially beneficial")||W.year<2029],
+ ["15. Beneficial transformation is representable without requiring it to occur",(()=>{let p={...W.people.maya,pressures:{financial:45,relationship:10,career:40,family:5,social:5}};let o={id:"BENEFICIAL-REPRESENTABILITY",type:"JOB",base:1};let hi=weightsFor(p,o);p={...p,pressures:{financial:3,relationship:2,career:5,family:0,social:2}};let lo=weightsFor(p,o);return hi.accept>0&&lo.accept>0&&hi.accept>lo.accept&&hi.decline>0&&hi.negotiate>0})()],
  ["16. Detrimental transformation is representable without being mandatory",(()=>{let p={...W.people.rosa,pressures:{financial:60,relationship:10,career:10,family:15,social:5}};let w=weightsFor(p,{id:"X",type:"FINANCE",base:1});return w.high_cost_debt>0&&w.ask_family>0&&w.cut_costs>0})()],
  ["17. Mixed transformation is representable",transforms.some(e=>e.meta.direction==="mixed")||W.year<2030],
  ["18. Different people interpret similar objective pressure differently",(()=>{let es=W.events.filter(e=>e.year===2032&&e.type==="PRESSURE_CHANGE"&&e.meta.domain==="financial");return es.length<2||new Set(es.map(e=>e.meta.experienced)).size>1})()],
@@ -193,6 +198,57 @@ function runTests(){
  ["24. No hidden success/failure label is attached to NPC decisions",allDec.every(d=>!("success" in d)&&!("failure" in d)&&!("good" in d)&&!("bad" in d))]
  ];
  document.getElementById("tests").innerHTML=tests.map(t=>`<div class="test row"><span>${t[0]}</span><span class="${t[1]?"pass":"bad"}">${t[1]?"PASS":"FAIL"}</span></div>`).join("");
+}
+function runWringer(){
+ if(!W)generate();
+ const clone=x=>JSON.parse(JSON.stringify(x));
+ const mk=(base,pressures)=>{let p=clone(base);p.pressures={...pressures};return p};
+ const sum=w=>Object.values(w).reduce((a,b)=>a+b,0);
+ const positive=w=>Object.values(w).every(v=>Number.isFinite(v)&&v>0);
+ const maya=W.people.maya,rosa=W.people.rosa,owen=W.people.owen;
+ const low={financial:0,relationship:0,career:0,family:0,social:0};
+ const high={financial:100,relationship:100,career:100,family:100,social:100};
+ const job={id:"WR-JOB",year:2035,type:"JOB",label:"adversarial career opening",base:1,domain:"career",transformative:true,status:"AVAILABLE"};
+ const retrain={id:"WR-RETRAIN",year:2035,type:"RETRAIN",label:"adversarial retraining",base:1,domain:"career",transformative:true,status:"AVAILABLE"};
+ const finance={id:"WR-FIN",year:2035,type:"FINANCE",label:"adversarial finance options",base:1,domain:"financial",transformative:true,status:"AVAILABLE"};
+ const move={id:"WR-MOVE",year:2035,type:"MOVE",label:"adversarial relocation",base:1,domain:"career",transformative:true,status:"AVAILABLE"};
+ const jl=weightsFor(mk(maya,low),job),jh=weightsFor(mk(maya,high),job);
+ const rl=weightsFor(mk(maya,low),retrain),rh=weightsFor(mk(maya,high),retrain);
+ const fl=weightsFor(mk(rosa,low),finance),fh=weightsFor(mk(rosa,high),finance);
+ const ml=weightsFor(mk(owen,low),move),mh=weightsFor(mk(owen,high),move);
+ const before=JSON.stringify(W), d1=choose(mk(maya,high),job), d2=choose(mk(maya,high),job), after=JSON.stringify(W);
+ const midA=weightsFor(mk(maya,{financial:50,relationship:0,career:0,family:0,social:0}),job);
+ const midB=weightsFor(mk(maya,{financial:0,relationship:0,career:50,family:0,social:0}),job);
+ const other=weightsFor(mk(owen,high),job);
+ let tests=[
+  ["1. Zero pressure leaves every JOB response possible",positive(jl)],
+  ["2. Extreme pressure leaves every JOB response possible",positive(jh)],
+  ["3. Zero pressure leaves every RETRAIN response possible",positive(rl)],
+  ["4. Extreme pressure leaves every RETRAIN response possible",positive(rh)],
+  ["5. Zero pressure leaves every FINANCE response possible",positive(fl)],
+  ["6. Extreme pressure leaves every FINANCE response possible",positive(fh)],
+  ["7. Zero pressure leaves every MOVE response possible",positive(ml)],
+  ["8. Extreme pressure leaves every MOVE response possible",positive(mh)],
+  ["9. Beneficial transformation remains possible at low pressure",jl.accept>0&&rl.enroll>0],
+  ["10. Detrimental transformation remains possible at low pressure",fl.high_cost_debt>0],
+  ["11. Mixed transformation remains possible at low pressure",ml.move>0],
+  ["12. High pressure increases beneficial transformative weight",jh.accept>jl.accept&&rh.enroll>rl.enroll],
+  ["13. High pressure increases risky transformative weight",fh.high_cost_debt>fl.high_cost_debt],
+  ["14. High pressure does not erase mundane/non-transformative alternatives",jh.decline>0&&jh.negotiate>0&&rh.delay>0&&rh.decline>0&&fh.cut_costs>0&&mh.stay>0],
+  ["15. Pressure modifies a landscape rather than storing a decision",JSON.stringify(jh)!==JSON.stringify(jl)&&!("choice" in jh)],
+  ["16. Same person + same opportunity + same pressure evaluates deterministically",d1.choice===d2.choice&&JSON.stringify(d1.weights)===JSON.stringify(d2.weights)],
+  ["17. Pure counterfactual evaluation does not mutate canonical world",before===after],
+  ["18. Every extreme-pressure landscape remains finite",[jh,rh,fh,mh].every(w=>Number.isFinite(sum(w))&&sum(w)>0)],
+  ["19. No response receives a zero-probability destiny cutoff",[jh,rh,fh,mh].every(positive)],
+  ["20. Pressure direction can broaden both beneficial and detrimental tails",rh.enroll>rl.enroll&&fh.high_cost_debt>fl.high_cost_debt],
+  ["21. Equal total pressure in different domains need not invent a forced choice",totalPressure(mk(maya,{financial:50,relationship:0,career:0,family:0,social:0}))===totalPressure(mk(maya,{financial:0,relationship:0,career:50,family:0,social:0}))&&positive(midA)&&positive(midB)],
+  ["22. Different people can retain different landscapes under identical objective extremes",JSON.stringify(jh)!==JSON.stringify(other)],
+  ["23. Opportunity objects contain possibility, not an encoded outcome",![job,retrain,finance,move].some(o=>"choice" in o||"decision" in o||"success" in o||"failure" in o)],
+  ["24. Wringer cannot manufacture a success/failure judgment",[d1,d2].every(d=>!("success" in d)&&!("failure" in d)&&!("good" in d)&&!("bad" in d))]
+ ];
+ document.getElementById("wringer").innerHTML=tests.map(t=>`<div class="test row"><span>${t[0]}</span><span class="${t[1]?"pass":"bad"}">${t[1]?"PASS":"FAIL"}</span></div>`).join("");
+ log("Block 6.0.2 adversarial decision-pressure wringer completed: "+tests.filter(t=>t[1]).length+"/"+tests.length+" passed.");
+ render();
 }
 function render(){
  if(!W)return;
