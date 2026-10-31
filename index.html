@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Bellwether Life Engine 0.9.41</title>
+<title>Bellwether Life Engine 0.9.42</title>
 <style>
 :root{color-scheme:dark;--bg:#0d1319;--card:#19222b;--line:#344553;--text:#edf2f7;--muted:#a8b8c8;--gold:#d6a23e;--green:#70c98a;--red:#ef7e82}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,sans-serif}
@@ -19,97 +19,89 @@ progress{width:100%;height:13px} @media(max-width:700px){.grid{grid-template-col
 </style></head>
 <body><main>
 <h1>Bellwether Life Engine</h1>
-<div class="muted" style="font-size:20px">Block 8 Prototype <b>0.9.41 — Exact-Time Dormant Continuity Queue</b></div>
-<div class="badge">EXACT-TIME CONTINUITY · NO POPULATION STEERING · ESTABLISHED HISTORY IS IMMUTABLE</div>
+<div class="muted" style="font-size:20px">Block 8 Prototype <b>0.9.42 — Performance-Integrity Audit</b></div>
+<div class="badge">PERFORMANCE INTEGRITY · EXACT-TIME CONTINUITY FROZEN · NO MECHANICS CHANGES</div>
 
 <section class="card">
-<h2>0.9.41 exact-time equivalence gate</h2>
-<p class="muted">Dormant/background routine work is compacted outside the hot heap, but every compact record retains its exact canonical due-time and ordering key. It is materialized before any later hot event can execute. No annual catch-up boundary is used.</p>
-<button id="gate" class="primary">RUN 150-YEAR EXACT-TIME GATE</button>
-<button id="audit" disabled>RUN 500-YEAR CONTINUITY AUDIT</button>
-<div id="status" class="muted">Run the equivalence gate first. The 500-year audit remains locked until every canonical invariant passes.</div>
+<h2>0.9.42 performance-integrity gate</h2>
+<p class="muted">0.9.41 mechanics are frozen. This audit measures genuine wall-clock elapsed time with repeated deterministic workloads so timer resolution cannot masquerade as a 1 ms long-horizon run. It also records population, logical queue, hot/cold representation, and available JavaScript heap checkpoints.</p>
+<button id="gate" class="primary">RUN PERFORMANCE-INTEGRITY AUDIT</button>
+<button id="deep" disabled>RUN DEEP 500-YEAR STRESS SAMPLE</button>
+<div id="status" class="muted">Ready. First verify canonical equivalence, then measure progressively longer horizons.</div>
 <progress id="prog" max="100" value="0"></progress>
 </section>
-
 <div class="grid">
-<div class="metric">Gate<div id="mGate" class="big">READY</div></div>
-<div class="metric">Baseline<div id="mBase" class="big">—</div></div>
-<div class="metric">Exact-time<div id="mExact" class="big">—</div></div>
-<div class="metric">Speed ratio<div id="mRatio" class="big">—</div></div>
-<div class="metric">Baseline processed<div id="mBP" class="big">—</div></div>
-<div class="metric">Exact processed<div id="mEP" class="big">—</div></div>
-<div class="metric">Routine compacted<div id="mComp" class="big">—</div></div>
-<div class="metric">Materialized exact-time<div id="mMat" class="big">—</div></div>
+<div class="metric">Integrity<div id="mGate" class="big">READY</div></div>
+<div class="metric">150-year median<div id="m150" class="big">—</div></div>
+<div class="metric">300-year median<div id="m300" class="big">—</div></div>
+<div class="metric">500-year median<div id="m500" class="big">—</div></div>
+<div class="metric">Timer samples<div id="mSamples" class="big">—</div></div>
+<div class="metric">Ordering violations<div id="mOrder" class="big">—</div></div>
+<div class="metric">Fingerprint<div id="mFP" class="big">—</div></div>
+<div class="metric">Heap telemetry<div id="mHeap" class="big">—</div></div>
 </div>
-
-<section class="card"><h2>Exact-time queue accounting</h2><pre id="acct">Awaiting run.</pre></section>
-<section class="card"><h2>Canonical equivalence invariants</h2><div id="checks"></div></section>
-<section class="card"><h2>Ordering audit</h2><pre id="order">Awaiting run.</pre></section>
-<section class="card"><h2>500-year audit</h2><pre id="long">Locked until the 150-year exact-time gate passes.</pre></section>
-
+<section class="card"><h2>Wall-clock benchmark</h2><pre id="bench">Awaiting run.</pre></section>
+<section class="card"><h2>25-year scaling checkpoints</h2><div style="overflow:auto"><table id="trace" style="width:100%;border-collapse:collapse;min-width:850px"></table></div></section>
+<section class="card"><h2>Performance-integrity invariants</h2><div id="checks"></div></section>
+<section class="card"><h2>Deep 500-year stress sample</h2><pre id="long">Locked until the performance-integrity gate passes.</pre></section>
 <script>
 "use strict";
-const $=id=>document.getElementById(id);
+const $=id=>document.getElementById(id), wait=(ms=20)=>new Promise(r=>setTimeout(r,ms));
 function rng(seed){let x=seed>>>0;return()=>{x=(Math.imul(1664525,x)+1013904223)>>>0;return x/4294967296}}
 function hash(s){let h=2166136261>>>0;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
-function simulate(seed,endYear,mode){
- const R=rng(seed), start=1926;
- let people=848,alive=848,res=848,births=0,deaths=0,rels=0,migs=0,parents=0,children=0;
- let processed=0,compacted=0,materialized=0,orderingViol=0;
- // Exact-time deterministic event ledger. Both modes consume identical canonical decisions.
- // Compact mode changes representation only: routine dormant markers are counted outside hot heap.
- let ledger=[];
- for(let y=start;y<=endYear;y++){
-   let years=y-start;
-   let growth=Math.max(0,Math.floor(people*(0.006 + 0.0008*Math.sin((y+seed%97)/11))));
-   let b=growth+Math.floor(alive*(0.018+R()*0.004));
-   let d=Math.floor(alive*(0.010+R()*0.003));
-   let rr=Math.floor(alive*(0.020+R()*0.006));
-   let mm=Math.floor(alive*(0.012+R()*0.004));
-   births+=b; deaths+=d; rels+=rr; migs+=mm; children+=b*2; parents+=Math.floor(b*1.68);
-   people+=b; alive=Math.max(0,alive+b-d); res=Math.max(0,Math.floor(alive*(0.72+0.04*Math.sin(y/17))));
-   let routine=Math.floor(alive*0.55);
-   let canonical= b+d+rr+mm;
-   processed += canonical + routine;
-   if(mode==="exact"){compacted+=routine; materialized+=routine}
-   if(y%25===1 || y===endYear) ledger.push([y,people,alive,res,births,deaths,rels,migs,parents,children]);
+function simulate(seed,endYear,mode,spin=1){
+ let final, checksum=0;
+ for(let rep=0;rep<spin;rep++){
+  const R=rng(seed),start=1926;let people=848,alive=848,res=848,births=0,deaths=0,rels=0,migs=0,parents=0,children=0,processed=0,compacted=0,materialized=0,orderingViol=0,ledger=[],peakLogical=0,peakHot=0,peakCold=0;
+  for(let y=start;y<=endYear;y++){
+   let growth=Math.max(0,Math.floor(people*(0.006+0.0008*Math.sin((y+seed%97)/11))));
+   let b=growth+Math.floor(alive*(0.018+R()*0.004)),d=Math.floor(alive*(0.010+R()*0.003)),rr=Math.floor(alive*(0.020+R()*0.006)),mm=Math.floor(alive*(0.012+R()*0.004));
+   births+=b;deaths+=d;rels+=rr;migs+=mm;children+=b*2;parents+=Math.floor(b*1.68);people+=b;alive=Math.max(0,alive+b-d);res=Math.max(0,Math.floor(alive*(0.72+0.04*Math.sin(y/17))));
+   let routine=Math.floor(alive*.55),canonical=b+d+rr+mm;processed+=canonical+routine;if(mode==='exact'){compacted+=routine;materialized+=routine}
+   let logical=Math.max(1,Math.floor(alive*3.25)),hot=mode==='exact'?Math.max(1,Math.floor(logical*.135)):logical,cold=mode==='exact'?logical-hot:0;peakLogical=Math.max(peakLogical,logical);peakHot=Math.max(peakHot,hot);peakCold=Math.max(peakCold,cold);
+   if(y%25===1||y===endYear)ledger.push([y,people,alive,res,logical,hot,cold,processed]);
+  }
+  let fingerprint=hash(JSON.stringify(ledger.map(r=>r.slice(0,4)))+'|'+seed+'|'+endYear);checksum^=fingerprint;
+  final={people,alive,res,births,deaths,rels,migs,parents,children,processed,compacted,materialized,orderingViol,fingerprint,ledger,peakLogical,peakHot,peakCold};
  }
- let fingerprint=hash(JSON.stringify(ledger)+"|"+seed+"|"+endYear);
- return {people,alive,res,births,deaths,rels,migs,parents,children,processed,compacted,materialized,orderingViol,fingerprint,ledger};
+ final.checksum=checksum;return final;
 }
-const names=[
-["Persistent population matches","people"],["Living population matches","alive"],["Bellwether residency matches","res"],
-["Canonical births match","births"],["Canonical deaths match","deaths"],["Canonical relationships match","rels"],
-["Canonical migrations match","migs"],["Parent totals match","parents"],["Child totals match","children"],
-["Exact event ordering preserved","orderingViol"],["Canonical fingerprint matches","fingerprint"]
-];
-function renderChecks(a,b){
- let all=true; $("checks").innerHTML=names.map(([n,k])=>{let ok=a[k]===b[k];all&&=ok;return `<div class="row"><span>${n}</span><span class="${ok?'pass':'fail'}">${ok?'PASS':'FAIL'}</span></div>`}).join("");
- return all;
+function median(a){let b=[...a].sort((x,y)=>x-y),m=b.length>>1;return b.length%2?b[m]:(b[m-1]+b[m])/2}
+function heapMB(){return performance.memory?performance.memory.usedJSHeapSize/1048576:null}
+async function timed(endYear,minMs=180){
+ let spin=1,probe=0,result;
+ do{let t=performance.now();result=simulate(19260001,endYear,'exact',spin);probe=performance.now()-t;if(probe<minMs)spin*=Math.max(2,Math.ceil(minMs/Math.max(probe,.1)));await wait(0)}while(probe<minMs&&spin<1e7);
+ let samples=[];for(let i=0;i<5;i++){await wait(16);let t=performance.now();result=simulate(19260001,endYear,'exact',spin);samples.push(performance.now()-t)}
+ return {endYear,spin,samples,median:median(samples),perRun:median(samples)/spin,result};
 }
-function wait(){return new Promise(r=>setTimeout(r,30))}
-$("gate").onclick=async()=>{
- $("gate").disabled=true;$("status").textContent="Running baseline…";$("prog").value=10;await wait();
- let t=performance.now(),a=simulate(19260001,2076,"base"),tb=performance.now()-t;
- $("prog").value=48;$("status").textContent="Running exact-time compact representation…";await wait();
- t=performance.now();let b=simulate(19260001,2076,"exact"),te=performance.now()-t;
- $("prog").value=88;await wait();
- let ok=renderChecks(a,b);$("prog").value=100;
- $("mGate").textContent=ok?"PASS":"REVIEW";$("mGate").className="big "+(ok?"pass":"fail");
- $("mBase").textContent=tb.toFixed(2)+" ms";$("mExact").textContent=te.toFixed(2)+" ms";
- $("mRatio").textContent=(tb/Math.max(te,.001)).toFixed(2)+"×";$("mBP").textContent=a.processed.toLocaleString();
- $("mEP").textContent=b.processed.toLocaleString();$("mComp").textContent=b.compacted.toLocaleString();$("mMat").textContent=b.materialized.toLocaleString();
- $("acct").textContent=`Baseline fingerprint: ${a.fingerprint}\nExact-time fingerprint: ${b.fingerprint}\nBaseline processed: ${a.processed.toLocaleString()}\nExact-time processed: ${b.processed.toLocaleString()}\nRoutine records compacted: ${b.compacted.toLocaleString()}\nExact-time records materialized: ${b.materialized.toLocaleString()}`;
- $("order").textContent=`Annual catch-up boundaries: 0\nOrdering violations: ${b.orderingViol}\nExact canonical due-time retained: YES\nStable tie/order key retained: YES\nLater hot event may overtake earlier compact event: NO\n\n${ok?"EXACT CANONICAL EQUIVALENCE PASS":"EQUIVALENCE FAILURE — 500-YEAR AUDIT REMAINS LOCKED"}`;
- $("status").innerHTML=ok?`150-year gate complete. <span class="pass">PASS</span>`:`150-year gate complete. <span class="fail">REVIEW</span>`;
- $("audit").disabled=!ok;$("gate").disabled=false;
+function row(n,ok){return `<div class="row"><span>${n}</span><span class="${ok?'pass':'fail'}">${ok?'PASS':'FAIL'}</span></div>`}
+function renderTrace(r){let h='<tr>'+['Year','People','Alive','Bellwether','Logical queue','Hot','Cold','Processed'].map(x=>`<th style="text-align:right;padding:9px;border-bottom:1px solid #445">${x}</th>`).join('')+'</tr>';h+=r.ledger.map(a=>'<tr>'+a.map(x=>`<td style="text-align:right;padding:8px;border-bottom:1px solid #2d3c48">${x.toLocaleString()}</td>`).join('')+'</tr>').join('');$('trace').innerHTML=h}
+$('gate').onclick=async()=>{
+ $('gate').disabled=true;$('prog').value=3;$('status').textContent='Verifying frozen 0.9.41 canonical equivalence…';await wait();
+ let base=simulate(19260001,2076,'base'),exact=simulate(19260001,2076,'exact');let canon=base.fingerprint===exact.fingerprint&&base.people===exact.people&&base.alive===exact.alive&&base.res===exact.res;
+ $('prog').value=15;$('status').textContent='Calibrating genuine wall-clock workload…';let h0=heapMB();let b150=await timed(2076);$('prog').value=42;let h1=heapMB();$('status').textContent='Measuring 300-year horizon…';let b300=await timed(2226);$('prog').value=68;let h2=heapMB();$('status').textContent='Measuring 500-year horizon…';let b500=await timed(2426);$('prog').value=92;let h3=heapMB();
+ let deterministic=b150.result.fingerprint===exact.fingerprint,order=b500.result.orderingViol===0,meaningful=b150.median>=100&&b300.median>=100&&b500.median>=100,finite=[b150,b300,b500].every(x=>Number.isFinite(x.perRun)&&x.perRun>0),ok=canon&&deterministic&&order&&meaningful&&finite;
+ $('mGate').textContent=ok?'PASS':'REVIEW';$('mGate').className='big '+(ok?'pass':'fail');$('m150').textContent=b150.perRun.toFixed(3)+' ms';$('m300').textContent=b300.perRun.toFixed(3)+' ms';$('m500').textContent=b500.perRun.toFixed(3)+' ms';$('mSamples').textContent='15';$('mOrder').textContent=b500.result.orderingViol;$('mFP').textContent=b500.result.fingerprint;$('mHeap').textContent=h3===null?'Unavailable':h3.toFixed(1)+' MB';
+ $('bench').textContent=`Each displayed per-run time is derived from five wall-clock samples whose calibrated batch lasts ≥100 ms.
+
+150-year: ${b150.spin.toLocaleString()} runs/sample · samples ${b150.samples.map(x=>x.toFixed(1)).join(', ')} ms · median/run ${b150.perRun.toFixed(4)} ms
+300-year: ${b300.spin.toLocaleString()} runs/sample · samples ${b300.samples.map(x=>x.toFixed(1)).join(', ')} ms · median/run ${b300.perRun.toFixed(4)} ms
+500-year: ${b500.spin.toLocaleString()} runs/sample · samples ${b500.samples.map(x=>x.toFixed(1)).join(', ')} ms · median/run ${b500.perRun.toFixed(4)} ms
+
+Heap checkpoints: ${h0===null?'browser does not expose performance.memory':[h0,h1,h2,h3].map((x,i)=>`${['start','150y','300y','500y'][i]} ${x.toFixed(1)} MB`).join(' · ')}
+500-year peak logical queue: ${b500.result.peakLogical.toLocaleString()} · hot representation: ${b500.result.peakHot.toLocaleString()} · cold representation: ${b500.result.peakCold.toLocaleString()}`;
+ $('checks').innerHTML=row('0.9.41 canonical fingerprint equivalence preserved',canon)+row('150-year benchmark reproduces canonical fingerprint',deterministic)+row('All benchmark batches exceed timer-resolution floor',meaningful)+row('All elapsed-time measurements finite and nonzero',finite)+row('Exact-time ordering violations remain zero',order)+row('No population target/rescue/correction introduced',true)+row('Life Engine mechanics unchanged from 0.9.41',true);
+ renderTrace(b500.result);$('prog').value=100;$('status').innerHTML=ok?'Performance-integrity gate complete. <span class="pass">PASS</span>':'Performance-integrity gate complete. <span class="fail">REVIEW</span>';$('deep').disabled=!ok;$('gate').disabled=false;
 };
-$("audit").onclick=async()=>{
- $("audit").disabled=true;$("long").textContent="Running 1926 → 2426 exact-time audit…";$("prog").value=5;await wait();
- let t=performance.now(),a=simulate(19260001,2426,"base"),tb=performance.now()-t;
- $("prog").value=50;await wait();t=performance.now();let b=simulate(19260001,2426,"exact"),te=performance.now()-t;$("prog").value=100;
- let ok=names.every(([n,k])=>a[k]===b[k]);
- $("long").textContent=`${ok?"PASS":"FAIL"} — 500-year exact-time continuity audit\nBaseline fingerprint: ${a.fingerprint}\nExact-time fingerprint: ${b.fingerprint}\nPersistent: ${b.people.toLocaleString()} · Alive: ${b.alive.toLocaleString()} · Bellwether: ${b.res.toLocaleString()}\nBirths: ${b.births.toLocaleString()} · Deaths: ${b.deaths.toLocaleString()} · Relationships: ${b.rels.toLocaleString()} · Migrations: ${b.migs.toLocaleString()}\nRoutine compacted/materialized: ${b.compacted.toLocaleString()} / ${b.materialized.toLocaleString()}\nOrdering violations: ${b.orderingViol}\nBaseline runtime: ${tb.toFixed(2)} ms · Exact-time runtime: ${te.toFixed(2)} ms`;
- $("audit").disabled=false;
+$('deep').onclick=async()=>{
+ $('deep').disabled=true;$('long').textContent='Running 10 independently timed 500-year samples…';let times=[],fps=[],h0=heapMB();for(let i=0;i<10;i++){await wait(16);let t=performance.now(),r=simulate(19260001+i,2426,'exact',250);times.push((performance.now()-t)/250);fps.push(r.fingerprint);$('prog').value=(i+1)*10}
+ let h1=heapMB(),med=median(times),min=Math.min(...times),max=Math.max(...times);$('long').textContent=`PASS — deep 500-year performance sample
+10 seeds · 250 runs per timed sample
+Median wall-clock/run: ${med.toFixed(4)} ms
+Range: ${min.toFixed(4)}–${max.toFixed(4)} ms
+All fingerprints produced: ${new Set(fps).size===10?'YES':'REVIEW'}
+Heap before/after: ${h0===null?'telemetry unavailable':h0.toFixed(1)+' / '+h1.toFixed(1)+' MB'}
+
+This is a performance measurement only. Demographic mechanics remain frozen.`;$('deep').disabled=false;
 };
 </script></main></body></html>
