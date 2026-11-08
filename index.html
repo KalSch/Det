@@ -1,22 +1,22 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#10151b"><title>Bellwether Business Engine v0.1.4</title>
+<meta name="theme-color" content="#10151b"><title>Bellwether Business Engine v0.1.5</title>
 <style>
 :root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;background:#10151b;color:#e8edf3}
 *{box-sizing:border-box}body{margin:0;padding:18px 14px 50px;max-width:1050px;margin-inline:auto}h1{font-size:1.5rem;margin:8px 0 2px}h2{font-size:1.15rem}p,.muted{color:#9cadbd;line-height:1.5}.eyebrow{color:#d6a44e;font-size:.85rem;letter-spacing:.07em}.panel{background:#1b232d;border:1px solid #344352;border-radius:15px;padding:17px;margin-top:16px}.controls{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}button,select,input{font:inherit;border-radius:9px;padding:10px;background:#101820;color:#e8edf3;border:1px solid #465a6c}button{cursor:pointer}button.primary{background:#b48739;color:#111;font-weight:700;border-color:#b48739}button:focus-visible,select:focus-visible{outline:2px solid #e9b85a}.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stat{background:#121a22;border:1px solid #354554;padding:12px;border-radius:10px}.stat small{display:block;color:#9cadbd}.stat strong{font-size:1.4rem}.list{display:grid;gap:8px}.business{width:100%;text-align:left;display:flex;justify-content:space-between;align-items:center;gap:8px}.business.selected{border-color:#d5a24a;background:#2c2a25}.tag{font-size:.75rem;color:#d6b16b}.record{padding:10px 0;border-bottom:1px solid #34414e;overflow-wrap:anywhere}.record:last-child{border:0}.details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.details div{background:#121a22;padding:10px;border-radius:8px}.details small{display:block;color:#9cadbd}.warning{color:#e3b269}.pass{color:#7acb92}#businesses{max-height:340px;overflow:auto}#history{max-height:300px;overflow:auto}footer{font-size:.82rem;color:#92a3b3;margin-top:20px}@media(min-width:750px){.stats{grid-template-columns:repeat(4,1fr)}.columns{display:grid;grid-template-columns:1fr 1fr;gap:16px}.columns .panel{margin-top:0}} 
 </style></head><body>
 <div class="eyebrow">BELLWETHER · STANDALONE SIMULATION</div>
-<h1>Business Engine</h1><div class="muted">Prototype <b>v0.1.4 — Business Formation and Commercial Opportunities</b></div>
+<h1>Business Engine</h1><div class="muted">Prototype <b>v0.1.5 — Business Survival & Market Equilibrium</b></div>
 <div class="panel"><strong>Independent engines · shared opportunities</strong><p>Businesses independently respond to market conditions, while new firms may emerge from demand, gaps in capacity, local opportunity, and uncertainty. Growth, contraction, formation, and closure are possible, never guaranteed. These are provisional simulation indicators, not historical financial records. No Life Engine dependency.</p></div>
 <div class="panel"><div class="controls"><button class="primary" id="day">Advance 1 day</button><button id="month">Advance 1 month</button><button id="advance">Advance 1 year</button><button id="five">Advance 5 years</button><button id="export">Export save</button><button id="import">Import save</button><button id="reset">New simulation</button><input type="file" id="file" accept=".json,application/json" hidden></div>
 <div class="stats"><div class="stat"><small>World date</small><strong id="date"></strong></div><div class="stat"><small>Businesses</small><strong id="count"></strong></div><div class="stat"><small>Active</small><strong id="active"></strong></div><div class="stat"><small>Closed</small><strong id="closed"></strong></div><div class="stat"><small>New formations</small><strong id="formations"></strong></div><div class="stat"><small>Historical records</small><strong id="events"></strong></div><div class="stat"><small>Audit faults</small><strong id="faults"></strong></div></div><p id="notice" role="status"></p></div>
 <div class="columns"><section class="panel"><h2>Business registry</h2><label for="filter" class="muted">Industry</label> <select id="filter"><option value="all">All industries</option></select> <label for="statusFilter" class="muted">Status</label> <select id="statusFilter"><option value="all">All businesses</option><option value="active">Active</option><option value="closed">Closed</option></select><div id="businesses" class="list" style="margin-top:12px"></div></section>
-<section class="panel"><h2>Business identity</h2><div id="detail" class="details"></div><h2>Business circumstances</h2><div id="circumstances" class="details"></div><h2>Individual history</h2><div id="history"></div></section></div>
+<section class="panel"><h2>Business identity</h2><div id="detail" class="details"></div><h2>Business characteristics</h2><div id="traits" class="details"></div><h2>Business circumstances</h2><div id="circumstances" class="details"></div><h2>Individual history</h2><div id="history"></div></section></div>
 <section class="panel"><h2>Integrity audit</h2><div id="audit"></div></section>
-<footer>Prototype scope: fictional businesses, persistent IDs, daily Gregorian calendar, monthly independent business reviews, meaningful event histories, operational responses, permanent closures, independent business formation, market opportunity evaluation, lifecycle-aware reviews, active/closed filtering, save migration and integrity audits. Industry and historical-era modifiers are illustrative assumptions, not historically calibrated data. No actual transactions, wages, or hiring are simulated.</footer>
+<footer>Prototype scope: fictional businesses, persistent IDs, daily Gregorian calendar, monthly independent business reviews, meaningful event histories, operational responses, permanent closures, independent business formation, local market opportunity evaluation, persistent business traits, recovery actions, lifecycle-aware reviews, active/closed filtering, save migration and integrity audits. Industry, local market, and historical-era modifiers are illustrative assumptions, not historically calibrated data. No actual transactions, wages, or hiring are simulated.</footer>
 <script>
 "use strict";
-const KEY="bellwether-business-v0140",PREVIOUS="bellwether-business-v0130",PRIOR="bellwether-business-v0120",OLD="bellwether-business-v0110",LEGACY="bellwether-business-v0100";
+const KEY="bellwether-business-v0150",V014="bellwether-business-v0140",PREVIOUS="bellwether-business-v0130",PRIOR="bellwether-business-v0120",OLD="bellwether-business-v0110",LEGACY="bellwether-business-v0100";
 const industries=["Agriculture","Manufacturing","Commerce and Services","Transportation","Construction","Publishing","Finance","Hospitality"];
 const prefixes=["Northfield","Bellmont","Ashford","Hawthorne","Cedar","Riverton","Briar","Westbridge","Stonewell","Redbrook","Millstone","Fairview"];
 const suffixes=["Works","Company","Trading","Enterprises","Supply","Cooperative","Industries","Services"];
@@ -31,10 +31,13 @@ function validDate(s){if(typeof s!=="string"||!/^\d{4}-\d{2}-\d{2}$/.test(s))ret
 function hash(s){let h=2166136261;for(let c of s){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 function baseline(b){let h=hash(b.id+"|"+b.founded);return {demand:35+h%35,capacity:42+(h>>>7)%35,liquidity:40+(h>>>14)%35,resilience:30+(h>>>20)%50,reviewed:null,phase:"operating",pressureMonths:0,stableMonths:0,reviewCount:0,closures:0,closedOn:null}}
+const sectorProfiles={"Agriculture":{season:5,overhead:1.1,volatility:1.2},"Manufacturing":{season:1,overhead:1.7,volatility:1},"Commerce and Services":{season:2,overhead:1.1,volatility:1.2},"Transportation":{season:1,overhead:1.8,volatility:1.1},"Construction":{season:4,overhead:1.5,volatility:1.4},"Publishing":{season:1,overhead:1,volatility:.9},"Finance":{season:0,overhead:1.2,volatility:1.5},"Hospitality":{season:6,overhead:1.3,volatility:1.4}};
+function traits(b){let h=hash(b.id+"|"+b.founded+"|character");return {discipline:20+h%81,adaptability:20+(h>>>7)%81,advantage:15+(h>>>14)%71,risk:15+(h>>>21)%81}}
+function market(industry,city,date){let month=date.slice(0,7),h=hash("market|"+(state.seed||0)+"|"+industry+"|"+city+"|"+month),p=sectorProfiles[industry]||sectorProfiles.Manufacturing;let peers=state.businesses.filter(b=>b.industry===industry&&b.city===city&&b.founded<=date&&b.circumstances.phase!=="closed");let supply=peers.reduce((n,b)=>n+b.circumstances.capacity,0);let opportunity=clamp(46+era(date,industry)*.8+((h%29)-14)*p.volatility+p.season*Math.sin((Number(date.slice(5,7))-1)*Math.PI/6),8,90);return {opportunity,supply,peers:peers.length,competition:clamp(supply/(Math.max(1,peers.length)*65),0,1.6)}}
 function fresh(){
 let businesses=[];for(let i=0;i<48;i++){let y=1880+(i*13)%40,m=1+(i*7)%12,d=1+(i*11)%28,id="BUS-"+String(i+1).padStart(5,"0"),date=iso(y,m,d);
-let b={id,name:`${prefixes[i%12]} ${suffixes[Math.floor(i/12)%8]}`,industry:industries[i%8],city:cities[(i*5)%6],founded:date,ownerRef:null,events:[{id:id+"-E0001",date,type:"founded",description:"Business identity established in the world registry."}]};b.circumstances=baseline(b);businesses.push(b)}
-return {schema:4,version:"0.1.3",date:"1920-01-01",businesses}}
+let b={id,name:`${prefixes[i%12]} ${suffixes[Math.floor(i/12)%8]}`,industry:industries[i%8],city:cities[(i*5)%6],founded:date,ownerRef:null,events:[{id:id+"-E0001",date,type:"founded",description:"Business identity established in the world registry."}]};b.traits=traits(b);b.circumstances=baseline(b);businesses.push(b)}
+return upgrade({schema:4,version:"0.1.3",date:"1920-01-01",businesses})}
 function era(date,industry){let y=Number(date.slice(0,4)),m=Number(date.slice(5,7)),v=0;
 if(y>=1929&&y<=1933)v=-14;
 else if(y>=1934&&y<=1939)v=-5;
@@ -47,17 +50,17 @@ return v}
 function event(b,date,type,description){b.events.push({id:b.id+"-E"+String(b.events.length+1).padStart(4,"0"),date,type,description})}
 function review(b,date){
 let c=b.circumstances;if(c.phase==="closed")return;let period=date.slice(0,7),h=hash(b.id+"|"+period+"|"+(state.seed||0)),bias=era(date,b.industry);
-let prev={...c};c.reviewCount=(c.reviewCount||0)+1;
+let prev={...c};let t=b.traits||traits(b),profile=sectorProfiles[b.industry]||sectorProfiles.Manufacturing,m=market(b.industry,b.city,date);c.reviewCount=(c.reviewCount||0)+1;
 // Independent demand shocks, including occasional large negative and positive events.
 let shock=(h%23)-11;let disruption=(h>>>9)%97===0? -12-((h>>>17)%15):0;
 let opportunity=(h>>>13)%101===0? 10+((h>>>21)%12):0;
-let seasonal=bias*.4;let demandTarget=48+seasonal+shock+disruption+opportunity;
+let seasonal=bias*.4;let demandTarget=m.opportunity+seasonal+shock*profile.volatility+disruption+opportunity+t.advantage*.10-m.competition*6;
 c.demand=clamp(Math.round(c.demand*.78+demandTarget*.22+((h>>>4)%7-3)),0,100);
 // Capacity is costly to change, and overexpansion strains liquidity.
-let capacityDrift=Math.round((c.demand-c.capacity)*.09+((h>>>6)%7-3)*.65);
+let capacityDrift=Math.round((c.demand-c.capacity)*(.045+t.adaptability/1800)+((h>>>6)%7-3)*.55);
 c.capacity=clamp(c.capacity+capacityDrift,0,100);
-let margin=(c.demand-c.capacity)*.11,burden=(c.capacity>c.demand+12?2.5:0);
-c.liquidity=clamp(Math.round(c.liquidity+margin-burden+((h>>>11)%11-5)*.95+bias*.1-1),0,100);
+let margin=(c.demand-c.capacity)*(.10+t.advantage/1600),burden=(c.capacity>c.demand+12?2.5:0)+profile.overhead*(1.5-t.discipline/110);
+c.liquidity=clamp(Math.round(c.liquidity+margin-burden+((h>>>11)%11-5)*(.65+t.risk/180)+bias*.1-burden*.3),0,100);
 // Resilience can improve or deteriorate, but never receives an automatic perpetual gain.
 let resilienceTarget=clamp((c.liquidity*.5+c.demand*.25+c.capacity*.25)-((h>>>19)%11),0,100);
 c.resilience=clamp(Math.round(c.resilience*.92+resilienceTarget*.08+((h>>>15)%7-3)),0,100);
@@ -66,19 +69,20 @@ c.pressureMonths=strained?(c.pressureMonths||0)+1:Math.max(0,(c.pressureMonths||
 c.stableMonths=!strained&&c.liquidity>48&&c.demand>42?(c.stableMonths||0)+1:0;
 let previousPhase=c.phase||"operating";
 // Business decisions respond to individual opportunity and constraints, not a fixed life cycle.
-if(c.pressureMonths>=5&&c.liquidity<13&&c.resilience<22&&((h>>>5)%5===0)){
+if(c.pressureMonths>=5&&c.liquidity<13&&c.resilience<22&&((h>>>5)%100)<clamp(34-t.discipline*.13-t.adaptability*.08,6,32)){
  c.phase="closed";c.closures=(c.closures||0)+1;c.closedOn=date;
  event(b,date,"closure",`Operations ceased after sustained financial and operational strain. Final demand ${c.demand}, liquidity ${c.liquidity}, resilience ${c.resilience}.`);
 }else if(c.pressureMonths>=3&&c.phase!=="contraction"&&c.phase!=="restructuring"){
  c.phase=(h%2)?"contraction":"restructuring";
- c.capacity=clamp(c.capacity-(4+h%9),0,100);
+ c.capacity=clamp(c.capacity-(3+h%7),0,100);c.liquidity=clamp(c.liquidity+Math.round(t.discipline/25)-1,0,100);
  event(b,date,c.phase,`Management responded to sustained pressure by ${c.phase==="contraction"?"reducing operating capacity":"reorganizing operations"}. Capacity ${prev.capacity} → ${c.capacity}; liquidity ${c.liquidity}.`);
-}else if(c.stableMonths>=6&&c.phase==="operating"&&c.liquidity>65&&c.demand>55&&((h>>>7)%9===0)){
+}else if(c.stableMonths>=6&&c.phase==="operating"&&c.liquidity>58&&c.demand>52&&((h>>>7)%100)<(4+t.risk/8)){
  c.phase="expanding";c.capacity=clamp(c.capacity+3+(h%7),0,100);c.liquidity=clamp(c.liquidity-4-(h%6),0,100);
  event(b,date,"expansion",`Business pursued expansion following sustained demand and available liquidity. Capacity ${prev.capacity} → ${c.capacity}; liquidity ${prev.liquidity} → ${c.liquidity}.`);
 }else if(["contraction","restructuring","expanding"].includes(c.phase)&&c.stableMonths>=4&&((h>>>3)%4===0)){
  c.phase="operating";event(b,date,"stabilization",`Business returned to regular operations after ${previousPhase}. Demand ${c.demand}; liquidity ${c.liquidity}.`);
 }
+if(c.phase!=="closed"&&c.pressureMonths>=2&&c.liquidity<38&&t.adaptability>55&&((h>>>12)%100)<(t.adaptability-40)/3){let relief=2+Math.floor(t.discipline/28);c.liquidity=clamp(c.liquidity+relief,0,100);event(b,date,"recovery-action",`Management renegotiated commitments and reduced immediate cash pressure; liquidity improved by ${relief} indicator points. Recovery remains uncertain.`)}
 let changes=["demand","capacity","liquidity","resilience"].map(k=>({key:k,delta:c[k]-prev[k]}));
 let significant=changes.filter(x=>Math.abs(x.delta)>=9);
 if(significant.length){let reasons=[];if(disruption)reasons.push("unexpected market disruption");if(opportunity)reasons.push("unusual demand opportunity");if(bias<=-5)reasons.push("adverse era conditions (illustrative)");if(c.capacity>c.demand+12)reasons.push("capacity exceeding demand");if(!reasons.length)reasons.push("independent market variation and operating conditions");
@@ -103,16 +107,15 @@ function formationReview(date){
  for(let slot=0;slot<4;slot++){
   const h=hash(`${state.seed||0}|formation|${period}|${slot}`);
   const sector=(h>>>4)%industries.length, industry=industries[sector];
-  const gap=sectorDemand[sector]-sectorCapacity[sector];
+  const city=cities[(h>>>13)%cities.length];const local=market(industry,city,date);const gap=(sectorDemand[sector]-sectorCapacity[sector])*.45+(local.opportunity-local.supply/Math.max(1,local.peers))*.55;
   const crowd=sectorCount[sector];
   const eraPressure=era(date,industry);
-  const chance=clamp(8+gap*.65+Math.max(0,sectorDemand[sector]-48)*.3+eraPressure*.6-Math.log2(crowd+1)*3,1,28);
+  const chance=clamp(6+gap*.36+Math.max(0,local.opportunity-48)*.2+eraPressure*.4-Math.log2(local.peers+1)*3,1,26);
   if((h%1000)/10>=chance)continue;
-  const city=cities[(h>>>13)%cities.length];
   const id="BUS-"+String(state.nextBusinessId++).padStart(5,"0");
   const name=`${prefixes[(h>>>19)%prefixes.length]} ${suffixes[(h>>>24)%suffixes.length]}`;
   const b={id,name,industry,city,founded:date,ownerRef:null,events:[{id:id+"-E0001",date,type:"founded",description:`New independent enterprise established in ${city}. Opportunity: ${gap>8?"unmet market demand":crowd===0?"an underserved industry":"a potential commercial opening"}. Formation does not guarantee success.`}]};
-  b.circumstances=baseline(b);
+  b.traits=traits(b);b.circumstances=baseline(b);
   // Start-ups vary in capitalization and scale; their operating trajectory remains independent.
   b.circumstances.capacity=clamp(20+(h>>>8)%34,0,100);
   b.circumstances.liquidity=clamp(23+(h>>>16)%54,0,100);
@@ -133,6 +136,7 @@ if(!validDate(state.date))issues.push("Invalid world date");if(!Number.isInteger
 for(let b of state.businesses){if(!b.id||ids.has(b.id))issues.push("Duplicate or missing business ID: "+b.id);ids.add(b.id);
 if(!b.name||!b.industry||!b.city||!validDate(b.founded))issues.push("Incomplete identity: "+b.id);
 if(!Array.isArray(b.events)||!b.events.length||b.events[0].type!=="founded"||b.events[0].date!==b.founded)issues.push("Founding record mismatch: "+b.id);
+if(!b.traits||["discipline","adaptability","advantage","risk"].some(k=>!Number.isFinite(b.traits[k])||b.traits[k]<0||b.traits[k]>100))issues.push("Invalid business characteristics: "+b.id);
 let c=b.circumstances;if(!c||["demand","capacity","liquidity","resilience"].some(k=>!Number.isFinite(c[k])||c[k]<0||c[k]>100))issues.push("Invalid circumstances: "+b.id);
 if(c&&!(["operating","expanding","contraction","restructuring","closed"].includes(c.phase)))issues.push("Invalid operating phase: "+b.id);
 if(c?.reviewed&&(!validDate(c.reviewed)||c.reviewed>state.date||c.reviewed<b.founded))issues.push("Invalid review date: "+b.id);
@@ -158,6 +162,7 @@ if(!shown.some(b=>b.id===selected))selected=shown[0]?.id??null;
 el("businesses").innerHTML=shown.map(b=>`<button class="business ${b.id===selected?"selected":""}" data-id="${safe(b.id)}"><span><b>${safe(b.name)}</b><br><small class="muted">${safe(b.id)} · ${safe(b.city)}</small></span><span class="tag">${safe(b.industry)}<br><small>${b.circumstances.phase==="closed"?"Closed "+safe(b.circumstances.closedOn):"Active"}</small></span></button>`).join("");
 let b=state.businesses.find(b=>b.id===selected);
 el("detail").innerHTML=b?[["Registry ID",b.id],["Name",b.name],["Industry",b.industry],["Location",b.city],["Founded",b.founded],["Ownership","Unassigned — future anchor"]].map(([k,v])=>`<div><small>${safe(k)}</small><b>${safe(v)}</b></div>`).join(""):"No business selected";
+el("traits").innerHTML=b?[["Financial discipline",b.traits.discipline+"/100"],["Adaptability",b.traits.adaptability+"/100"],["Competitive advantage",b.traits.advantage+"/100"],["Risk tolerance",b.traits.risk+"/100"]].map(([k,v])=>`<div><small>${safe(k)}</small><b>${safe(v)}</b></div>`).join(""):"";
 el("circumstances").innerHTML=b?[["Demand",b.circumstances.demand+"/100"],["Operating capacity",b.circumstances.capacity+"/100"],["Liquidity indicator",b.circumstances.liquidity+"/100"],["Resilience",b.circumstances.resilience+"/100"],["Operating status",b.circumstances.phase],["Closure date",b.circumstances.closedOn||"—"],["Pressure reviews",b.circumstances.pressureMonths],["Last review",b.circumstances.reviewed||"Initial baseline"],["Interpretation","Provisional"]].map(([k,v])=>`<div><small>${safe(k)}</small><b>${safe(v)}</b></div>`).join(""):"";
 el("history").innerHTML=b?b.events.slice(-80).reverse().map(e=>`<div class="record"><span class="tag">${safe(e.date)} · ${safe(e.type)}</span><div>${safe(e.description)}</div></div>`).join(""):"";
 document.querySelectorAll("[data-id]").forEach(btn=>btn.onclick=()=>{selected=btn.dataset.id;render()})}
@@ -167,11 +172,12 @@ el("month").onclick=()=>advanceTo(addMonths(state.date,1));
 el("advance").onclick=()=>advanceTo(addMonths(state.date,12));
 el("five").onclick=()=>advanceTo(addMonths(state.date,60));
 el("reset").onclick=()=>{if(confirm("Start a new simulation? This replaces the current browser save. Export first if needed.")){state=fresh();selected=null;save();render();notify("New simulation created.")}};
-el("export").onclick=()=>{let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="bellwether-business-v0.1.4-save.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);notify("Save exported.")};
+el("export").onclick=()=>{let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="bellwether-business-v0.1.5-save.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);notify("Save exported.")};
 el("import").onclick=()=>el("file").click();
 function upgrade(obj){
 if(!obj||!Array.isArray(obj.businesses))throw Error("Invalid save structure");
-if(obj.schema===5)return obj;
+if(obj.schema===6)return obj;
+if(obj.schema===5)return {...obj,schema:6,version:"0.1.5",businesses:obj.businesses.map(b=>({...b,traits:b.traits||traits(b)}))};
 if(obj.schema===4)return {...obj,schema:5,version:"0.1.4",seed:Number.isInteger(obj.seed)?obj.seed:hash("migration|"+obj.date),nextBusinessId:Math.max(0,...obj.businesses.map(b=>Number(b.id.slice(4))||0))+1,formationReviews:0};
 if(obj.schema===3){return upgrade({...obj,schema:4,version:"0.1.3",businesses:obj.businesses.map(b=>{
 let c={...baseline(b),...b.circumstances};let closures=(b.events||[]).filter(e=>e.type==="closure");
@@ -187,6 +193,6 @@ if(obj.schema!==1||!Number.isInteger(obj.year))throw Error("Unsupported save for
 return upgrade({schema:3,version:"0.1.2",date:iso(obj.year,1,1),businesses:obj.businesses.map(b=>({...b,circumstances:baseline(b)}))});}
 el("file").onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let obj=upgrade(JSON.parse(await f.text()));if(obj.businesses.length>10000)throw Error("Too many businesses");let old=state;state=obj;let faults=audit();if(faults.length){state=old;throw Error("Save failed integrity audit: "+faults[0])}save();selected=null;render();notify("Save imported successfully.")}catch(err){notify("Import failed: "+err.message)}e.target.value=""};
 for(let i of industries){let opt=document.createElement("option");opt.value=i;opt.textContent=i;el("filter").appendChild(opt)}el("filter").onchange=render;el("statusFilter").onchange=render;
-try{let data=localStorage.getItem(KEY)||localStorage.getItem(PREVIOUS)||localStorage.getItem(PRIOR)||localStorage.getItem(OLD)||localStorage.getItem(LEGACY);state=data?upgrade(JSON.parse(data)):fresh();if(audit().length)throw Error("Invalid stored state");if(!localStorage.getItem(KEY)&&data)notify("Previous save migrated. Historical business records preserved.")}catch(e){state=fresh();notify("Started fresh simulation; previous browser data could not be validated.")}
+try{let data=localStorage.getItem(KEY)||localStorage.getItem(V014)||localStorage.getItem(PREVIOUS)||localStorage.getItem(PRIOR)||localStorage.getItem(OLD)||localStorage.getItem(LEGACY);state=data?upgrade(JSON.parse(data)):fresh();if(audit().length)throw Error("Invalid stored state");if(!localStorage.getItem(KEY)&&data)notify("Previous save migrated. Historical business records preserved.")}catch(e){state=fresh();notify("Started fresh simulation; previous browser data could not be validated.")}
 save();render();
 </script></body></html>
