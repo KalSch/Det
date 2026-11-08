@@ -1,61 +1,105 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#10151b"><title>Bellwether Business Engine v0.1.0</title>
+<meta name="theme-color" content="#10151b"><title>Bellwether Business Engine v0.1.1</title>
 <style>
 :root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;background:#10151b;color:#e8edf3}
 *{box-sizing:border-box}body{margin:0;padding:18px 14px 50px;max-width:1050px;margin-inline:auto}h1{font-size:1.5rem;margin:8px 0 2px}h2{font-size:1.15rem}p,.muted{color:#9cadbd;line-height:1.5}.eyebrow{color:#d6a44e;font-size:.85rem;letter-spacing:.07em}.panel{background:#1b232d;border:1px solid #344352;border-radius:15px;padding:17px;margin-top:16px}.controls{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}button,select,input{font:inherit;border-radius:9px;padding:10px;background:#101820;color:#e8edf3;border:1px solid #465a6c}button{cursor:pointer}button.primary{background:#b48739;color:#111;font-weight:700;border-color:#b48739}button:focus-visible,select:focus-visible{outline:2px solid #e9b85a}.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stat{background:#121a22;border:1px solid #354554;padding:12px;border-radius:10px}.stat small{display:block;color:#9cadbd}.stat strong{font-size:1.4rem}.list{display:grid;gap:8px}.business{width:100%;text-align:left;display:flex;justify-content:space-between;align-items:center;gap:8px}.business.selected{border-color:#d5a24a;background:#2c2a25}.tag{font-size:.75rem;color:#d6b16b}.record{padding:10px 0;border-bottom:1px solid #34414e;overflow-wrap:anywhere}.record:last-child{border:0}.details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.details div{background:#121a22;padding:10px;border-radius:8px}.details small{display:block;color:#9cadbd}.warning{color:#e3b269}.pass{color:#7acb92}#businesses{max-height:340px;overflow:auto}#history{max-height:300px;overflow:auto}footer{font-size:.82rem;color:#92a3b3;margin-top:20px}@media(min-width:750px){.stats{grid-template-columns:repeat(4,1fr)}.columns{display:grid;grid-template-columns:1fr 1fr;gap:16px}.columns .panel{margin-top:0}} 
 </style></head><body>
 <div class="eyebrow">BELLWETHER · STANDALONE SIMULATION</div>
-<h1>Business Engine</h1><div class="muted">Prototype <b>v0.1.0 — Persistent Business Identity</b></div>
-<div class="panel"><strong>Independent engines · shared opportunities</strong><p>Businesses have persistent identities and dated histories. No Life Engine dependency. This first build does not simulate finances, hiring, vacancies, or autonomous commercial decisions.</p></div>
-<div class="panel"><div class="controls"><button class="primary" id="advance">Advance 1 year</button><button id="five">Advance 5 years</button><button id="export">Export save</button><button id="import">Import save</button><button id="reset">New simulation</button><input type="file" id="file" accept=".json,application/json" hidden></div>
+<h1>Business Engine</h1><div class="muted">Prototype <b>v0.1.1 — Calendar and Business Circumstances</b></div>
+<div class="panel"><strong>Independent engines · shared opportunities</strong><p>Each business independently tracks demand, operating capacity, liquidity pressure, and resilience on a dated world calendar. These are provisional simulation indicators, not historical financial records. No Life Engine dependency.</p></div>
+<div class="panel"><div class="controls"><button class="primary" id="day">Advance 1 day</button><button id="month">Advance 1 month</button><button id="advance">Advance 1 year</button><button id="five">Advance 5 years</button><button id="export">Export save</button><button id="import">Import save</button><button id="reset">New simulation</button><input type="file" id="file" accept=".json,application/json" hidden></div>
 <div class="stats"><div class="stat"><small>World date</small><strong id="date"></strong></div><div class="stat"><small>Businesses</small><strong id="count"></strong></div><div class="stat"><small>Historical records</small><strong id="events"></strong></div><div class="stat"><small>Audit faults</small><strong id="faults"></strong></div></div><p id="notice" role="status"></p></div>
 <div class="columns"><section class="panel"><h2>Business registry</h2><label for="filter" class="muted">Industry</label> <select id="filter"><option value="all">All industries</option></select><div id="businesses" class="list" style="margin-top:12px"></div></section>
-<section class="panel"><h2>Business identity</h2><div id="detail" class="details"></div><h2>Individual history</h2><div id="history"></div></section></div>
+<section class="panel"><h2>Business identity</h2><div id="detail" class="details"></div><h2>Business circumstances</h2><div id="circumstances" class="details"></div><h2>Individual history</h2><div id="history"></div></section></div>
 <section class="panel"><h2>Integrity audit</h2><div id="audit"></div></section>
-<footer>Prototype scope: fictional sample businesses, stable IDs, historical calendar, individual immutable founding records, browser save, export/import, and integrity checks. Business names and circumstances are fictional and are not historical claims.</footer>
+<footer>Prototype scope: fictional businesses, persistent IDs, daily Gregorian calendar, monthly independent business reviews, dated circumstances and audit checks. Industry and historical-era modifiers are illustrative assumptions, not historically calibrated data. No actual transactions, wages, or hiring are simulated.</footer>
 <script>
 "use strict";
-const KEY="bellwether-business-v0100";
+const KEY="bellwether-business-v0110",OLD="bellwether-business-v0100";
 const industries=["Agriculture","Manufacturing","Commerce and Services","Transportation","Construction","Publishing","Finance","Hospitality"];
 const prefixes=["Northfield","Bellmont","Ashford","Hawthorne","Cedar","Riverton","Briar","Westbridge","Stonewell","Redbrook","Millstone","Fairview"];
 const suffixes=["Works","Company","Trading","Enterprises","Supply","Cooperative","Industries","Services"];
 const cities=["Kansas City","St. Louis","Chicago","Omaha","Des Moines","Topeka"];
-let state, selected=null;
-function fresh(){
- let b=[];for(let i=0;i<48;i++){let y=1880+(i*13)%40, m=1+(i*7)%12,d=1+(i*11)%28,id="BUS-"+String(i+1).padStart(5,"0");
- let date=`${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
- b.push({id,name:`${prefixes[i%12]} ${suffixes[Math.floor(i/12)%8]}`,industry:industries[i%8],city:cities[(i*5)%6],founded:date,ownerRef:null,events:[{id:id+"-E0001",date,type:"founded",description:"Business identity established in the world registry."}]});}
- return {schema:1,version:"0.1.0",year:1920,businesses:b};
-}
+let state,selected=null;
+const pad=n=>String(n).padStart(2,"0");
+const iso=(y,m,d)=>`${y}-${pad(m)}-${pad(d)}`;
+const utc=s=>new Date(s+"T12:00:00Z");
+function addDays(s,n){let dt=utc(s);dt.setUTCDate(dt.getUTCDate()+n);return iso(dt.getUTCFullYear(),dt.getUTCMonth()+1,dt.getUTCDate())}
+function addMonths(s,n){let dt=utc(s), y=dt.getUTCFullYear(),m=dt.getUTCMonth()+n,day=dt.getUTCDate();let target=new Date(Date.UTC(y,m+1,0));return iso(target.getUTCFullYear(),target.getUTCMonth()+1,Math.min(day,target.getUTCDate()))}
 function validDate(s){if(typeof s!=="string"||!/^\d{4}-\d{2}-\d{2}$/.test(s))return false;let [y,m,d]=s.split("-").map(Number);let dt=new Date(Date.UTC(y,m-1,d));return dt.getUTCFullYear()===y&&dt.getUTCMonth()===m-1&&dt.getUTCDate()===d}
-function audit(){let issues=[],ids=new Set();for(let b of state.businesses){if(!b.id||ids.has(b.id))issues.push("Duplicate or missing business ID: "+b.id);ids.add(b.id);
+function hash(s){let h=2166136261;for(let c of s){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function baseline(b){let h=hash(b.id+"|"+b.founded);return {demand:35+h%35,capacity:42+(h>>>7)%35,liquidity:40+(h>>>14)%35,resilience:30+(h>>>20)%50,reviewed:null}}
+function fresh(){
+let businesses=[];for(let i=0;i<48;i++){let y=1880+(i*13)%40,m=1+(i*7)%12,d=1+(i*11)%28,id="BUS-"+String(i+1).padStart(5,"0"),date=iso(y,m,d);
+let b={id,name:`${prefixes[i%12]} ${suffixes[Math.floor(i/12)%8]}`,industry:industries[i%8],city:cities[(i*5)%6],founded:date,ownerRef:null,events:[{id:id+"-E0001",date,type:"founded",description:"Business identity established in the world registry."}]};b.circumstances=baseline(b);businesses.push(b)}
+return {schema:2,version:"0.1.1",date:"1920-01-01",businesses}}
+function era(date,industry){let y=Number(date.slice(0,4)),m=Number(date.slice(5,7)),v=0;
+if(y>=1929&&y<=1933)v=-14;
+else if(y>=1934&&y<=1939)v=-5;
+else if(y>=1942&&y<=1945)v=industry==="Manufacturing"?10:-3;
+else if(y>=1973&&y<=1975)v=-7;
+else if(y>=2008&&y<=2009)v=-9;
+if(industry==="Agriculture"&&m>=7&&m<=10)v+=3;
+if(industry==="Hospitality"&&(m===6||m===7||m===12))v+=3;
+return v}
+function review(b,date){
+let c=b.circumstances,period=date.slice(0,7),h=hash(b.id+"|"+period),noise=((h%13)-6),bias=era(date,b.industry);
+let prev={...c};
+c.demand=clamp(Math.round(c.demand*.86+50*.14+noise*.65+bias*.35),0,100);
+c.capacity=clamp(Math.round(c.capacity+(c.demand-c.capacity)*.13+((h>>>5)%7-3)*.5),0,100);
+c.liquidity=clamp(Math.round(c.liquidity+(c.demand-c.capacity)*.12+((h>>>10)%9-4)*.6+bias*.12),0,100);
+c.resilience=clamp(Math.round(c.resilience+(c.liquidity-50)*.025+((h>>>15)%5-2)*.4),0,100);
+c.reviewed=date;
+let delta=Math.abs(c.demand-prev.demand)+Math.abs(c.capacity-prev.capacity)+Math.abs(c.liquidity-prev.liquidity);
+let stress=(c.liquidity<25||c.demand<25);
+if(stress||delta>=13){b.events.push({id:b.id+"-E"+String(b.events.length+1).padStart(4,"0"),date,type:stress?"circumstance-pressure":"circumstance-review",description:`Monthly review: demand ${c.demand}, capacity ${c.capacity}, liquidity ${c.liquidity}, resilience ${c.resilience}. Illustrative indicators.`})}
+}
+function advanceTo(target){
+if(!validDate(target)||target<state.date||target>"9998-12-31"){notify("Date outside supported range.");return}
+let previous=state.date,monthCursor=previous.slice(0,7)+"-01",last=target.slice(0,7)+"-01",reviews=0;
+while(monthCursor<=last){let reviewDate=monthCursor;
+if(reviewDate>previous){for(let b of state.businesses)if(b.founded<=reviewDate){review(b,reviewDate);reviews++}}
+monthCursor=addMonths(monthCursor,1)}
+state.date=target;save();render();notify(`Advanced from ${previous} to ${target}. ${reviews} independent business reviews processed.`)}
+function audit(){let issues=[],ids=new Set();
+if(!validDate(state.date))issues.push("Invalid world date");
+for(let b of state.businesses){if(!b.id||ids.has(b.id))issues.push("Duplicate or missing business ID: "+b.id);ids.add(b.id);
 if(!b.name||!b.industry||!b.city||!validDate(b.founded))issues.push("Incomplete identity: "+b.id);
 if(!Array.isArray(b.events)||!b.events.length||b.events[0].type!=="founded"||b.events[0].date!==b.founded)issues.push("Founding record mismatch: "+b.id);
-let prior="",evIds=new Set();for(let e of b.events||[]){if(!e.id||evIds.has(e.id)||!validDate(e.date)||e.date<prior||e.date<b.founded||e.date>`${state.year}-12-31`)issues.push("Event chronology or ID fault: "+b.id);evIds.add(e.id);prior=e.date;}}
+let c=b.circumstances;if(!c||["demand","capacity","liquidity","resilience"].some(k=>!Number.isFinite(c[k])||c[k]<0||c[k]>100))issues.push("Invalid circumstances: "+b.id);
+if(c?.reviewed&&(!validDate(c.reviewed)||c.reviewed>state.date))issues.push("Invalid review date: "+b.id);
+let prior="",evIds=new Set();for(let e of b.events||[]){if(!e.id||evIds.has(e.id)||!validDate(e.date)||e.date<prior||e.date<b.founded||e.date>state.date)issues.push("Event chronology or ID fault: "+b.id);evIds.add(e.id);prior=e.date}}
 return issues}
 function save(){localStorage.setItem(KEY,JSON.stringify(state))}
-function el(id){return document.getElementById(id)}
+const el=id=>document.getElementById(id);
 function safe(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function render(){
- el("date").textContent=state.year;el("count").textContent=state.businesses.length;el("events").textContent=state.businesses.reduce((n,b)=>n+b.events.length,0);
- let issues=audit();el("faults").textContent=issues.length;el("audit").innerHTML=issues.length?issues.map(x=>`<div class="record warning">${safe(x)}</div>`).join(""):'<div class="pass">PASS — unique IDs, valid Gregorian dates, complete identities, founding records and event chronology.</div>';
- let f=el("filter").value;let shown=state.businesses.filter(b=>f==="all"||b.industry===f);
- el("businesses").innerHTML=shown.map(b=>`<button class="business ${b.id===selected?"selected":""}" data-id="${safe(b.id)}"><span><b>${safe(b.name)}</b><br><small class="muted">${safe(b.id)} · ${safe(b.city)}</small></span><span class="tag">${safe(b.industry)}</span></button>`).join("");
- if(!shown.some(b=>b.id===selected))selected=shown[0]?.id??null;
- let b=state.businesses.find(b=>b.id===selected);
- el("detail").innerHTML=b?[["Registry ID",b.id],["Name",b.name],["Industry",b.industry],["Location",b.city],["Founded",b.founded],["Ownership","Unassigned — future anchor"]].map(([k,v])=>`<div><small>${safe(k)}</small><b>${safe(v)}</b></div>`).join(""):"No business selected";
- el("history").innerHTML=b?b.events.map(e=>`<div class="record"><span class="tag">${safe(e.date)} · ${safe(e.type)}</span><div>${safe(e.description)}</div></div>`).join(""):"";
- document.querySelectorAll("[data-id]").forEach(btn=>btn.onclick=()=>{selected=btn.dataset.id;render()});
-}
+el("date").textContent=state.date;el("count").textContent=state.businesses.length;el("events").textContent=state.businesses.reduce((n,b)=>n+b.events.length,0);
+let issues=audit();el("faults").textContent=issues.length;el("audit").innerHTML=issues.length?issues.slice(0,30).map(x=>`<div class="record warning">${safe(x)}</div>`).join(""):'<div class="pass">PASS — unique identities, valid Gregorian calendar, chronological records and bounded circumstances.</div>';
+let f=el("filter").value,shown=state.businesses.filter(b=>f==="all"||b.industry===f);
+if(!shown.some(b=>b.id===selected))selected=shown[0]?.id??null;
+el("businesses").innerHTML=shown.map(b=>`<button class="business ${b.id===selected?"selected":""}" data-id="${safe(b.id)}"><span><b>${safe(b.name)}</b><br><small class="muted">${safe(b.id)} · ${safe(b.city)}</small></span><span class="tag">${safe(b.industry)}</span></button>`).join("");
+let b=state.businesses.find(b=>b.id===selected);
+el("detail").innerHTML=b?[["Registry ID",b.id],["Name",b.name],["Industry",b.industry],["Location",b.city],["Founded",b.founded],["Ownership","Unassigned — future anchor"]].map(([k,v])=>`<div><small>${safe(k)}</small><b>${safe(v)}</b></div>`).join(""):"No business selected";
+el("circumstances").innerHTML=b?[["Demand",b.circumstances.demand+"/100"],["Operating capacity",b.circumstances.capacity+"/100"],["Liquidity indicator",b.circumstances.liquidity+"/100"],["Resilience",b.circumstances.resilience+"/100"],["Last review",b.circumstances.reviewed||"Initial baseline"],["Interpretation","Provisional"]].map(([k,v])=>`<div><small>${safe(k)}</small><b>${safe(v)}</b></div>`).join(""):"";
+el("history").innerHTML=b?b.events.slice(-40).reverse().map(e=>`<div class="record"><span class="tag">${safe(e.date)} · ${safe(e.type)}</span><div>${safe(e.description)}</div></div>`).join(""):"";
+document.querySelectorAll("[data-id]").forEach(btn=>btn.onclick=()=>{selected=btn.dataset.id;render()})}
 function notify(s){el("notice").textContent=s}
-function advance(n){state.year+=n;save();render();notify("Advanced "+n+" year(s). Existing identities and histories preserved.")}
-el("advance").onclick=()=>advance(1);el("five").onclick=()=>advance(5);
+el("day").onclick=()=>advanceTo(addDays(state.date,1));
+el("month").onclick=()=>advanceTo(addMonths(state.date,1));
+el("advance").onclick=()=>advanceTo(addMonths(state.date,12));
+el("five").onclick=()=>advanceTo(addMonths(state.date,60));
 el("reset").onclick=()=>{if(confirm("Start a new simulation? This replaces the current browser save. Export first if needed.")){state=fresh();selected=null;save();render();notify("New simulation created.")}};
-el("export").onclick=()=>{let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="bellwether-business-v0.1.0-save.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);notify("Save exported.")};
+el("export").onclick=()=>{let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="bellwether-business-v0.1.1-save.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);notify("Save exported.")};
 el("import").onclick=()=>el("file").click();
-el("file").onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let obj=JSON.parse(await f.text());if(obj.schema!==1||!Number.isInteger(obj.year)||obj.year<1900||obj.year>9999||!Array.isArray(obj.businesses)||obj.businesses.length>10000)throw Error("Unsupported save format");let old=state;state=obj;let faults=audit();if(faults.length){state=old;throw Error("Save failed integrity audit: "+faults[0])}save();selected=null;render();notify("Save imported successfully.")}catch(err){notify("Import failed: "+err.message)}e.target.value=""};
+function upgrade(obj){if(obj.schema===2)return obj;
+if(obj.schema!==1||!Number.isInteger(obj.year)||!Array.isArray(obj.businesses))throw Error("Unsupported save format");
+let date=iso(obj.year,1,1);
+return {schema:2,version:"0.1.1",date,businesses:obj.businesses.map(b=>({...b,circumstances:baseline(b)}))}}
+el("file").onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let obj=upgrade(JSON.parse(await f.text()));if(obj.businesses.length>10000)throw Error("Too many businesses");let old=state;state=obj;let faults=audit();if(faults.length){state=old;throw Error("Save failed integrity audit: "+faults[0])}save();selected=null;render();notify("Save imported successfully.")}catch(err){notify("Import failed: "+err.message)}e.target.value=""};
 for(let i of industries){let opt=document.createElement("option");opt.value=i;opt.textContent=i;el("filter").appendChild(opt)}el("filter").onchange=render;
-try{let data=localStorage.getItem(KEY);state=data?JSON.parse(data):fresh();if(state.schema!==1||audit().length)throw Error("Invalid stored state")}catch(e){state=fresh();notify("Started fresh simulation; previous browser data could not be validated.")}
+try{let data=localStorage.getItem(KEY)||localStorage.getItem(OLD);state=data?upgrade(JSON.parse(data)):fresh();if(audit().length)throw Error("Invalid stored state");if(!localStorage.getItem(KEY)&&data)notify("Previous v0.1.0 save migrated. Historical business records preserved.")}catch(e){state=fresh();notify("Started fresh simulation; previous browser data could not be validated.")}
 save();render();
 </script></body></html>
