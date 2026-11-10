@@ -13,7 +13,7 @@
 <div class="columns"><section class="panel"><h2>Business registry</h2><label for="filter" class="muted">Industry</label> <select id="filter"><option value="all">All industries</option></select> <label for="statusFilter" class="muted">Status</label> <select id="statusFilter"><option value="all">All businesses</option><option value="active">Active</option><option value="closed">Closed</option></select><div id="businesses" class="list" style="margin-top:12px"></div></section>
 <section class="panel"><h2>Business identity</h2><div id="detail" class="details"></div><h2>Business characteristics</h2><div id="traits" class="details"></div><h2>Business circumstances</h2><div id="circumstances" class="details"></div><h2>Lifecycle diagnostics</h2><div id="diagnostics"></div><h2>Individual history</h2><div id="history"></div></section></div>
 <section class="panel"><h2>Survival cohorts</h2><p class="muted">Founding cohorts by decade. Active share is measured as of the current world date, not a fixed-age survival probability.</p><div id="cohorts"></div></section><section class="panel"><h2>Integrity audit</h2><div id="audit"></div></section>
-<footer>Prototype scope: fictional businesses, persistent IDs, daily Gregorian calendar, monthly independent business reviews, meaningful event histories, operational responses, permanent closures, independent business formation, monthly diagnostic observations, founding cohort analysis, local market opportunity evaluation, persistent business traits, recovery actions, lifecycle-aware reviews, active/closed filtering, save migration and integrity audits. Industry, local market, and historical-era modifiers are illustrative assumptions, not historically calibrated data. No actual transactions, wages, or hiring are simulated.</footer>
+<footer>Prototype scope: fictional businesses, persistent IDs, daily Gregorian calendar, monthly independent business reviews, meaningful event histories, operational responses, permanent closures, independent business formation, bounded monthly diagnostic observations with storage-aware compaction, founding cohort analysis, local market opportunity evaluation, persistent business traits, recovery actions, lifecycle-aware reviews, active/closed filtering, save migration and integrity audits. Industry, local market, and historical-era modifiers are illustrative assumptions, not historically calibrated data. No actual transactions, wages, or hiring are simulated.</footer>
 <script>
 "use strict";
 const KEY="bellwether-business-v0160",V015="bellwether-business-v0150",V014="bellwether-business-v0140",PREVIOUS="bellwether-business-v0130",PRIOR="bellwether-business-v0120",OLD="bellwether-business-v0110",LEGACY="bellwether-business-v0100";
@@ -96,7 +96,7 @@ function recordDiagnostic(b,date,factors){
  if(!Array.isArray(b.diagnostics))b.diagnostics=[];
  b.diagnostics.push({date,demand:c.demand,capacity:c.capacity,liquidity:c.liquidity,resilience:c.resilience,phase:c.phase,pressure:c.pressureMonths,factors});
  // Preserve every monthly observation; capped for mobile storage with lifetime event history untouched.
- if(b.diagnostics.length>360)b.diagnostics.splice(0,b.diagnostics.length-360);
+ if(b.diagnostics.length>72)b.diagnostics.splice(0,b.diagnostics.length-72);
 }
 function diagnosticReasons(b){let c=b.circumstances,d=b.diagnostics||[],last=d[d.length-1],f=last?.factors;
  if(!last)return 'No monthly diagnostic observations yet. Older imported saves retain events, but historical diagnostic snapshots cannot be reconstructed.';
@@ -151,7 +151,7 @@ let previous=state.date,monthCursor=previous.slice(0,7)+"-01",last=target.slice(
 while(monthCursor<=last){let reviewDate=monthCursor;
 if(reviewDate>previous){for(let b of state.businesses)if(b.founded<=reviewDate&&b.circumstances.phase!=="closed"){review(b,reviewDate);reviews++}formations+=formationReview(reviewDate)}
 monthCursor=addMonths(monthCursor,1)}
-state.date=target;save();render();notify(`Advanced from ${previous} to ${target}. ${reviews} independent business reviews processed; ${formations} new businesses formed.`)}
+state.date=target;let persisted=save();render();notify(`${persisted?"":"WARNING: browser storage is full; export your save. "}Advanced from ${previous} to ${target}. ${reviews} independent business reviews processed; ${formations} new businesses formed.`)}
 function audit(){let issues=[],ids=new Set();
 if(!validDate(state.date))issues.push("Invalid world date");if(!Number.isInteger(state.nextBusinessId)||state.nextBusinessId<1||!Number.isInteger(state.formationReviews)||state.formationReviews<0)issues.push("Invalid formation counters");
 for(let b of state.businesses){if(!b.id||ids.has(b.id))issues.push("Duplicate or missing business ID: "+b.id);ids.add(b.id);
@@ -173,7 +173,19 @@ if(!Number.isInteger(c.pressureMonths)||c.pressureMonths<0||!Number.isInteger(c.
 }
 let prior="",evIds=new Set();for(let e of b.events||[]){if(!e.id||evIds.has(e.id)||!validDate(e.date)||e.date<prior||e.date<b.founded||e.date>state.date)issues.push("Event chronology or ID fault: "+b.id);evIds.add(e.id);prior=e.date}}
 if(state.nextBusinessId<=Math.max(0,...state.businesses.map(b=>Number(b.id.slice(4))||0)))issues.push("Next business ID would collide");return issues}
-function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function save(){
+ // Mobile browsers have small per-origin storage quotas. Keep meaningful lifetime events,
+ // but progressively compact the diagnostic cache if persistence is running out of space.
+ for(let pass=0;pass<7;pass++){
+  try{localStorage.setItem(KEY,JSON.stringify(state));return true}
+  catch(err){
+   if(pass===6){notify("Storage is full. Export your save before leaving this page; recent progress may not persist.");return false}
+   const limits=[48,36,24,12,6,2][pass];
+   for(const b of state.businesses){if(Array.isArray(b.diagnostics)&&b.diagnostics.length>limits)b.diagnostics=b.diagnostics.slice(-limits)}
+  }
+ }
+ return false;
+}
 const el=id=>document.getElementById(id);
 function safe(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function render(){
@@ -199,7 +211,7 @@ el("month").onclick=()=>advanceTo(addMonths(state.date,1));
 el("advance").onclick=()=>advanceTo(addMonths(state.date,12));
 el("five").onclick=()=>advanceTo(addMonths(state.date,60));
 el("reset").onclick=()=>{if(confirm("Start a new simulation? This replaces the current browser save. Export first if needed.")){state=fresh();selected=null;save();render();notify("New simulation created.")}};
-el("export").onclick=()=>{let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="bellwether-business-v0.1.6-save.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);notify("Save exported.")};
+el("export").onclick=()=>{let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="bellwether-business-v0.1.6.1-save.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);notify("Save exported.")};
 el("import").onclick=()=>el("file").click();
 function upgrade(obj){
 if(!obj||!Array.isArray(obj.businesses))throw Error("Invalid save structure");
