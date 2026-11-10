@@ -1,19 +1,19 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#10151b"><title>Bellwether Business Engine v0.1.6</title>
+<meta name="theme-color" content="#10151b"><title>Bellwether Business Engine v0.1.7</title>
 <style>
 :root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;background:#10151b;color:#e8edf3}
 *{box-sizing:border-box}body{margin:0;padding:18px 14px 50px;max-width:1050px;margin-inline:auto}h1{font-size:1.5rem;margin:8px 0 2px}h2{font-size:1.15rem}p,.muted{color:#9cadbd;line-height:1.5}.eyebrow{color:#d6a44e;font-size:.85rem;letter-spacing:.07em}.panel{background:#1b232d;border:1px solid #344352;border-radius:15px;padding:17px;margin-top:16px}.controls{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}button,select,input{font:inherit;border-radius:9px;padding:10px;background:#101820;color:#e8edf3;border:1px solid #465a6c}button{cursor:pointer}button.primary{background:#b48739;color:#111;font-weight:700;border-color:#b48739}button:focus-visible,select:focus-visible{outline:2px solid #e9b85a}.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stat{background:#121a22;border:1px solid #354554;padding:12px;border-radius:10px}.stat small{display:block;color:#9cadbd}.stat strong{font-size:1.4rem}.list{display:grid;gap:8px}.business{width:100%;text-align:left;display:flex;justify-content:space-between;align-items:center;gap:8px}.business.selected{border-color:#d5a24a;background:#2c2a25}.tag{font-size:.75rem;color:#d6b16b}.record{padding:10px 0;border-bottom:1px solid #34414e;overflow-wrap:anywhere}.record:last-child{border:0}.details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.details div{background:#121a22;padding:10px;border-radius:8px}.details small{display:block;color:#9cadbd}.warning{color:#e3b269}.pass{color:#7acb92}#businesses{max-height:340px;overflow:auto}#history{max-height:300px;overflow:auto}.diag{background:#121a22;border-radius:9px;padding:12px;margin:10px 0}.diag small{color:#9cadbd}.mini-table{width:100%;border-collapse:collapse;font-size:.87rem}.mini-table td,.mini-table th{padding:8px 5px;text-align:left;border-bottom:1px solid #34414e}.mini-table td:not(:first-child),.mini-table th:not(:first-child){text-align:right}.trend{font-size:.85rem;color:#d6b16b}footer{font-size:.82rem;color:#92a3b3;margin-top:20px}@media(min-width:750px){.stats{grid-template-columns:repeat(4,1fr)}.columns{display:grid;grid-template-columns:1fr 1fr;gap:16px}.columns .panel{margin-top:0}} 
 </style></head><body>
 <div class="eyebrow">BELLWETHER · STANDALONE SIMULATION</div>
-<h1>Business Engine</h1><div class="muted">Prototype <b>v0.1.6 — Lifecycle Diagnostics & Cohort Analysis</b></div>
-<div class="panel"><strong>Independent engines · shared opportunities</strong><p>Businesses independently respond to market conditions, while new firms may emerge from demand, gaps in capacity, local opportunity, and uncertainty. Growth, contraction, formation, and closure are possible, never guaranteed. These are provisional simulation indicators, not historical financial records. No Life Engine dependency.</p></div>
+<h1>Business Engine</h1><div class="muted">Prototype <b>v0.1.7 — Business Relationships & Market Competition</b></div>
+<div class="panel"><strong>Independent engines · shared opportunities</strong><p>Businesses independently respond to market conditions, while new firms may emerge from demand, gaps in capacity, local opportunity, and uncertainty. Growth, contraction, formation, and closure are possible, never guaranteed. These are provisional simulation indicators, not historical financial records. No Life Engine dependency. Supplier and customer links now persist, with modeled purchasing, competitive selection, and closure effects.</p></div>
 <div class="panel"><div class="controls"><button class="primary" id="day">Advance 1 day</button><button id="month">Advance 1 month</button><button id="advance">Advance 1 year</button><button id="five">Advance 5 years</button><button id="export">Export save</button><button id="import">Import save</button><button id="reset">New simulation</button><input type="file" id="file" accept=".json,application/json" hidden></div>
 <div class="stats"><div class="stat"><small>World date</small><strong id="date"></strong></div><div class="stat"><small>Businesses</small><strong id="count"></strong></div><div class="stat"><small>Active</small><strong id="active"></strong></div><div class="stat"><small>Closed</small><strong id="closed"></strong></div><div class="stat"><small>New formations</small><strong id="formations"></strong></div><div class="stat"><small>Historical records</small><strong id="events"></strong></div><div class="stat"><small>Audit faults</small><strong id="faults"></strong></div></div><p id="notice" role="status"></p></div>
 <div class="columns"><section class="panel"><h2>Business registry</h2><label for="filter" class="muted">Industry</label> <select id="filter"><option value="all">All industries</option></select> <label for="statusFilter" class="muted">Status</label> <select id="statusFilter"><option value="all">All businesses</option><option value="active">Active</option><option value="closed">Closed</option></select><div id="businesses" class="list" style="margin-top:12px"></div></section>
-<section class="panel"><h2>Business identity</h2><div id="detail" class="details"></div><h2>Business characteristics</h2><div id="traits" class="details"></div><h2>Business circumstances</h2><div id="circumstances" class="details"></div><h2>Lifecycle diagnostics</h2><div id="diagnostics"></div><h2>Individual history</h2><div id="history"></div></section></div>
+<section class="panel"><h2>Business identity</h2><div id="detail" class="details"></div><h2>Business characteristics</h2><div id="traits" class="details"></div><h2>Business circumstances</h2><div id="circumstances" class="details"></div><h2>Lifecycle diagnostics</h2><div id="diagnostics"></div><h2>Commercial relationships</h2><div id="relationships"></div><h2>Individual history</h2><div id="history"></div></section></div>
 <section class="panel"><h2>Survival cohorts</h2><p class="muted">Founding cohorts by decade. Active share is measured as of the current world date, not a fixed-age survival probability.</p><div id="cohorts"></div></section><section class="panel"><h2>Integrity audit</h2><div id="audit"></div></section>
-<footer>Prototype scope: fictional businesses, persistent IDs, daily Gregorian calendar, monthly independent business reviews, meaningful event histories, operational responses, permanent closures, independent business formation, bounded monthly diagnostic observations with IndexedDB persistence and read-back verification, founding cohort analysis, local market opportunity evaluation, persistent business traits, recovery actions, lifecycle-aware reviews, active/closed filtering, save migration and integrity audits. Industry, local market, and historical-era modifiers are illustrative assumptions, not historically calibrated data. No actual transactions, wages, or hiring are simulated.</footer>
+<footer>Prototype scope: fictional businesses, persistent IDs, daily Gregorian calendar, monthly independent business reviews, meaningful event histories, operational responses, permanent closures, independent business formation, bounded monthly diagnostic observations with IndexedDB persistence and read-back verification, founding cohort analysis, local market opportunity evaluation, persistent business traits, recovery actions, lifecycle-aware reviews, active/closed filtering, save migration and integrity audits. Industry, local market, and historical-era modifiers are illustrative assumptions, not historically calibrated data. Commercial links represent modeled business relationships and indicative orders, not actual accounting transactions, wages, or hiring.</footer>
 <script>
 "use strict";
 const KEY="bellwether-business-v0160",V015="bellwether-business-v0150",V014="bellwether-business-v0140",PREVIOUS="bellwether-business-v0130",PRIOR="bellwether-business-v0120",OLD="bellwether-business-v0110",LEGACY="bellwether-business-v0100";
@@ -145,15 +145,96 @@ function formationReview(date){
  }
  return formed;
 }
+
+// v0.1.7: standalone persistent commercial network. Relationships are modeled
+// as indicative orders, not accounting entries. All choices are deterministic
+// per world seed, month and pair; no Life Engine dependency.
+function networkInit(){
+ if(!state.network||typeof state.network!=="object")state.network={links:[],reviews:0};
+ if(!Array.isArray(state.network.links))state.network.links=[];
+ if(!Number.isInteger(state.network.reviews))state.network.reviews=0;
+}
+function linkKey(a,b){return a+"|"+b}
+function commercialReview(date){
+ networkInit();
+ const active=state.businesses.filter(b=>b.founded<=date&&b.circumstances.phase!=="closed");
+ const byId=new Map(active.map(b=>[b.id,b]));
+ const links=state.network.links;
+ // Close links only once, preserving full commercial history.
+ for(const l of links)if(!l.ended&&(!byId.has(l.buyer)||!byId.has(l.supplier))){
+   l.ended=date;l.status="ended";l.endReason="A trading partner ceased operations";
+ }
+ const live=links.filter(l=>!l.ended);
+ const used=new Map();
+ for(const l of live)used.set(l.buyer,(used.get(l.buyer)||0)+1);
+ // A buyer can maintain up to two supplier relationships, and may switch.
+ for(const buyer of active){
+   const existing=live.filter(l=>l.buyer===buyer.id&&!l.ended);
+   for(const l of existing){
+     const supplier=byId.get(l.supplier);if(!supplier)continue;
+     const h=hash(`${state.seed}|trade|${date}|${l.buyer}|${l.supplier}`);
+     const fit=(buyer.city===supplier.city?13:0)+supplier.traits.advantage*.23+
+       supplier.circumstances.capacity*.23+supplier.circumstances.resilience*.12-
+       supplier.circumstances.demand*.08;
+     const order=clamp(Math.round(8+buyer.circumstances.demand*.25+
+       supplier.circumstances.capacity*.12+((h%19)-9)),1,65);
+     l.lastReview=date;l.reviewCount=(l.reviewCount||0)+1;
+     l.orderIndicator=order;l.strength=clamp(Math.round((l.strength||45)*.85+fit*.15+
+       ((h>>>8)%9-4)),0,100);
+     if(l.strength<19&&((h>>>15)%100)<35){
+       l.ended=date;l.status="ended";l.endReason="Buyer changed purchasing arrangements";
+       continue;
+     }
+     // Indicative pressure only, not revenue or actual settlement.
+     supplier.circumstances.demand=clamp(supplier.circumstances.demand+
+       (order>=40?1:0),0,100);
+     if(order>45&&supplier.circumstances.capacity<35)
+       supplier.circumstances.resilience=clamp(supplier.circumstances.resilience-1,0,100);
+   }
+   const count=links.filter(l=>l.buyer===buyer.id&&!l.ended).length;
+   if(count>=2)continue;
+   const candidates=active.filter(s=>s.id!==buyer.id&&s.industry!==buyer.industry&&
+     !links.some(l=>!l.ended&&l.buyer===buyer.id&&l.supplier===s.id));
+   if(!candidates.length)continue;
+   candidates.sort((a,b)=>{
+     const score=s=>(s.city===buyer.city?22:0)+s.traits.advantage*.35+
+       s.circumstances.capacity*.22-s.circumstances.liquidity*.04+
+       (hash(`${state.seed}|candidate|${date}|${buyer.id}|${s.id}`)%31);
+     return score(b)-score(a)||a.id.localeCompare(b.id);
+   });
+   const h=hash(`${state.seed}|newlink|${date}|${buyer.id}`);
+   if((h%100)>= (count?7:16))continue;
+   const supplier=candidates[0];
+   const id="REL-"+String(state.network.links.length+1).padStart(7,"0");
+   links.push({id,buyer:buyer.id,supplier:supplier.id,started:date,ended:null,
+     status:"active",strength:40+(h>>>9)%31,orderIndicator:0,
+     reviewCount:0,lastReview:date,endReason:null});
+ }
+ state.network.reviews++;
+}
+
 async function advanceTo(target){
 if(advanceBusy)return;setBusy(true);try{
 if(!validDate(target)||target<state.date||target>"9998-12-31"){notify("Date outside supported range.");return}
 let previous=state.date,monthCursor=previous.slice(0,7)+"-01",last=target.slice(0,7)+"-01",reviews=0,formations=0;
 while(monthCursor<=last){let reviewDate=monthCursor;
-if(reviewDate>previous){for(let b of state.businesses)if(b.founded<=reviewDate&&b.circumstances.phase!=="closed"){review(b,reviewDate);reviews++}formations+=formationReview(reviewDate)}
+if(reviewDate>previous){for(let b of state.businesses)if(b.founded<=reviewDate&&b.circumstances.phase!=="closed"){review(b,reviewDate);reviews++}formations+=formationReview(reviewDate);commercialReview(reviewDate)}
 monthCursor=addMonths(monthCursor,1)}
 state.date=target;let persisted=await save();render();notify(`${persisted?"Saved and verified in IndexedDB. ":"WARNING: Save verification failed; export immediately. "+storageMode+". "}Advanced from ${previous} to ${target}. ${reviews} independent business reviews processed; ${formations} new businesses formed.`)}finally{setBusy(false)}}
 function audit(){let issues=[],ids=new Set();
+networkInit();
+const known=new Map(state.businesses.map(b=>[b.id,b]));
+const linkIds=new Set(),pairs=new Set();
+for(const l of state.network.links){
+ if(linkIds.has(l.id))issues.push("Duplicate commercial relationship: "+l.id);
+ linkIds.add(l.id);
+ if(!known.has(l.buyer)||!known.has(l.supplier)||l.buyer===l.supplier)issues.push("Invalid commercial counterpart: "+l.id);
+ if(!validDate(l.started)||l.started>state.date||l.ended&&(!validDate(l.ended)||l.ended<l.started||l.ended>state.date))issues.push("Invalid relationship chronology: "+l.id);
+ if(!Number.isFinite(l.strength)||l.strength<0||l.strength>100||!Number.isFinite(l.orderIndicator)||l.orderIndicator<0||l.orderIndicator>100)issues.push("Invalid relationship indicators: "+l.id);
+ if(!l.ended){let k=linkKey(l.buyer,l.supplier);if(pairs.has(k))issues.push("Duplicate active trading pair: "+k);pairs.add(k);
+ if(known.get(l.buyer)?.circumstances.phase==="closed"||known.get(l.supplier)?.circumstances.phase==="closed")issues.push("Active relationship with closed firm: "+l.id);}
+}
+
 if(!validDate(state.date))issues.push("Invalid world date");if(!Number.isInteger(state.nextBusinessId)||state.nextBusinessId<1||!Number.isInteger(state.formationReviews)||state.formationReviews<0)issues.push("Invalid formation counters");
 for(let b of state.businesses){if(!b.id||ids.has(b.id))issues.push("Duplicate or missing business ID: "+b.id);ids.add(b.id);
 if(!b.name||!b.industry||!b.city||!validDate(b.founded))issues.push("Incomplete identity: "+b.id);
@@ -185,11 +266,18 @@ const el=id=>document.getElementById(id);
 function safe(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function render(){
 el("date").textContent=state.date;el("count").textContent=state.businesses.length;el("active").textContent=state.businesses.filter(b=>b.circumstances.phase!=="closed").length;el("closed").textContent=state.businesses.filter(b=>b.circumstances.phase==="closed").length;el("formations").textContent=state.businesses.filter(b=>Number(b.id.slice(4))>=49).length;el("events").textContent=state.businesses.reduce((n,b)=>n+b.events.length,0);
-let issues=audit();el("faults").textContent=issues.length;el("audit").innerHTML=issues.length?issues.slice(0,30).map(x=>`<div class="record warning">${safe(x)}</div>`).join(""):'<div class="pass">PASS — unique identities, valid Gregorian calendar, chronological records and bounded circumstances.</div>';
+networkInit();let issues=audit();el("faults").textContent=issues.length;el("audit").innerHTML=issues.length?issues.slice(0,30).map(x=>`<div class="record warning">${safe(x)}</div>`).join(""):'<div class="pass">PASS — unique identities, valid Gregorian calendar, chronological records and bounded circumstances.</div>';
 let f=el("filter").value,st=el("statusFilter").value,shown=state.businesses.filter(b=>(f==="all"||b.industry===f)&&(st==="all"||(st==="closed"?b.circumstances.phase==="closed":b.circumstances.phase!=="closed")));
 if(!shown.some(b=>b.id===selected))selected=shown[0]?.id??null;
 el("businesses").innerHTML=shown.map(b=>`<button class="business ${b.id===selected?"selected":""}" data-id="${safe(b.id)}"><span><b>${safe(b.name)}</b><br><small class="muted">${safe(b.id)} · ${safe(b.city)}</small></span><span class="tag">${safe(b.industry)}<br><small>${b.circumstances.phase==="closed"?"Closed "+safe(b.circumstances.closedOn):"Active"}</small></span></button>`).join("");
 let b=state.businesses.find(b=>b.id===selected);
+networkInit();
+el("relationships").innerHTML=b?(()=>{
+ const rel=state.network.links.filter(l=>l.buyer===b.id||l.supplier===b.id);
+ const names=new Map(state.businesses.map(x=>[x.id,x.name]));
+ return `<p class="muted">Persistent modeled supplier/customer links. Order indicators are not actual transactions.</p>`+
+ (rel.length?rel.slice(-35).reverse().map(l=>`<div class="record"><b>${safe(l.buyer===b.id?"Supplier: ":"Customer: ")}${safe(names.get(l.buyer===b.id?l.supplier:l.buyer)||"Unknown")}</b><br><small class="muted">${safe(l.started)} · ${l.ended?"Ended "+safe(l.ended):"Active"} · Strength ${l.strength}/100 · Order indicator ${l.orderIndicator}/100</small>${l.endReason?`<div class="muted">${safe(l.endReason)}</div>`:""}</div>`).join(""):"<p class='muted'>No commercial relationships recorded.</p>");
+})():"";
 el("detail").innerHTML=b?[["Registry ID",b.id],["Name",b.name],["Industry",b.industry],["Location",b.city],["Founded",b.founded],["Ownership","Unassigned — future anchor"]].map(([k,v])=>`<div><small>${safe(k)}</small><b>${safe(v)}</b></div>`).join(""):"No business selected";
 el("traits").innerHTML=b?[["Financial discipline",b.traits.discipline+"/100"],["Adaptability",b.traits.adaptability+"/100"],["Competitive advantage",b.traits.advantage+"/100"],["Risk tolerance",b.traits.risk+"/100"]].map(([k,v])=>`<div><small>${safe(k)}</small><b>${safe(v)}</b></div>`).join(""):"";
 el("circumstances").innerHTML=b?[["Demand",b.circumstances.demand+"/100"],["Operating capacity",b.circumstances.capacity+"/100"],["Liquidity indicator",b.circumstances.liquidity+"/100"],["Resilience",b.circumstances.resilience+"/100"],["Operating status",b.circumstances.phase],["Closure date",b.circumstances.closedOn||"—"],["Pressure reviews",b.circumstances.pressureMonths],["Last review",b.circumstances.reviewed||"Initial baseline"],["Interpretation","Provisional"]].map(([k,v])=>`<div><small>${safe(k)}</small><b>${safe(v)}</b></div>`).join(""):"";
@@ -206,7 +294,7 @@ el("month").onclick=()=>advanceTo(addMonths(state.date,1));
 el("advance").onclick=()=>advanceTo(addMonths(state.date,12));
 el("five").onclick=()=>advanceTo(addMonths(state.date,60));
 el("reset").onclick=async()=>{if(advanceBusy)return;if(confirm("Start a new simulation? This replaces the current browser save. Export first if needed.")){state=fresh();selected=null;const ok=await save();render();notify(ok?"New simulation saved and verified.":"New simulation is NOT saved; export immediately. "+storageMode)}};
-el("export").onclick=()=>{let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="bellwether-business-v0.1.6.2-save.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);notify("Save exported.")};
+el("export").onclick=()=>{let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="bellwether-business-v0.1.7-save.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);notify("Save exported.")};
 el("import").onclick=()=>el("file").click();
 function upgrade(obj){
 if(!obj||!Array.isArray(obj.businesses))throw Error("Invalid save structure");
