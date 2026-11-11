@@ -1,19 +1,19 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#10151b"><title>Bellwether Business Engine v0.1.7</title>
+<meta name="theme-color" content="#10151b"><title>Bellwether Business Engine v0.1.8</title>
 <style>
 :root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;background:#10151b;color:#e8edf3}
 *{box-sizing:border-box}body{margin:0;padding:18px 14px 50px;max-width:1050px;margin-inline:auto}h1{font-size:1.5rem;margin:8px 0 2px}h2{font-size:1.15rem}p,.muted{color:#9cadbd;line-height:1.5}.eyebrow{color:#d6a44e;font-size:.85rem;letter-spacing:.07em}.panel{background:#1b232d;border:1px solid #344352;border-radius:15px;padding:17px;margin-top:16px}.controls{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}button,select,input{font:inherit;border-radius:9px;padding:10px;background:#101820;color:#e8edf3;border:1px solid #465a6c}button{cursor:pointer}button.primary{background:#b48739;color:#111;font-weight:700;border-color:#b48739}button:focus-visible,select:focus-visible{outline:2px solid #e9b85a}.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stat{background:#121a22;border:1px solid #354554;padding:12px;border-radius:10px}.stat small{display:block;color:#9cadbd}.stat strong{font-size:1.4rem}.list{display:grid;gap:8px}.business{width:100%;text-align:left;display:flex;justify-content:space-between;align-items:center;gap:8px}.business.selected{border-color:#d5a24a;background:#2c2a25}.tag{font-size:.75rem;color:#d6b16b}.record{padding:10px 0;border-bottom:1px solid #34414e;overflow-wrap:anywhere}.record:last-child{border:0}.details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.details div{background:#121a22;padding:10px;border-radius:8px}.details small{display:block;color:#9cadbd}.warning{color:#e3b269}.pass{color:#7acb92}#businesses{max-height:340px;overflow:auto}#history{max-height:300px;overflow:auto}.diag{background:#121a22;border-radius:9px;padding:12px;margin:10px 0}.diag small{color:#9cadbd}.mini-table{width:100%;border-collapse:collapse;font-size:.87rem}.mini-table td,.mini-table th{padding:8px 5px;text-align:left;border-bottom:1px solid #34414e}.mini-table td:not(:first-child),.mini-table th:not(:first-child){text-align:right}.trend{font-size:.85rem;color:#d6b16b}footer{font-size:.82rem;color:#92a3b3;margin-top:20px}@media(min-width:750px){.stats{grid-template-columns:repeat(4,1fr)}.columns{display:grid;grid-template-columns:1fr 1fr;gap:16px}.columns .panel{margin-top:0}} 
 </style></head><body>
 <div class="eyebrow">BELLWETHER · STANDALONE SIMULATION</div>
-<h1>Business Engine</h1><div class="muted">Prototype <b>v0.1.7 — Business Relationships & Market Competition</b></div>
-<div class="panel"><strong>Independent engines · shared opportunities</strong><p>Businesses independently respond to market conditions, while new firms may emerge from demand, gaps in capacity, local opportunity, and uncertainty. Growth, contraction, formation, and closure are possible, never guaranteed. These are provisional simulation indicators, not historical financial records. No Life Engine dependency. Supplier and customer links now persist, with modeled purchasing, competitive selection, and closure effects.</p></div>
+<h1>Business Engine</h1><div class="muted">Prototype <b>v0.1.8 — Business Relationships & Market Competition</b></div>
+<div class="panel"><strong>Independent engines · shared opportunities</strong><p>Businesses independently respond to market conditions, while new firms may emerge from demand, gaps in capacity, local opportunity, and uncertainty. Growth, contraction, formation, and closure are possible, never guaranteed. These are provisional simulation indicators, not historical financial records. No Life Engine dependency. Supplier and customer links persist. This version revises operating returns and market crowding, and makes the pool of potential founders respond to local opportunities. No business-count target or survival rescue exists.</p></div>
 <div class="panel"><div class="controls"><button class="primary" id="day">Advance 1 day</button><button id="month">Advance 1 month</button><button id="advance">Advance 1 year</button><button id="five">Advance 5 years</button><button id="export">Export save</button><button id="import">Import save</button><button id="reset">New simulation</button><input type="file" id="file" accept=".json,application/json" hidden></div>
 <div class="stats"><div class="stat"><small>World date</small><strong id="date"></strong></div><div class="stat"><small>Businesses</small><strong id="count"></strong></div><div class="stat"><small>Active</small><strong id="active"></strong></div><div class="stat"><small>Closed</small><strong id="closed"></strong></div><div class="stat"><small>New formations</small><strong id="formations"></strong></div><div class="stat"><small>Historical records</small><strong id="events"></strong></div><div class="stat"><small>Audit faults</small><strong id="faults"></strong></div></div><p id="notice" role="status"></p></div>
 <div class="columns"><section class="panel"><h2>Business registry</h2><label for="filter" class="muted">Industry</label> <select id="filter"><option value="all">All industries</option></select> <label for="statusFilter" class="muted">Status</label> <select id="statusFilter"><option value="all">All businesses</option><option value="active">Active</option><option value="closed">Closed</option></select><div id="businesses" class="list" style="margin-top:12px"></div></section>
 <section class="panel"><h2>Business identity</h2><div id="detail" class="details"></div><h2>Business characteristics</h2><div id="traits" class="details"></div><h2>Business circumstances</h2><div id="circumstances" class="details"></div><h2>Lifecycle diagnostics</h2><div id="diagnostics"></div><h2>Commercial relationships</h2><div id="relationships"></div><h2>Individual history</h2><div id="history"></div></section></div>
 <section class="panel"><h2>Survival cohorts</h2><p class="muted">Founding cohorts by decade. Active share is measured as of the current world date, not a fixed-age survival probability.</p><div id="cohorts"></div></section><section class="panel"><h2>Integrity audit</h2><div id="audit"></div></section>
-<footer>Prototype scope: fictional businesses, persistent IDs, daily Gregorian calendar, monthly independent business reviews, meaningful event histories, operational responses, permanent closures, independent business formation, bounded monthly diagnostic observations with IndexedDB persistence and read-back verification, founding cohort analysis, local market opportunity evaluation, persistent business traits, recovery actions, lifecycle-aware reviews, active/closed filtering, save migration and integrity audits. Industry, local market, and historical-era modifiers are illustrative assumptions, not historically calibrated data. Commercial links represent modeled business relationships and indicative orders, not actual accounting transactions, wages, or hiring.</footer>
+<footer>Prototype scope: fictional businesses, persistent IDs, daily Gregorian calendar, monthly independent business reviews, meaningful event histories, operational responses, permanent closures, independent business formation, bounded monthly diagnostic observations with IndexedDB persistence and read-back verification, founding cohort analysis, local market opportunity evaluation, persistent business traits, recovery actions, lifecycle-aware reviews, active/closed filtering, save migration and integrity audits. v0.1.8 changes apply prospectively to existing saves; closed firms and historical observations are never rewritten. Industry, local market, and historical-era modifiers are illustrative assumptions, not historically calibrated data. Commercial links represent modeled business relationships and indicative orders, not actual accounting transactions, wages, or hiring.</footer>
 <script>
 "use strict";
 const KEY="bellwether-business-v0160",V015="bellwether-business-v0150",V014="bellwether-business-v0140",PREVIOUS="bellwether-business-v0130",PRIOR="bellwether-business-v0120",OLD="bellwether-business-v0110",LEGACY="bellwether-business-v0100";
@@ -33,7 +33,7 @@ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 function baseline(b){let h=hash(b.id+"|"+b.founded);return {demand:35+h%35,capacity:42+(h>>>7)%35,liquidity:40+(h>>>14)%35,resilience:30+(h>>>20)%50,reviewed:null,phase:"operating",pressureMonths:0,stableMonths:0,reviewCount:0,closures:0,closedOn:null}}
 const sectorProfiles={"Agriculture":{season:5,overhead:1.1,volatility:1.2},"Manufacturing":{season:1,overhead:1.7,volatility:1},"Commerce and Services":{season:2,overhead:1.1,volatility:1.2},"Transportation":{season:1,overhead:1.8,volatility:1.1},"Construction":{season:4,overhead:1.5,volatility:1.4},"Publishing":{season:1,overhead:1,volatility:.9},"Finance":{season:0,overhead:1.2,volatility:1.5},"Hospitality":{season:6,overhead:1.3,volatility:1.4}};
 function traits(b){let h=hash(b.id+"|"+b.founded+"|character");return {discipline:20+h%81,adaptability:20+(h>>>7)%81,advantage:15+(h>>>14)%71,risk:15+(h>>>21)%81}}
-function market(industry,city,date){let month=date.slice(0,7),h=hash("market|"+(state.seed||0)+"|"+industry+"|"+city+"|"+month),p=sectorProfiles[industry]||sectorProfiles.Manufacturing;let peers=state.businesses.filter(b=>b.industry===industry&&b.city===city&&b.founded<=date&&b.circumstances.phase!=="closed");let supply=peers.reduce((n,b)=>n+b.circumstances.capacity,0);let opportunity=clamp(46+era(date,industry)*.8+((h%29)-14)*p.volatility+p.season*Math.sin((Number(date.slice(5,7))-1)*Math.PI/6),8,90);return {opportunity,supply,peers:peers.length,competition:clamp(supply/(Math.max(1,peers.length)*65),0,1.6)}}
+function market(industry,city,date){let month=date.slice(0,7),h=hash("market|"+(state.seed||0)+"|"+industry+"|"+city+"|"+month),p=sectorProfiles[industry]||sectorProfiles.Manufacturing;let peers=state.businesses.filter(b=>b.industry===industry&&b.city===city&&b.founded<=date&&b.circumstances.phase!=="closed");let supply=peers.reduce((n,b)=>n+b.circumstances.capacity,0);let opportunity=clamp(46+era(date,industry)*.8+((h%29)-14)*p.volatility+p.season*Math.sin((Number(date.slice(5,7))-1)*Math.PI/6),8,90);return {opportunity,supply,peers:peers.length,competition:clamp(supply/Math.max(35,opportunity*1.8),0,3.5)}}
 function fresh(){
 let businesses=[];for(let i=0;i<48;i++){let y=1880+(i*13)%40,m=1+(i*7)%12,d=1+(i*11)%28,id="BUS-"+String(i+1).padStart(5,"0"),date=iso(y,m,d);
 let b={id,name:`${prefixes[i%12]} ${suffixes[Math.floor(i/12)%8]}`,industry:industries[i%8],city:cities[(i*5)%6],founded:date,ownerRef:null,events:[{id:id+"-E0001",date,type:"founded",description:"Business identity established in the world registry."}]};b.traits=traits(b);b.circumstances=baseline(b);businesses.push(b)}
@@ -54,13 +54,19 @@ let prev={...c};let t=b.traits||traits(b),profile=sectorProfiles[b.industry]||se
 // Independent demand shocks, including occasional large negative and positive events.
 let shock=(h%23)-11;let disruption=(h>>>9)%97===0? -12-((h>>>17)%15):0;
 let opportunity=(h>>>13)%101===0? 10+((h>>>21)%12):0;
-let seasonal=bias*.4;let demandTarget=m.opportunity+seasonal+shock*profile.volatility+disruption+opportunity+t.advantage*.10-m.competition*6;
+let seasonal=bias*.4;let demandTarget=m.opportunity+seasonal+shock*profile.volatility+disruption+opportunity+t.advantage*.10-m.competition*7;
 c.demand=clamp(Math.round(c.demand*.78+demandTarget*.22+((h>>>4)%7-3)),0,100);
 // Capacity is costly to change, and overexpansion strains liquidity.
 let capacityDrift=Math.round((c.demand-c.capacity)*(.045+t.adaptability/1800)+((h>>>6)%7-3)*.55);
 c.capacity=clamp(c.capacity+capacityDrift,0,100);
-let margin=(c.demand-c.capacity)*(.10+t.advantage/1600),burden=(c.capacity>c.demand+12?2.5:0)+profile.overhead*(1.5-t.discipline/110);
-c.liquidity=clamp(Math.round(c.liquidity+margin-burden+((h>>>11)%11-5)*(.65+t.risk/180)+bias*.1-burden*.3),0,100);
+// Operating returns respond to utilization, pricing advantage, cost discipline and market demand.
+// Unlike v0.1.7, positive demand can finance a viable firm rather than every firm
+// inevitably losing a fixed overhead amount each month.
+let utilization=Math.min(c.demand,c.capacity),salesReturn=utilization*(.055+t.advantage/2400),
+ operatingCost=c.capacity*(.032+profile.overhead*.012)*(1.35-t.discipline/180),
+ margin=salesReturn-operatingCost+(c.demand-c.capacity)*.035,
+ burden=(c.capacity>c.demand+12?1.2:0)+profile.overhead*.35;
+c.liquidity=clamp(Math.round(c.liquidity+margin-burden+((h>>>11)%11-5)*(.55+t.risk/220)+bias*.11),0,100);
 // Resilience can improve or deteriorate, but never receives an automatic perpetual gain.
 let resilienceTarget=clamp((c.liquidity*.5+c.demand*.25+c.capacity*.25)-((h>>>19)%11),0,100);
 c.resilience=clamp(Math.round(c.resilience*.92+resilienceTarget*.08+((h>>>15)%7-3)),0,100);
@@ -125,13 +131,19 @@ function formationReview(date){
   // Each of several independent potential entrepreneurs can decline or pursue an opportunity.
  // Rare empty-sector entry is possible, but not guaranteed; surviving firms do not block entry.
  let formed=0;
- for(let slot=0;slot<4;slot++){
+ // Candidate attempts reflect aggregate opportunities across independent local markets.
+ // This is not a target for the number of active businesses or a replacement quota.
+ const openings=industries.reduce((sum,i)=>sum+cities.reduce((n,city)=>{
+   const m=market(i,city,date);return n+Math.max(0,m.opportunity-m.supply*.65);
+ },0),0);
+ const candidateCount=Math.max(2,Math.min(24,Math.round(openings/165)));
+ for(let slot=0;slot<candidateCount;slot++){
   const h=hash(`${state.seed||0}|formation|${period}|${slot}`);
   const sector=(h>>>4)%industries.length, industry=industries[sector];
   const city=cities[(h>>>13)%cities.length];const local=market(industry,city,date);const gap=(sectorDemand[sector]-sectorCapacity[sector])*.45+(local.opportunity-local.supply/Math.max(1,local.peers))*.55;
   const crowd=sectorCount[sector];
   const eraPressure=era(date,industry);
-  const chance=clamp(6+gap*.36+Math.max(0,local.opportunity-48)*.2+eraPressure*.4-Math.log2(local.peers+1)*3,1,26);
+  const chance=clamp(5+gap*.34+Math.max(0,local.opportunity-48)*.18+eraPressure*.35-local.competition*5,0.5,28);
   if((h%1000)/10>=chance)continue;
   const id="BUS-"+String(state.nextBusinessId++).padStart(5,"0");
   const name=`${prefixes[(h>>>19)%prefixes.length]} ${suffixes[(h>>>24)%suffixes.length]}`;
@@ -146,7 +158,7 @@ function formationReview(date){
  return formed;
 }
 
-// v0.1.7: standalone persistent commercial network. Relationships are modeled
+// v0.1.8: standalone persistent commercial network. Relationships are modeled
 // as indicative orders, not accounting entries. All choices are deterministic
 // per world seed, month and pair; no Life Engine dependency.
 function networkInit(){
@@ -294,7 +306,7 @@ el("month").onclick=()=>advanceTo(addMonths(state.date,1));
 el("advance").onclick=()=>advanceTo(addMonths(state.date,12));
 el("five").onclick=()=>advanceTo(addMonths(state.date,60));
 el("reset").onclick=async()=>{if(advanceBusy)return;if(confirm("Start a new simulation? This replaces the current browser save. Export first if needed.")){state=fresh();selected=null;const ok=await save();render();notify(ok?"New simulation saved and verified.":"New simulation is NOT saved; export immediately. "+storageMode)}};
-el("export").onclick=()=>{let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="bellwether-business-v0.1.7-save.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);notify("Save exported.")};
+el("export").onclick=()=>{let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="bellwether-business-v0.1.8-save.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);notify("Save exported.")};
 el("import").onclick=()=>el("file").click();
 function upgrade(obj){
 if(!obj||!Array.isArray(obj.businesses))throw Error("Invalid save structure");
