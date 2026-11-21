@@ -13,7 +13,7 @@
 <div class="columns"><section class="panel"><h2>Business registry</h2><label for="filter" class="muted">Industry</label> <select id="filter"><option value="all">All industries</option></select> <label for="statusFilter" class="muted">Status</label> <select id="statusFilter"><option value="all">All businesses</option><option value="active">Active</option><option value="closed">Closed</option></select><div id="businesses" class="list" style="margin-top:12px"></div></section>
 <section class="panel"><h2>Business identity</h2><div id="detail" class="details"></div><h2>Business characteristics</h2><div id="traits" class="details"></div><h2>Business circumstances</h2><div id="circumstances" class="details"></div><h2>Lifecycle diagnostics</h2><div id="diagnostics"></div><h2>Commercial relationships</h2><div id="relationships"></div><h2>Individual history</h2><div id="history"></div></section></div>
 <section class="panel" id="validationPanel"><h2>Economic validation · observational only</h2><p class="muted">These tables read the current saved world without altering business decisions, formation, closures, market calculations, or random seeds. Counts are descriptive, not population targets.</p><div class="controls"><button id="validationExport">Export validation snapshot (CSV)</button></div><h3>Causality diagnostics · read-only</h3><div id="causalityDiagnostics"></div><h3>City outcomes</h3><div id="validationCities"></div><h3>Industry outcomes</h3><div id="validationIndustries"></div><h3>Liquidity and capacity</h3><div id="validationFinancial"></div><h3>Relationship and survival checks</h3><div id="validationLinks"></div><p class="muted">Financial indicators are not cash flow, profit, debt, or accounting reserves. A high liquidity indicator does not establish that a firm earned enough to sustain itself. Historical-era and location modifiers are illustrative, not calibrated economic history.</p></section><section class="panel"><h2>Survival cohorts</h2><p class="muted">Founding cohorts by decade. Active share is measured as of the current world date, not a fixed-age survival probability.</p><div id="cohorts"></div></section><section class="panel"><h2>Integrity audit</h2><div id="audit"></div></section>
-<footer>Prototype scope: fictional businesses, persistent IDs, daily Gregorian calendar, monthly independent business reviews, meaningful event histories, operational responses, permanent closures, independent business formation, bounded monthly diagnostic observations with IndexedDB persistence and read-back verification, founding cohort analysis, local market opportunity evaluation, persistent business traits, recovery actions, lifecycle-aware reviews, active/closed filtering, save migration and integrity audits. v0.1.11 adds read-only economic validation; v0.1.8 simulation changes apply prospectively to existing saves; closed firms and historical observations are never rewritten. Industry, local market, and historical-era modifiers are illustrative assumptions, not historically calibrated data. Commercial links represent modeled business relationships and indicative orders, not actual accounting transactions, wages, or hiring.</footer>
+<footer>Prototype scope: fictional businesses, persistent IDs, daily Gregorian calendar, monthly independent business reviews, meaningful event histories, operational responses, permanent closures, independent business formation, bounded monthly diagnostic observations with IndexedDB persistence and read-back verification, founding cohort analysis, local market opportunity evaluation, persistent business traits, recovery actions, lifecycle-aware reviews, active/closed filtering, save migration and integrity audits. v0.1.12 adds prospective liquidity decomposition and advance reconciliation; v0.1.8 simulation changes apply prospectively to existing saves; closed firms and historical observations are never rewritten. Industry, local market, and historical-era modifiers are illustrative assumptions, not historically calibrated data. Commercial links represent modeled business relationships and indicative orders, not actual accounting transactions, wages, or hiring.</footer>
 <script>
 "use strict";
 const KEY="bellwether-business-v0160",V015="bellwether-business-v0150",V014="bellwether-business-v0140",PREVIOUS="bellwether-business-v0130",PRIOR="bellwether-business-v0120",OLD="bellwether-business-v0110",LEGACY="bellwether-business-v0100";
@@ -66,7 +66,12 @@ let utilization=Math.min(c.demand,c.capacity),salesReturn=utilization*(.055+t.ad
  operatingCost=c.capacity*(.032+profile.overhead*.012)*(1.35-t.discipline/180),
  margin=salesReturn-operatingCost+(c.demand-c.capacity)*.035,
  burden=(c.capacity>c.demand+12?1.2:0)+profile.overhead*.35;
-c.liquidity=clamp(Math.round(c.liquidity+margin-burden+((h>>>11)%11-5)*(.55+t.risk/220)+bias*.11),0,100);
+// Diagnostic components mirror the existing liquidity formula exactly.
+let randomLiquidity=((h>>>11)%11-5)*(.55+t.risk/220),eraLiquidity=bias*.11;
+let liquidityUnbounded=prev.liquidity+margin-burden+randomLiquidity+eraLiquidity;
+let liquidityRounded=Math.round(liquidityUnbounded);
+c.liquidity=clamp(liquidityRounded,0,100);
+let liquidityBeforeActions=c.liquidity;
 // Resilience can improve or deteriorate, but never receives an automatic perpetual gain.
 let resilienceTarget=clamp((c.liquidity*.5+c.demand*.25+c.capacity*.25)-((h>>>19)%11),0,100);
 c.resilience=clamp(Math.round(c.resilience*.92+resilienceTarget*.08+((h>>>15)%7-3)),0,100);
@@ -103,7 +108,20 @@ if(significant.length){let reasons=[];if(disruption)reasons.push("unexpected mar
  event(b,date,"circumstance-change",`${significant.map(x=>x.key+" "+(x.delta>0?"+":"")+x.delta).join(", ")}. Factors: ${reasons.join("; ")}. Current demand ${c.demand}, capacity ${c.capacity}, liquidity ${c.liquidity}, resilience ${c.resilience}.`)}
 if(strained&&(!prev.pressureMonths||c.pressureMonths===3||c.pressureMonths===6))event(b,date,"financial-pressure",`Sustained pressure ${c.pressureMonths} review(s). Demand ${c.demand}; liquidity ${c.liquidity}; resilience ${c.resilience}.`);
 c.reviewed=date;
-recordDiagnostic(b,date,{shock,disruption,opportunity,bias,marketOpportunity:m.opportunity,competition:m.competition,margin,burden,priorLiquidity:prev.liquidity,priorDemand:prev.demand,phaseBefore:previousPhase,gatePressure,gateLiquidity,gateResilience,gateProbability,gateAll,liquidityCeiling:c.liquidity===100});
+// Cumulative per-business observations persist beyond the 72-month rolling display.
+let flow=b.liquidityTrace||(b.liquidityTrace={reviews:0,sales:0,cost:0,utilizationGap:0,burden:0,random:0,era:0,rawNet:0,roundedNet:0,boundEffect:0,managementEffect:0,finalNet:0,positiveRaw:0,negativeRaw:0,ceilingHits:0,floorHits:0});
+flow.reviews++;flow.sales+=salesReturn;flow.cost+=operatingCost;flow.utilizationGap+=(c.demand-c.capacity)*.035;
+flow.burden+=burden;flow.random+=randomLiquidity;flow.era+=eraLiquidity;
+flow.rawNet+=liquidityUnbounded-prev.liquidity;
+flow.roundedNet+=liquidityRounded-prev.liquidity;
+flow.boundEffect+=liquidityBeforeActions-liquidityRounded;
+flow.managementEffect+=c.liquidity-liquidityBeforeActions;
+flow.finalNet+=c.liquidity-prev.liquidity;
+if(liquidityUnbounded>prev.liquidity)flow.positiveRaw++;
+if(liquidityUnbounded<prev.liquidity)flow.negativeRaw++;
+if(liquidityRounded>100)flow.ceilingHits++;
+if(liquidityRounded<0)flow.floorHits++;
+recordDiagnostic(b,date,{salesReturn,operatingCost,utilizationGap:(c.demand-c.capacity)*.035,randomLiquidity,eraLiquidity,liquidityUnbounded,liquidityRounded,liquidityBeforeActions,liquidityAfterActions:c.liquidity,shock,disruption,opportunity,bias,marketOpportunity:m.opportunity,competition:m.competition,margin,burden,priorLiquidity:prev.liquidity,priorDemand:prev.demand,phaseBefore:previousPhase,gatePressure,gateLiquidity,gateResilience,gateProbability,gateAll,liquidityCeiling:c.liquidity===100});
 }
 function recordDiagnostic(b,date,factors){
  let c=b.circumstances;
@@ -237,10 +255,16 @@ async function advanceTo(target){
 if(advanceBusy)return;setBusy(true);try{
 if(!validDate(target)||target<state.date||target>"9998-12-31"){notify("Date outside supported range.");return}
 let previous=state.date,monthCursor=previous.slice(0,7)+"-01",last=target.slice(0,7)+"-01",reviews=0,formations=0;
+let startingIds=new Set(state.businesses.map(b=>b.id)),startingActive=state.businesses.filter(b=>b.circumstances.phase!=="closed").length;
 while(monthCursor<=last){let reviewDate=monthCursor;
 if(reviewDate>previous){for(let b of state.businesses)if(b.founded<=reviewDate&&b.circumstances.phase!=="closed"){review(b,reviewDate);reviews++}formations+=formationReview(reviewDate);commercialReview(reviewDate)}
 monthCursor=addMonths(monthCursor,1)}
-state.date=target;let persisted=await save();render();notify(`${persisted?"Saved and verified in IndexedDB. ":"WARNING: Save verification failed; export immediately. "+storageMode+". "}Advanced from ${previous} to ${target}. ${reviews} independent business reviews processed; ${formations} new businesses formed.`)}finally{setBusy(false)}}
+state.date=target;
+let newFirms=state.businesses.filter(b=>!startingIds.has(b.id));
+let newlyClosed=state.businesses.filter(b=>b.circumstances.closedOn&&b.circumstances.closedOn>previous&&b.circumstances.closedOn<=target);
+let endingActive=state.businesses.filter(b=>b.circumstances.phase!=="closed").length;
+state.lastAdvanceReconciliation={from:previous,to:target,startingTotal:startingIds.size,startingActive,reportedFormations:formations,newFirmRecords:newFirms.length,newClosures:newlyClosed.length,endingTotal:state.businesses.length,endingActive,expectedActive:startingActive+newFirms.length-newlyClosed.length,matching:startingActive+newFirms.length-newlyClosed.length===endingActive&&formations===newFirms.length};
+let persisted=await save();render();notify(`${persisted?"Saved and verified in IndexedDB. ":"WARNING: Save verification failed; export immediately. "+storageMode+". "}Advanced from ${previous} to ${target}. ${reviews} independent business reviews processed; ${formations} new businesses formed.`)}finally{setBusy(false)}}
 function audit(){let issues=[],ids=new Set();
 networkInit();
 const known=new Map(state.businesses.map(b=>[b.id,b]));
@@ -343,6 +367,11 @@ function renderCausalityDiagnostics(){
  <p>Observed firm-month reviews: <b>${totals.observations}</b></p><div style="overflow-x:auto"><table class="mini-table"><thead><tr><th>Decision gate</th><th>Firm-months</th></tr></thead><tbody>${gateRows.map(([name,n])=>`<tr><td>${safe(name)}</td><td>${n}</td></tr>`).join('')}</tbody></table></div>
  <h3>Liquidity mechanics · prospective counters</h3><div class="details"><div><small>Reviews ending at liquidity 100</small><b>${totals.liquidityCeiling}</b></div><div><small>Margin above burden</small><b>${totals.positiveMargin}</b></div><div><small>Margin below burden</small><b>${totals.negativeMargin}</b></div><div><small>Older diagnostic observations retained</small><b>${oldObs.length}</b></div></div>
  <p class="muted">Historical retained snapshots (up to 72 per firm) show ${historicCeiling} observations at liquidity 100 and ${priorMargin.filter(d=>d.factors.margin>d.factors.burden).length} with margin above burden out of ${priorMargin.length} observations with both inputs. These snapshots do not establish lifetime totals. Prospective counters persist even after older monthly snapshots roll off; importing an older save cannot reconstruct earlier gate results.</p>
+ <h3>Liquidity equation · prospective trace</h3>
+ <p class="muted">These totals cover only firm-months processed after v0.1.12 was deployed. Each component is the sum of its actual contribution to the liquidity indicator, before or after rounding and bounds. They are not monetary amounts.</p>
+ ${(()=>{const keys=['reviews','sales','cost','utilizationGap','burden','random','era','rawNet','roundedNet','boundEffect','managementEffect','finalNet','positiveRaw','negativeRaw','ceilingHits','floorHits'];let t=Object.fromEntries(keys.map(k=>[k,0]));for(const b of firms)if(b.liquidityTrace)for(const k of keys)t[k]+=b.liquidityTrace[k]||0;let f=n=>Number(n).toLocaleString(undefined,{maximumFractionDigits:2,minimumFractionDigits:0});let rr=[['Sales return',t.sales],['Operating cost',-t.cost],['Demand minus capacity adjustment',t.utilizationGap],['Operating burden',-t.burden],['Independent variation',t.random],['Illustrative era adjustment',t.era],['Raw net liquidity change',t.rawNet],['Rounding effect',t.roundedNet-t.rawNet],['Bound effect (0–100)',t.boundEffect],['Management action effect',t.managementEffect],['Final net liquidity change',t.finalNet]];return `<p>Traced reviews: <b>${t.reviews}</b> · Positive raw months: <b>${t.positiveRaw}</b> · Negative raw months: <b>${t.negativeRaw}</b> · Upper-bound hits: <b>${t.ceilingHits}</b> · Lower-bound hits: <b>${t.floorHits}</b></p><div style="overflow-x:auto"><table class="mini-table"><thead><tr><th>Liquidity component</th><th>Summed indicator points</th><th>Per review</th></tr></thead><tbody>${rr.map(([k,v])=>`<tr><td>${safe(k)}</td><td>${f(v)}</td><td>${t.reviews?f(v/t.reviews):'—'}</td></tr>`).join('')}</tbody></table></div><p class="muted">Reconciliation: raw change + rounding effect + bound effect + management action effect = final net change. Totals include businesses that subsequently closed.</p>`})()}
+ <h3>Last advancement · population reconciliation</h3>
+ ${(()=>{let r=state.lastAdvanceReconciliation;if(!r)return '<p class="muted">No advancement recorded by v0.1.12 yet. Advance time to create an exact start-to-end comparison.</p>';return `<p class="muted">${safe(r.from)} → ${safe(r.to)}. This is the exact last advancement interval, not the rolling five-calendar-year window below.</p><div class="details"><div><small>Starting active</small><b>${r.startingActive}</b></div><div><small>New firm records</small><b>${r.newFirmRecords}</b></div><div><small>New closures</small><b>${r.newClosures}</b></div><div><small>Expected ending active</small><b>${r.expectedActive}</b></div><div><small>Actual ending active</small><b>${r.endingActive}</b></div><div><small>Formation function reported</small><b>${r.reportedFormations}</b></div></div><p><b>${r.matching?'PASS':'CHECK'}:</b> ${r.matching?'Active population and formation counts reconcile.':'The counts differ; export this save for investigation.'}</p>`})()}
  <h3>Five-year city formation and closure</h3><div style="overflow-x:auto"><table class="mini-table"><thead><tr><th>City</th><th>Active now</th><th>Founded</th><th>Closed</th></tr></thead><tbody>${cells}</tbody></table></div>
  <h3>Recorded event types in window</h3><div style="overflow-x:auto"><table class="mini-table"><thead><tr><th>Event type</th><th>Count</th></tr></thead><tbody>${counts.map(([type,n])=>`<tr><td>${safe(type)}</td><td>${n}</td></tr>`).join('')||'<tr><td colspan="2">No recorded events</td></tr>'}</tbody></table></div>
  <p class="muted">Recent diagnostic samples held across active firms: ${obs.length}. High liquidity and survival are flags for further testing, not evidence of a defect. Compare fresh runs using the CSV export and save files. Existing history is not retroactively reconstructed.</p>`;
@@ -357,7 +386,7 @@ el("month").onclick=()=>advanceTo(addMonths(state.date,1));
 el("advance").onclick=()=>advanceTo(addMonths(state.date,12));
 el("five").onclick=()=>advanceTo(addMonths(state.date,60));
 el("reset").onclick=async()=>{if(advanceBusy)return;if(confirm("Start a new simulation? This replaces the current browser save. Export first if needed.")){state=fresh();selected=null;const ok=await save();render();notify(ok?"New simulation saved and verified.":"New simulation is NOT saved; export immediately. "+storageMode)}};
-el("export").onclick=()=>{let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="bellwether-business-v0.1.11-save.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);notify("Save exported.")};
+el("export").onclick=()=>{let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="bellwether-business-v0.1.12-save.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);notify("Save exported.")};
 el("import").onclick=()=>el("file").click();
 function upgrade(obj){
 if(!obj||!Array.isArray(obj.businesses))throw Error("Invalid save structure");
