@@ -1,19 +1,19 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#10151b"><title>Bellwether Business Engine v0.1.31</title>
+<meta name="theme-color" content="#10151b"><title>Bellwether Business Engine v0.1.32</title>
 <style>
 :root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;background:#10151b;color:#e8edf3}
 *{box-sizing:border-box}body{margin:0;padding:18px 14px 50px;max-width:1050px;margin-inline:auto}h1{font-size:1.5rem;margin:8px 0 2px}h2{font-size:1.15rem}p,.muted{color:#9cadbd;line-height:1.5}.eyebrow{color:#d6a44e;font-size:.85rem;letter-spacing:.07em}.panel{background:#1b232d;border:1px solid #344352;border-radius:15px;padding:17px;margin-top:16px}.controls{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}button,select,input{font:inherit;border-radius:9px;padding:10px;background:#101820;color:#e8edf3;border:1px solid #465a6c}button{cursor:pointer}button.primary{background:#b48739;color:#111;font-weight:700;border-color:#b48739}button:focus-visible,select:focus-visible{outline:2px solid #e9b85a}.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stat{background:#121a22;border:1px solid #354554;padding:12px;border-radius:10px}.stat small{display:block;color:#9cadbd}.stat strong{font-size:1.4rem}.list{display:grid;gap:8px}.business{width:100%;text-align:left;display:flex;justify-content:space-between;align-items:center;gap:8px}.business.selected{border-color:#d5a24a;background:#2c2a25}.tag{font-size:.75rem;color:#d6b16b}.record{padding:10px 0;border-bottom:1px solid #34414e;overflow-wrap:anywhere}.record:last-child{border:0}.details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.details div{background:#121a22;padding:10px;border-radius:8px}.details small{display:block;color:#9cadbd}.warning{color:#e3b269}.pass{color:#7acb92}#businesses{max-height:340px;overflow:auto}#history{max-height:300px;overflow:auto}.diag{background:#121a22;border-radius:9px;padding:12px;margin:10px 0}.diag small{color:#9cadbd}.mini-table{width:100%;border-collapse:collapse;font-size:.87rem}.mini-table td,.mini-table th{padding:8px 5px;text-align:left;border-bottom:1px solid #34414e}.mini-table td:not(:first-child),.mini-table th:not(:first-child){text-align:right}.trend{font-size:.85rem;color:#d6b16b}footer{font-size:.82rem;color:#92a3b3;margin-top:20px}@media(min-width:750px){.stats{grid-template-columns:repeat(4,1fr)}.columns{display:grid;grid-template-columns:1fr 1fr;gap:16px}.columns .panel{margin-top:0}} 
 </style></head><body>
 <div class="eyebrow">BELLWETHER · STANDALONE SIMULATION</div>
-<h1>Business Engine</h1><div class="muted">Prototype <b>v0.1.31 — Customer demand routing (prospective)</b></div>
-<div class="panel"><strong>Independent engines · shared opportunities</strong><p>Businesses independently respond to market conditions, while new firms may emerge from demand, gaps in capacity, local opportunity, and uncertainty. Growth, contraction, formation, and closure are possible, never guaranteed. These are provisional simulation indicators, not historical financial records. No Life Engine dependency. Supplier and customer links persist. v0.1.31 introduces independent production decisions prospectively; earlier history remains unchanged. No business-count target or survival rescue exists.</p></div>
+<h1>Business Engine</h1><div class="muted">Prototype <b>v0.1.32 — Customer demand routing (prospective)</b></div>
+<div class="panel"><strong>Independent engines · shared opportunities</strong><p>Businesses independently respond to market conditions, while new firms may emerge from demand, gaps in capacity, local opportunity, and uncertainty. Growth, contraction, formation, and closure are possible, never guaranteed. These are provisional simulation indicators, not historical financial records. No Life Engine dependency. Supplier and customer links persist. v0.1.32 introduces independent production decisions prospectively; earlier history remains unchanged. No business-count target or survival rescue exists.</p></div>
 <div class="panel"><div class="controls"><button class="primary" id="day">Advance 1 day</button><button id="month">Advance 1 month</button><button id="advance">Advance 1 year</button><button id="five">Advance 5 years</button><button id="export">Export save</button><button id="import">Import save</button><button id="reset">New simulation</button><input type="file" id="file" accept=".json,application/json" hidden></div>
 <div class="stats"><div class="stat"><small>World date</small><strong id="date"></strong></div><div class="stat"><small>Businesses</small><strong id="count"></strong></div><div class="stat"><small>Active</small><strong id="active"></strong></div><div class="stat"><small>Closed</small><strong id="closed"></strong></div><div class="stat"><small>New formations</small><strong id="formations"></strong></div><div class="stat"><small>Historical records</small><strong id="events"></strong></div><div class="stat"><small>Audit faults</small><strong id="faults"></strong></div></div><p id="notice" role="status"></p></div>
 <div class="columns"><section class="panel"><h2>Business registry</h2><label for="filter" class="muted">Industry</label> <select id="filter"><option value="all">All industries</option></select> <label for="statusFilter" class="muted">Status</label> <select id="statusFilter"><option value="all">All businesses</option><option value="active">Active</option><option value="closed">Closed</option></select><div id="businesses" class="list" style="margin-top:12px"></div></section>
 <section class="panel"><h2>Business identity</h2><div id="detail" class="details"></div><h2>Business characteristics</h2><div id="traits" class="details"></div><h2>Business circumstances</h2><div id="circumstances" class="details"></div><h2>Lifecycle diagnostics</h2><div id="diagnostics"></div><h2>Commercial relationships</h2><div id="relationships"></div><h2>Individual history</h2><div id="history"></div></section></div>
-<section class="panel" id="validationPanel"><h2>Economic validation · historical and prospective</h2><p class="muted">Diagnostics are read-only; v0.1.31 records selection-time market conditions and reconciles regional referral and settlement evidence without rewriting prior history. Counts are descriptive, not population targets. Entrepreneurial assessments distinguish unobserved markets, entry versus incumbent responses, and actor-specific judgment. January snapshots preserve assessment history. Eligible incumbents can independently approve or decline evidence-based capacity investments. Monthly follow-up separates baseline changes, capacity movements, production and tracked settlements without causal attribution; new entry and diversification remain observational.</p><div class="controls"><button id="validationExport">Export validation snapshot (CSV)</button><button id="segmentsExport">Export operating segments (CSV)</button></div><h3>Causality diagnostics · read-only</h3><div id="causalityDiagnostics"></div><h3>Operating performance by circumstance · prospective</h3><div id="operatingSegments"></div><h3>Independent demand, capacity and output · v0.1.31</h3><div id="strategyDiagnostics"></div><div class="controls"><button id="strategyExport">Export strategy decisions (CSV)</button></div><h3>Customer demand routing · prospective v0.1.31</h3><p class="muted">v0.1.31 records eligible local/regional alternatives, available capacity, supplier rank and delivery mode; orders can be rerouted when a supplier closes. A reservation that cannot settle is explicitly canceled in the audit.</p><div id="customerFlow"></div><div class="controls"><button id="customerFlowExport">Export customer flows (CSV)</button><button id="settlementExport">Export completed purchases (CSV)</button><button id="purchaseFailuresExport">Export failed purchases (CSV)</button><button id="orderAuditExport">Export order audit (CSV)</button><button id="supplierChoicesExport">Export supplier choices + alternatives (CSV)</button><button id="marketCoverageExport">Export market opportunity evidence (CSV)</button><button id="opportunityExport">Export entrepreneurial assessments (CSV)</button><button id="assessmentHistoryExport">Export assessment history (CSV)</button><button id="expansionDecisionsExport">Export assessed expansion decisions (CSV)</button><button id="investmentPerformanceExport">Export investment outcome reconciliation (CSV)</button><button id="productionSalesExport">Export production and sales reconciliation (CSV)</button><button id="reconciliationExport">Export settlement reconciliation (CSV)</button></div><p class="muted">Production/sales reconciliation separates legacy modeled output from separately verified settlement units. The legacy output proxy is not proof of a sale, and no inventory or profit is inferred.</p><h3>Demand and capacity mechanics · prospective</h3><div id="demandCapacityDiagnostics"></div><div class="controls"><button id="demandCapacityExport">Export demand and capacity (CSV)</button></div><h3>City outcomes</h3><div id="validationCities"></div><h3>Industry outcomes</h3><div id="validationIndustries"></div><h3>Liquidity and capacity</h3><div id="validationFinancial"></div><h3>Relationship and survival checks</h3><div id="validationLinks"></div><p class="muted">Financial indicators are not cash flow, profit, debt, or accounting reserves. A high liquidity indicator does not establish that a firm earned enough to sustain itself. Historical-era and location modifiers are illustrative, not calibrated economic history.</p></section><section class="panel"><h2>Survival cohorts</h2><p class="muted">Founding cohorts by decade. Active share is measured as of the current world date, not a fixed-age survival probability.</p><div id="cohorts"></div></section><section class="panel"><h2>Integrity audit</h2><div id="audit"></div></section>
-<footer>Prototype scope: fictional businesses, persistent IDs, daily Gregorian calendar, monthly independent business reviews, meaningful event histories, operational responses, permanent closures, independent business formation, bounded monthly diagnostic observations with IndexedDB persistence and read-back verification, founding cohort analysis, local market opportunity evaluation, persistent business traits, recovery actions, lifecycle-aware reviews, active/closed filtering, save migration and integrity audits. v0.1.31 adds prospective customer purchase settlement; v0.1.12 added liquidity decomposition and advance reconciliation; v0.1.8 simulation changes apply prospectively to existing saves; closed firms and historical observations are never rewritten. Industry, local market, and historical-era modifiers are illustrative assumptions, not historically calibrated data. Commercial links represent modeled business relationships and indicative orders, not actual accounting transactions, wages, or hiring.</footer>
+<section class="panel" id="validationPanel"><h2>Economic validation · historical and prospective</h2><p class="muted">Diagnostics are read-only; v0.1.32 records selection-time market conditions and reconciles regional referral and settlement evidence without rewriting prior history. Counts are descriptive, not population targets. Entrepreneurial assessments distinguish unobserved markets, entry versus incumbent responses, and actor-specific judgment. January snapshots preserve assessment history. Eligible incumbents can independently approve or decline evidence-based capacity investments. Monthly follow-up separates baseline changes, capacity movements, production and tracked settlements without causal attribution; new entry and diversification remain observational.</p><div class="controls"><button id="validationExport">Export validation snapshot (CSV)</button><button id="segmentsExport">Export operating segments (CSV)</button></div><h3>Causality diagnostics · read-only</h3><div id="causalityDiagnostics"></div><h3>Operating performance by circumstance · prospective</h3><div id="operatingSegments"></div><h3>Independent demand, capacity and output · v0.1.32</h3><div id="strategyDiagnostics"></div><div class="controls"><button id="strategyExport">Export strategy decisions (CSV)</button></div><h3>Customer demand routing · prospective v0.1.32</h3><p class="muted">v0.1.32 records eligible local/regional alternatives, available capacity, supplier rank and delivery mode; orders can be rerouted when a supplier closes. A reservation that cannot settle is explicitly canceled in the audit.</p><div id="customerFlow"></div><div class="controls"><button id="customerFlowExport">Export customer flows (CSV)</button><button id="settlementExport">Export completed purchases (CSV)</button><button id="purchaseFailuresExport">Export failed purchases (CSV)</button><button id="orderAuditExport">Export order audit (CSV)</button><button id="supplierChoicesExport">Export supplier choices + alternatives (CSV)</button><button id="marketCoverageExport">Export market opportunity evidence (CSV)</button><button id="opportunityExport">Export entrepreneurial assessments (CSV)</button><button id="assessmentHistoryExport">Export assessment history (CSV)</button><button id="expansionDecisionsExport">Export assessed expansion decisions (CSV)</button><button id="investmentPerformanceExport">Export investment outcome reconciliation (CSV)</button><button id="productionSalesExport">Export production and sales reconciliation (CSV)</button><button id="ordinaryPurchasesExport">Export ordinary customer purchases (CSV)</button><button id="ordinaryDemandExport">Export ordinary customer demand (CSV)</button><button id="reconciliationExport">Export settlement reconciliation (CSV)</button></div><p class="muted">Production/sales reconciliation now also identifies ordinary customer purchases attributed to an existing portion of modeled output. Ordinary purchase revenue is a subset of legacy modeled revenue, never additional revenue. This is a prospective partial accounting bridge, not complete transaction-driven economics.</p><h3>Ordinary customer purchasing · v0.1.32</h3><div id="ordinaryPurchaseDiagnostics"></div><h3>Demand and capacity mechanics · prospective</h3><div id="demandCapacityDiagnostics"></div><div class="controls"><button id="demandCapacityExport">Export demand and capacity (CSV)</button></div><h3>City outcomes</h3><div id="validationCities"></div><h3>Industry outcomes</h3><div id="validationIndustries"></div><h3>Liquidity and capacity</h3><div id="validationFinancial"></div><h3>Relationship and survival checks</h3><div id="validationLinks"></div><p class="muted">Financial indicators are not cash flow, profit, debt, or accounting reserves. A high liquidity indicator does not establish that a firm earned enough to sustain itself. Historical-era and location modifiers are illustrative, not calibrated economic history.</p></section><section class="panel"><h2>Survival cohorts</h2><p class="muted">Founding cohorts by decade. Active share is measured as of the current world date, not a fixed-age survival probability.</p><div id="cohorts"></div></section><section class="panel"><h2>Integrity audit</h2><div id="audit"></div></section>
+<footer>Prototype scope: fictional businesses, persistent IDs, daily Gregorian calendar, monthly independent business reviews, meaningful event histories, operational responses, permanent closures, independent business formation, bounded monthly diagnostic observations with IndexedDB persistence and read-back verification, founding cohort analysis, local market opportunity evaluation, persistent business traits, recovery actions, lifecycle-aware reviews, active/closed filtering, save migration and integrity audits. v0.1.32 adds ordinary customer demand and purchase attribution; v0.1.12 added liquidity decomposition and advance reconciliation; v0.1.8 simulation changes apply prospectively to existing saves; closed firms and historical observations are never rewritten. Industry, local market, and historical-era modifiers are illustrative assumptions, not historically calibrated data. Commercial links represent modeled business relationships and indicative orders, not actual accounting transactions, wages, or hiring.</footer>
 <script>
 "use strict";
 const KEY="bellwether-business-v0180",V016="bellwether-business-v0170",V015="bellwether-business-v0150",V014="bellwether-business-v0140",PREVIOUS="bellwether-business-v0130",PRIOR="bellwether-business-v0120",OLD="bellwether-business-v0110",LEGACY="bellwether-business-v0100";
@@ -58,7 +58,7 @@ let priorDemand=c.demand,priorCapacity=c.capacity;let seasonal=bias*.4;
 // Market demand is independent of productive capacity. Scarcity may alter future
 // customer interest, but never guarantees a favorable response.
 let scarcitySignal=Number(c.scarcitySignal)||0;
-let customerReferral=0; c.customerReferral=0; // v0.1.31: referrals settle as separately tracked purchases, never synthetic base demand
+let customerReferral=0; c.customerReferral=0; // v0.1.32: referrals settle as separately tracked purchases, never synthetic base demand
 let demandTarget=m.opportunity+seasonal+shock*profile.volatility+disruption+opportunity+t.advantage*.10-m.competition*7+scarcitySignal+customerReferral;
 c.demand=clamp(Math.round(c.demand*.78+demandTarget*.22+((h>>>4)%7-3)),0,100);
 c.scarcitySignal=0;
@@ -163,7 +163,7 @@ observeDemandCapacity(b,{priorDemand,priorCapacity,demandTarget,demandAfterUpdat
 observeOperatingSegment(b,date,{salesReturn,operatingCost,utilization,margin,burden,competition:m.competition,marketOpportunity:m.opportunity,priorLiquidity:prev.liquidity,finalLiquidity:c.liquidity,rawNet:liquidityUnbounded-prev.liquidity,ceilingHit:liquidityRounded>100});
 recordDiagnostic(b,date,{salesReturn,operatingCost,utilizationGap:(c.demand-c.capacity)*.035,randomLiquidity,eraLiquidity,liquidityUnbounded,liquidityRounded,liquidityBeforeActions,liquidityAfterActions:c.liquidity,shock,disruption,opportunity,bias,marketOpportunity:m.opportunity,competition:m.competition,margin,burden,priorLiquidity:prev.liquidity,priorDemand:prev.demand,phaseBefore:previousPhase,gatePressure,gateLiquidity,gateResilience,gateProbability,gateAll,liquidityCeiling:c.liquidity===100});
 }
-// v0.1.31 observational counters: use already computed inputs, never affect decisions.
+// v0.1.32 observational counters: use already computed inputs, never affect decisions.
 function observeStrategy(b,o){
  let t=b.strategyTrace||(b.strategyTrace={reviews:0,hold:0,expand:0,reduce:0,restricted:0,scarcityPositive:0,scarcityNeutral:0,scarcityNegative:0,output:0,unused:0,capacity:0,demand:0,investment:0});
  t.reviews++;t.output+=o.actualOutput;t.unused+=o.unusedCapacity;t.capacity+=o.capacity;t.demand+=o.demand;t.investment+=o.capacityInvestment;
@@ -174,7 +174,7 @@ function renderStrategy(){
  let keys=['reviews','hold','expand','reduce','restricted','scarcityPositive','scarcityNeutral','scarcityNegative','output','unused','capacity','demand','investment'],t=Object.fromEntries(keys.map(k=>[k,0]));
  for(let b of state.businesses)for(let k of keys)t[k]+=(b.strategyTrace?.[k]||0);
  let n=t.reviews,rows=[['Business-months',n],['Hold installed capacity',t.hold],['Capacity expansion decisions',t.expand],['Capacity reduction decisions',t.reduce],['Deliberate output restrictions',t.restricted],['Scarcity signals: favorable / neutral / adverse',t.scarcityPositive+' / '+t.scarcityNeutral+' / '+t.scarcityNegative],['Mean demand',n?(t.demand/n).toFixed(2):'—'],['Mean installed capacity',n?(t.capacity/n).toFixed(2):'—'],['Mean actual output',n?(t.output/n).toFixed(2):'—'],['Mean unused capacity',n?(t.unused/n).toFixed(2):'—'],['Total capacity-change investment indicator',t.investment.toFixed(2)]];
- el('strategyDiagnostics').innerHTML='<p class="muted">Prospective v0.1.31 observations only. Installed capacity, actual output, and customer demand are separate. Scarcity signals are uncertain and affect the next demand review; they are not guaranteed demand gains. Financial units are abstract indicators.</p><div style="overflow-x:auto"><table class="mini-table"><tbody>'+rows.map(([k,v])=>'<tr><td>'+safe(k)+'</td><td>'+safe(v)+'</td></tr>').join('')+'</tbody></table></div>';
+ el('strategyDiagnostics').innerHTML='<p class="muted">Prospective v0.1.32 observations only. Installed capacity, actual output, and customer demand are separate. Scarcity signals are uncertain and affect the next demand review; they are not guaranteed demand gains. Financial units are abstract indicators.</p><div style="overflow-x:auto"><table class="mini-table"><tbody>'+rows.map(([k,v])=>'<tr><td>'+safe(k)+'</td><td>'+safe(v)+'</td></tr>').join('')+'</tbody></table></div>';
 }
 function exportStrategy(){let keys=['reviews','hold','expand','reduce','restricted','scarcityPositive','scarcityNeutral','scarcityNegative','output','unused','capacity','demand','investment'];let q=x=>'"'+String(x??'').replace(/"/g,'""')+'"';let rows=[['worldDate','businessId','industry','city',...keys].join(','),...state.businesses.filter(b=>b.strategyTrace?.reviews).map(b=>[state.date,b.id,b.industry,b.city,...keys.map(k=>b.strategyTrace[k]||0)].map(q).join(','))];let url=URL.createObjectURL(new Blob([rows.join('\r\n')],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='bellwether-strategy-'+state.date+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);notify('Strategy diagnostics exported.');}
 function observeDemandCapacity(b,o){
@@ -190,9 +190,9 @@ function observeDemandCapacity(b,o){
 }
 function demandCapacityTotals(){let t={};for(let b of state.businesses)for(let [k,v] of Object.entries(b.demandCapacityTrace||{}))t[k]=(t[k]||0)+v;return t}
 function renderDemandCapacity(){let t=demandCapacityTotals(),n=t.n||0,f=v=>n?(v/n).toFixed(2):'—',p=v=>n?(100*v/n).toFixed(1)+'%':'—';
- if(!n){el('demandCapacityDiagnostics').innerHTML='<p class="muted">No new reviews yet. Advance time after deploying v0.1.31.</p>';return}
+ if(!n){el('demandCapacityDiagnostics').innerHTML='<p class="muted">No new reviews yet. Advance time after deploying v0.1.32.</p>';return}
  let rows=[['Observed business-months',n],['Mean demand before → after',f(t.demandBefore)+' → '+f(t.demandAfter)],['Mean demand target',f(t.target)],['Mean capacity before → after monthly drift',f(t.capacityBefore)+' → '+f(t.capacityAfter)],['Mean absolute demand/capacity gap before → after',f(t.absGapBefore)+' → '+f(t.absGapAfter)],['Mean market opportunity',f(t.market)],['Mean competition index',f(t.competition)],['Mean local supply / active peers',f(t.supply)+' / '+f(t.peers)],['Capacity rose / fell / unchanged',t.capacityUp+' / '+t.capacityDown+' / '+t.capacityFlat],['Capacity drift moved toward / away from updated demand',t.capacityTowardDemand+' / '+t.capacityAwayDemand],['Demand rose / fell',t.demandUp+' / '+t.demandDown],['Utilization ≥95% / below 50%',p(t.nearFull)+' / '+p(t.under50)],['Demand exceeds capacity by >12 / capacity exceeds demand by >12',p(t.shortage)+' / '+p(t.surplus)],['Negative operating result',p(t.negativeNet)],['Mean operating result',f(t.operatingNet)],['High-competition reviews (index ≥1.5)',t.highCompetition],['Positive high-competition reviews',t.highCompetition?((100*t.highCompetitionPositive/t.highCompetition).toFixed(1)+'%'):'—'],['Reviews ending in closure',t.closed]];
- el('demandCapacityDiagnostics').innerHTML='<p class="muted">New observations only, beginning with v0.1.31. Firm-months include firms that subsequently close. Capacity after refers to the ordinary monthly drift, before management expansion or contraction. Gap comparison measures updated demand against capacity before and after drift. Beginning v0.1.31, independent capacity decisions and output restrictions replace automatic capacity drift.</p><div style="overflow-x:auto"><table class="mini-table"><thead><tr><th>Measurement</th><th>Result</th></tr></thead><tbody>'+rows.map(([k,v])=>'<tr><td>'+safe(k)+'</td><td>'+safe(v)+'</td></tr>').join('')+'</tbody></table></div>';
+ el('demandCapacityDiagnostics').innerHTML='<p class="muted">New observations only, beginning with v0.1.32. Firm-months include firms that subsequently close. Capacity after refers to the ordinary monthly drift, before management expansion or contraction. Gap comparison measures updated demand against capacity before and after drift. Beginning v0.1.32, independent capacity decisions and output restrictions replace automatic capacity drift.</p><div style="overflow-x:auto"><table class="mini-table"><thead><tr><th>Measurement</th><th>Result</th></tr></thead><tbody>'+rows.map(([k,v])=>'<tr><td>'+safe(k)+'</td><td>'+safe(v)+'</td></tr>').join('')+'</tbody></table></div>';
 }
 function exportDemandCapacity(){let fields=['businessId','industry','city','founded','closed','observations','demandBefore','demandAfter','target','capacityBefore','capacityAfter','market','competition','supply','peers','operatingNet','absGapBefore','absGapAfter','nearFull','under50','shortage','surplus','capacityUp','capacityDown','capacityFlat','capacityTowardDemand','capacityAwayDemand','demandUp','demandDown','negativeNet','highCompetition','highCompetitionPositive'];let quote=x=>'"'+String(x??'').replace(/"/g,'""')+'"';let csv=[['worldDate',...fields].join(','),...state.businesses.filter(b=>b.demandCapacityTrace?.n).map(b=>[state.date,...fields.map(k=>k==='businessId'?b.id:k==='industry'?b.industry:k==='city'?b.city:k==='founded'?b.founded:k==='closed'?(b.circumstances.phase==='closed'):k==='observations'?b.demandCapacityTrace.n:b.demandCapacityTrace[k]??'')].map(quote).join(','))].join('\r\n');let url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='bellwether-demand-capacity-'+state.date+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);notify('Demand/capacity diagnostics exported. Simulation unchanged.')}
 function operatingAgeBand(b,date){let years=Number(date.slice(0,4))-Number(b.founded.slice(0,4))-(date.slice(5,10)<b.founded.slice(5,10)?1:0);return years<5?"0–4 years":years<15?"5–14 years":years<30?"15–29 years":"30+ years"}
@@ -209,7 +209,7 @@ function observeOperatingSegment(b,date,o){
 }
 function renderOperatingSegments(){
  let dimensions=[["industry","Industry"],["city","City"],["utilization","Capacity utilization"],["competition","Competition index"],["age","Business age"]];
- let format=x=>Number.isFinite(x)?x.toFixed(2):"—",html='<p class="muted">Only reviews processed after v0.1.31 are included. Each row represents firm-months, not unique businesses. A positive operating month means margin exceeds burden; it is not an accounting profit. Capacity utilization is sales utilization divided by capacity, measured after the monthly demand/capacity update. Competition is the modeled local supply-to-opportunity index. Figures are observational, not calibrated monetary values.</p>';
+ let format=x=>Number.isFinite(x)?x.toFixed(2):"—",html='<p class="muted">Only reviews processed after v0.1.32 are included. Each row represents firm-months, not unique businesses. A positive operating month means margin exceeds burden; it is not an accounting profit. Capacity utilization is sales utilization divided by capacity, measured after the monthly demand/capacity update. Competition is the modeled local supply-to-opportunity index. Figures are observational, not calibrated monetary values.</p>';
  for(const [dim,title] of dimensions){
   let groups=new Map();for(const b of state.businesses)for(const [key,src] of Object.entries(b.operatingSegments||{})){
    if(!key.startsWith(dim+'|'))continue;let name=key.slice(dim.length+1),a=groups.get(name);
@@ -352,7 +352,7 @@ function commercialReview(date){
  state.network.reviews++;
 }
 
-// v0.1.31: prospective order lifecycle. Existing saves are migrated without
+// v0.1.32: prospective order lifecycle. Existing saves are migrated without
 // reconstructing earlier transactions. Financial amounts are indexed operating
 // units, not dollars; the 0-100 liquidity indicator remains separate.
 function customerLedger(date){
@@ -368,7 +368,7 @@ function recordOrder(l,o,date,status,units,reason='',extra={}){
  l.orderAudit.push({date,orderId:o.orderId,originId:o.originId,recipientId:o.recipientId||o.originId,source:o.source||o.kind||'deferred',status,units,reason,created:o.created,...extra});
  if(l.orderAudit.length>12000)l.orderAudit.splice(0,l.orderAudit.length-12000);
 }
-// v0.1.31: deterministic, readable product/service specialties. Existing firms
+// v0.1.32: deterministic, readable product/service specialties. Existing firms
 // receive stable catalog identities derived from their IDs; no history is changed.
 const productCatalog={
  'Hospitality':[{name:'Restaurant meals',range:35,kind:'local-service'},{name:'Lodging',range:280,kind:'destination-service'},{name:'Catering',range:80,kind:'local-service'}],
@@ -435,7 +435,7 @@ function recordSupplierChoice(l,o,date,dest,availableOptions){
  recordChoiceMarketEvent(l,{date,orderId:o.orderId,city:origin.city,industry:origin.industry,product:x.wanted,condition:choiceMarketCondition(localEligible,localAvailable),localEligible,localAvailable,regional:dest.city!==origin.city,units:o.units});
  l.supplierChoiceTotal=(l.supplierChoiceTotal||0)+1;
 }
-// v0.1.31: customer preference can select an acceptable non-top-ranked seller.
+// v0.1.32: customer preference can select an acceptable non-top-ranked seller.
 // Deterministic per order and candidate; scores remain visible and no sale is guaranteed.
 function chooseSupplier(origin,date,options,orderKey){
  if(!options.length)return null;
@@ -444,7 +444,7 @@ function chooseSupplier(origin,date,options,orderKey){
  const preferred=ranked[Math.min(ranked.length-1,(h%100)<72?0:(h%100)<92?1:2)];
  return preferred;
 }
-// v0.1.31: Opportunity evidence is observational, not a business creation rule.
+// v0.1.32: Opportunity evidence is observational, not a business creation rule.
 // Separate current unmet production, regional referrals, and completed regional
 // purchases. An outbound purchase is NOT an unfulfilled or guaranteed local sale.
 function marketCoverageSnapshot(date){
@@ -509,9 +509,9 @@ function recordMarketSignals(date){
   if(l.assessmentHistory.length>12000)l.assessmentHistory.splice(0,l.assessmentHistory.length-12000);
  }
 }
-// v0.1.31: read-only, imperfect entrepreneurial assessments. These are modeled
+// v0.1.32: read-only, imperfect entrepreneurial assessments. These are modeled
 // estimates, not financial forecasts, offers, or formation instructions.
-// v0.1.31: independent observational judgments. No firm is created or altered.
+// v0.1.32: independent observational judgments. No firm is created or altered.
 // Missing customer observations are not evidence of zero underlying demand.
 function opportunityAssessments(asOf=state.date){
  const l=customerLedger(asOf),history=l.coverageHistory||[];
@@ -564,7 +564,7 @@ function exportAssessmentHistory(){
  const l=customerLedger(state.date),fields=['asOf','city','industry','product','response','actorNumber','actorId','observedMonths','evidence','localFirms','availableFirms','noLocalReferralUnits','noHeadroomReferralUnits','competitiveReferralUnits','regionalSettledUnits','observedUnfulfilledUnits','abandonedUnits','experienceIndex','riskToleranceIndex','resourceIndex','financeIndex','estimatedCostIndex','perceivedRiskIndex','perceivedOpportunityScore','assessment','caveat'];
  exportCustomerCSV('bellwether-entrepreneurial-history',fields,l.assessmentHistory||[]);
 }
-// v0.1.31: January incumbent investment decisions, recorded prospectively.
+// v0.1.32: January incumbent investment decisions, recorded prospectively.
 // Assessments are imperfect signals, not guarantees; only the actual firm can act.
 function assessedExpansionReview(date){
  if(date.slice(5,7)!=='01')return;
@@ -595,7 +595,7 @@ function exportExpansionDecisions(){
  const l=customerLedger(state.date),fields=['date','businessId','businessName','city','industry','product','assessment','score','observedMonths','regionalSettledUnits','unfulfilledUnits','priorCapacity','priorLiquidity','capacityAdded','liquidityInvestment','endingCapacity','endingLiquidity','decision','reason'];
  exportCustomerCSV('bellwether-assessed-expansion-decisions',fields,l.expansionDecisions||[]);
 }
-// v0.1.31: Monthly observational follow-up, never a claim of causal impact.
+// v0.1.32: Monthly observational follow-up, never a claim of causal impact.
 // An expansion's additional capacity cannot be uniquely identified in aggregate output.
 function recordInvestmentPerformance(date){
  const l=customerLedger(date),items=l.investmentPerformance||[];
@@ -737,27 +737,103 @@ function resolvePurchases(date){
  if(l.failures.length>3000)l.failures.splice(0,l.failures.length-3000);
  state._purchaseReservations=null;state._purchaseIntents=null;
 }
-// v0.1.31: reconcile modeled baseline output and verified settlement increments.
+// v0.1.32: Ordinary customers are explicitly modeled by city, product and
+// customer class. Purchases use a reserved *portion of existing baseline output*.
+// They do not increase physical output, legacy revenue or liquidity. The
+// revenue attribution is a subset of the existing proxy, NOT an extra credit.
+// This bridge is deliberately prospective; old saves and old rows are retained.
+const ordinaryCustomerClasses=['household','business','institutional'];
+function ordinaryLedger(){
+ const l=state.ordinaryCommerce||(state.ordinaryCommerce={since:null,sequence:0,demand:[],purchases:[],cumulative:{attempted:0,fulfilled:0,unfulfilled:0,spentIndex:0}});
+ for(const k of ['demand','purchases'])if(!Array.isArray(l[k]))l[k]=[];
+ if(!l.cumulative)l.cumulative={attempted:0,fulfilled:0,unfulfilled:0,spentIndex:0};
+ return l;
+}
+function ordinaryCustomerReview(date){
+ const l=ordinaryLedger();if(!l.since)l.since=date;
+ const active=state.businesses.filter(b=>b.founded<=date&&b.circumstances.phase!=='closed'&&b.circumstances.lastProduction?.date===date);
+ const remaining=new Map(active.map(b=>[b.id,Math.max(0,Math.floor((b.circumstances.lastProduction.baseOutput||0)*.4))]));
+ const bySpecialty=new Map();
+ for(const b of active){const p=productOf(b).name;if(!bySpecialty.has(p))bySpecialty.set(p,[]);bySpecialty.get(p).push(b)}
+ const month=Number(date.slice(5,7));
+ for(const city of cities)for(const [industry,products] of Object.entries(productCatalog))for(const product of products){
+  // These are small sampled demand cohorts, not population estimates.
+  // They exist even when a city has zero providers of the specialty.
+  const key=city+'|'+product.name+'|'+date+'|'+(state.seed||0);
+  const h=hash('ordinary-demand|'+key),customerClass=ordinaryCustomerClasses[h%3];
+  const season=product.kind==='perishable'&&month>=6&&month<=9?1:0;
+  const requested=(h>>>4)%8+season;
+  if(!requested)continue;
+  const orderId='OC-'+date+'-'+String(++l.sequence).padStart(7,'0');
+  const budgetIndex=+(.77+((h>>>9)%74)/100).toFixed(2);
+  const compatible=(bySpecialty.get(product.name)||[]).map(b=>{
+   const distance=distanceMiles(city,b.city);
+   const price=+(0.75+(hash('price|'+b.id)%51)/100).toFixed(2);
+   const transport=+(distance/Math.max(1,product.range)*(.08+(product.kind==='shippable'?.06:.13))).toFixed(3);
+   const quality=(b.traits?.advantage||50)/100;
+   const score=quality*.35+(city===b.city?.10:0)-price*.25-transport;
+   return {b,distance,price,transport,score,available:remaining.get(b.id)||0};
+  }).filter(x=>x.distance<=product.range).sort((a,b)=>b.score-a.score||a.b.id.localeCompare(b.b.id));
+  const candidates=compatible.filter(x=>x.available>0);
+  const choiceRoll=hash('ordinary-choice|'+key)%100;
+  const rank=Math.min(candidates.length-1,choiceRoll<72?0:choiceRoll<92?1:2);
+  const chosen=candidates.length?candidates[rank]:null;
+  let reason='',fulfilled=0,priceIndex='',supplierId='',supplierCity='',distanceMilesValue='',deliveryMode='';
+  if(!compatible.length)reason='no-compatible-supplier';
+  else if(!candidates.length)reason='no-attributed-baseline-supply';
+  else if(chosen){
+   supplierId=chosen.b.id;supplierCity=chosen.b.city;priceIndex=chosen.price;distanceMilesValue=chosen.distance;
+   deliveryMode=supplierDeliveryMode(product.name,chosen.distance);
+   if(chosen.price+chosen.transport>budgetIndex)reason='customer-budget';
+   else if((hash('ordinary-withdraw|'+key)%100)<8)reason='customer-withdrew';
+   else {fulfilled=Math.min(requested,chosen.available);remaining.set(supplierId,chosen.available-fulfilled);if(fulfilled<requested)reason='partial-supply';}
+  }
+  const unmet=requested-fulfilled;
+  // Index is the identifiable portion of the previously modeled sale-return.
+  // No new revenue or liquidity adjustment occurs here.
+  const saleRate=chosen?(.055+(chosen.b.traits?.advantage||50)/2400):0;
+  const attributedRevenue=+(fulfilled*saleRate).toFixed(6);
+  const row={date,orderId,city,industry,product:product.name,customerClass,requestedUnits:requested,fulfilledUnits:fulfilled,unfulfilledUnits:unmet,eligibleSuppliers:compatible.length,availableSuppliers:candidates.length,localEligible:compatible.filter(x=>x.b.city===city).length,localAvailable:candidates.filter(x=>x.b.city===city).length,selectedRank:chosen?rank+1:'',supplierId,supplierCity,distanceMiles:distanceMilesValue,deliveryMode,priceIndex,budgetIndex,reason:reason||'fulfilled',attributedLegacyRevenueIndex:attributedRevenue,additionalRevenueIndex:0,additionalLiquidityEffect:0};
+  l.demand.push(row);if(fulfilled)l.purchases.push({...row});
+  l.cumulative.attempted+=requested;l.cumulative.fulfilled+=fulfilled;l.cumulative.unfulfilled+=unmet;l.cumulative.spentIndex+=attributedRevenue;
+ }
+ // Detailed observations are bounded; cumulative figures are never reset.
+ if(l.demand.length>16000)l.demand.splice(0,l.demand.length-16000);
+ if(l.purchases.length>12000)l.purchases.splice(0,l.purchases.length-12000);
+}
+function renderOrdinaryCommerce(){
+ const l=ordinaryLedger(),c=l.cumulative;
+ const latest=l.demand.filter(x=>x.date===state.date.slice(0,7)+'-01');
+ const total=(key)=>latest.reduce((n,x)=>n+(Number(x[key])||0),0);
+ const items=[['Observed demand cohorts',latest.length],['Demand units (latest review)',total('requestedUnits')],['Fulfilled ordinary purchase units',total('fulfilledUnits')],['Unmet ordinary demand units',total('unfulfilledUnits')],['Cumulative attributed legacy revenue index',(+c.spentIndex).toFixed(2)],['Additional ordinary revenue credited',0]];
+ el('ordinaryPurchaseDiagnostics').innerHTML='<p class="muted">Prospective demand cohorts exist independently of local business formation. Fulfilled units are explicitly attributed to a limited share of existing baseline modeled output; they are NOT added to output, revenue or liquidity. No inventory or true profitability is inferred. Exports retain bounded purchase/demand records.</p><table class="mini-table"><tbody>'+items.map(([k,v])=>'<tr><td>'+safe(k)+'</td><td>'+safe(v)+'</td></tr>').join('')+'</tbody></table>';
+}
+function exportOrdinaryDemand(){exportCustomerCSV('bellwether-ordinary-customer-demand',['date','orderId','city','industry','product','customerClass','requestedUnits','fulfilledUnits','unfulfilledUnits','eligibleSuppliers','availableSuppliers','localEligible','localAvailable','selectedRank','supplierId','supplierCity','distanceMiles','deliveryMode','priceIndex','budgetIndex','reason','attributedLegacyRevenueIndex','additionalRevenueIndex','additionalLiquidityEffect'],ordinaryLedger().demand);}
+function exportOrdinaryPurchases(){exportCustomerCSV('bellwether-ordinary-customer-purchases',['date','orderId','city','industry','product','customerClass','requestedUnits','fulfilledUnits','unfulfilledUnits','eligibleSuppliers','availableSuppliers','localEligible','localAvailable','selectedRank','supplierId','supplierCity','distanceMiles','deliveryMode','priceIndex','budgetIndex','reason','attributedLegacyRevenueIndex','additionalRevenueIndex','additionalLiquidityEffect'],ordinaryLedger().purchases);}
+// v0.1.32: reconcile modeled baseline output and verified settlement increments.
 // Baseline output contributes to a legacy operating proxy; it is NOT evidence
 // of an individually recorded customer purchase. No inventory is inferred.
 function recordProductionSalesReconciliation(date){
  const l=customerLedger(date);
  const rows=state.productionSalesReconciliation||(state.productionSalesReconciliation=[]);
  const settlements=(l.settlements||[]).filter(x=>x.date===date);
+ const ordinary=(state.ordinaryCommerce?.purchases||[]).filter(x=>x.date===date);
+ const ordinaryTotals=new Map();for(const x of ordinary){const t=ordinaryTotals.get(x.supplierId)||{units:0,revenue:0};t.units+=x.fulfilledUnits;t.revenue+=x.attributedLegacyRevenueIndex;ordinaryTotals.set(x.supplierId,t)}
  const totals=new Map();
  for(const x of settlements){let a=totals.get(x.recipientId)||{units:0,revenue:0,cost:0};a.units+=Number(x.units)||0;a.revenue+=Number(x.revenueIndex)||0;a.cost+=Number(x.fulfillmentCostIndex)||0;totals.set(x.recipientId,a)}
  for(const b of state.businesses){
   const p=b.circumstances?.lastProduction;if(!p||p.date!==date)continue;
   const t=totals.get(b.id)||{units:0,revenue:0,cost:0};
+  const o=ordinaryTotals.get(b.id)||{units:0,revenue:0};
   const base=Number(p.baseOutput??(p.output-(p.extraSales||0)));
   const extra=Number(p.extraSales)||0;
   const reported=Number(p.output)||0;
-  rows.push({date,businessId:b.id,businessName:b.name,city:b.city,industry:b.industry,product:productOf(b).name,installedCapacity:p.capacity,productionLimit:p.limit,modeledDemand:p.demand,baselineModeledOutput:base,verifiedSettlementUnits:t.units,settlementOutputIncrement:extra,totalReportedOutput:reported,outputArithmeticDifference:reported-base-extra,settlementUnitDifference:extra-t.units,legacyModeledRevenueIndex:p.legacyModeledRevenueIndex??'',verifiedSettlementRevenueIndex:+t.revenue.toFixed(6),verifiedSettlementCostIndex:+t.cost.toFixed(6),unusedOutputHeadroom:Math.max(0,p.limit-reported),unverifiedBaselineSalesUnits:base,inventoryUnits:'',wasteUnits:'',interpretation:'Baseline output is a legacy modeled operating proxy, not verified customer sales. Settlement units are separately evidenced and added to reported output. No physical inventory, waste or net profit can be inferred.'});
+  rows.push({date,businessId:b.id,businessName:b.name,city:b.city,industry:b.industry,product:productOf(b).name,installedCapacity:p.capacity,productionLimit:p.limit,modeledDemand:p.demand,baselineModeledOutput:base,verifiedSettlementUnits:t.units,settlementOutputIncrement:extra,totalReportedOutput:reported,outputArithmeticDifference:reported-base-extra,settlementUnitDifference:extra-t.units,legacyModeledRevenueIndex:p.legacyModeledRevenueIndex??'',verifiedSettlementRevenueIndex:+t.revenue.toFixed(6),verifiedSettlementCostIndex:+t.cost.toFixed(6),unusedOutputHeadroom:Math.max(0,p.limit-reported),verifiedOrdinaryPurchaseUnits:o.units,ordinaryRevenueAttributedWithinLegacyIndex:+o.revenue.toFixed(6),remainingUnverifiedBaselineUnits:base-o.units,ordinaryAllocationDifference:Math.min(0,base-o.units),unverifiedBaselineSalesUnits:base-o.units,inventoryUnits:'',wasteUnits:'',interpretation:'Ordinary purchases verify a subset of baseline modeled output and attribute existing legacy revenue without new credit. Referral settlements add output and separate indexed revenue. Remaining modeled output is unverified; no inventory or net profit inferred.'});
  }
  if(rows.length>18000)rows.splice(0,rows.length-18000);
 }
 function exportProductionSalesReconciliation(){
- const fields=['date','businessId','businessName','city','industry','product','installedCapacity','productionLimit','modeledDemand','baselineModeledOutput','verifiedSettlementUnits','settlementOutputIncrement','totalReportedOutput','outputArithmeticDifference','settlementUnitDifference','legacyModeledRevenueIndex','verifiedSettlementRevenueIndex','verifiedSettlementCostIndex','unusedOutputHeadroom','unverifiedBaselineSalesUnits','inventoryUnits','wasteUnits','interpretation'];
+ const fields=['date','businessId','businessName','city','industry','product','installedCapacity','productionLimit','modeledDemand','baselineModeledOutput','verifiedSettlementUnits','settlementOutputIncrement','totalReportedOutput','outputArithmeticDifference','settlementUnitDifference','legacyModeledRevenueIndex','verifiedSettlementRevenueIndex','verifiedSettlementCostIndex','unusedOutputHeadroom','verifiedOrdinaryPurchaseUnits','ordinaryRevenueAttributedWithinLegacyIndex','remainingUnverifiedBaselineUnits','ordinaryAllocationDifference','unverifiedBaselineSalesUnits','inventoryUnits','wasteUnits','interpretation'];
  exportCustomerCSV('bellwether-production-sales-reconciliation',fields,state.productionSalesReconciliation||[]);
 }
 function exportSupplierChoices(){
@@ -778,7 +854,7 @@ function exportCustomerCSV(prefix,fields,rows){
  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download=prefix+'-'+state.date+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);
 }
 
-// v0.1.31: conservation of *unfulfilled customer interest*, not a money ledger.
+// v0.1.32: conservation of *unfulfilled customer interest*, not a money ledger.
 // Routing occurs after independent business reviews. Referrals influence the NEXT
 // review; no extra sales are booked in the current review. One unit is assigned
 // exactly once. A local or regional recipient must have available output headroom.
@@ -839,7 +915,7 @@ if(!validDate(target)||target<state.date||target>"9998-12-31"){notify("Date outs
 let previous=state.date,monthCursor=previous.slice(0,7)+"-01",last=target.slice(0,7)+"-01",reviews=0,formations=0;
 let startingIds=new Set(state.businesses.map(b=>b.id)),startingActive=state.businesses.filter(b=>b.circumstances.phase!=="closed").length;
 while(monthCursor<=last){let reviewDate=monthCursor;
-if(reviewDate>previous){preparePurchaseReservations(reviewDate);for(let b of state.businesses)if(b.founded<=reviewDate&&b.circumstances.phase!=="closed"){review(b,reviewDate);reviews++}resolvePurchases(reviewDate);recordProductionSalesReconciliation(reviewDate);customerDemandReview(reviewDate);assessedExpansionReview(reviewDate);formations+=formationReview(reviewDate);commercialReview(reviewDate);recordInvestmentPerformance(reviewDate)}
+if(reviewDate>previous){preparePurchaseReservations(reviewDate);for(let b of state.businesses)if(b.founded<=reviewDate&&b.circumstances.phase!=="closed"){review(b,reviewDate);reviews++}resolvePurchases(reviewDate);ordinaryCustomerReview(reviewDate);recordProductionSalesReconciliation(reviewDate);customerDemandReview(reviewDate);assessedExpansionReview(reviewDate);formations+=formationReview(reviewDate);commercialReview(reviewDate);recordInvestmentPerformance(reviewDate)}
 monthCursor=addMonths(monthCursor,1)}
 state.date=target;
 let newFirms=state.businesses.filter(b=>!startingIds.has(b.id));
@@ -890,7 +966,7 @@ async function save(){try{const snapshot=JSON.stringify(state);await dbWrite(sna
 function setBusy(b){advanceBusy=b;for(const id of ["day","month","advance","five","reset","import"]){el(id).disabled=b}}
 const el=id=>document.getElementById(id);
 function safe(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function render(){
+function render(){renderOrdinaryCommerce();
 el("date").textContent=state.date;el("count").textContent=state.businesses.length;el("active").textContent=state.businesses.filter(b=>b.circumstances.phase!=="closed").length;el("closed").textContent=state.businesses.filter(b=>b.circumstances.phase==="closed").length;el("formations").textContent=state.businesses.filter(b=>Number(b.id.slice(4))>=49).length;el("events").textContent=state.businesses.reduce((n,b)=>n+b.events.length,0);
 networkInit();let issues=audit();el("faults").textContent=issues.length;el("audit").innerHTML=issues.length?issues.slice(0,30).map(x=>`<div class="record warning">${safe(x)}</div>`).join(""):'<div class="pass">PASS — unique identities, valid Gregorian calendar, chronological records and bounded circumstances.</div>';
 let f=el("filter").value,st=el("statusFilter").value,shown=state.businesses.filter(b=>(f==="all"||b.industry===f)&&(st==="all"||(st==="closed"?b.circumstances.phase==="closed":b.circumstances.phase!=="closed")));
@@ -967,7 +1043,7 @@ let q=x=>'"'+String(x??'').replace(/"/g,'""')+'"',csv=rows.map(r=>r.map(q).join(
 el('segmentsExport').onclick=exportOperatingSegments;
 el('demandCapacityExport').onclick=exportDemandCapacity;
 el('strategyExport').onclick=exportStrategy;
-el('customerFlowExport').onclick=exportCustomerFlow;el('settlementExport').onclick=exportSettlements;el('purchaseFailuresExport').onclick=exportPurchaseFailures;el('orderAuditExport').onclick=exportOrderAudit;el('supplierChoicesExport').onclick=exportSupplierChoices;el('marketCoverageExport').onclick=exportMarketCoverage;el('opportunityExport').onclick=exportOpportunityAssessments;el('assessmentHistoryExport').onclick=exportAssessmentHistory;el('expansionDecisionsExport').onclick=exportExpansionDecisions;el('investmentPerformanceExport').onclick=exportInvestmentPerformance;el('productionSalesExport').onclick=exportProductionSalesReconciliation;el('reconciliationExport').onclick=exportSettlementReconciliation;
+el('customerFlowExport').onclick=exportCustomerFlow;el('settlementExport').onclick=exportSettlements;el('purchaseFailuresExport').onclick=exportPurchaseFailures;el('orderAuditExport').onclick=exportOrderAudit;el('supplierChoicesExport').onclick=exportSupplierChoices;el('marketCoverageExport').onclick=exportMarketCoverage;el('opportunityExport').onclick=exportOpportunityAssessments;el('assessmentHistoryExport').onclick=exportAssessmentHistory;el('expansionDecisionsExport').onclick=exportExpansionDecisions;el('investmentPerformanceExport').onclick=exportInvestmentPerformance;el('productionSalesExport').onclick=exportProductionSalesReconciliation;el('ordinaryDemandExport').onclick=exportOrdinaryDemand;el('ordinaryPurchasesExport').onclick=exportOrdinaryPurchases;el('reconciliationExport').onclick=exportSettlementReconciliation;
 
 
 function notify(s){el("notice").textContent=s}
@@ -976,7 +1052,7 @@ el("month").onclick=()=>advanceTo(addMonths(state.date,1));
 el("advance").onclick=()=>advanceTo(addMonths(state.date,12));
 el("five").onclick=()=>advanceTo(addMonths(state.date,60));
 el("reset").onclick=async()=>{if(advanceBusy)return;if(confirm("Start a new simulation? This replaces the current browser save. Export first if needed.")){state=fresh();selected=null;const ok=await save();render();notify(ok?"New simulation saved and verified.":"New simulation is NOT saved; export immediately. "+storageMode)}};
-el("export").onclick=()=>{let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="bellwether-business-v0.1.31-save.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);notify("Save exported.")};
+el("export").onclick=()=>{let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="bellwether-business-v0.1.32-save.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);notify("Save exported.")};
 el("import").onclick=()=>el("file").click();
 function upgrade(obj){
 if(!obj||!Array.isArray(obj.businesses))throw Error("Invalid save structure");
