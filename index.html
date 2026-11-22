@@ -1,19 +1,19 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#10151b"><title>Bellwether Business Engine v0.1.22</title>
+<meta name="theme-color" content="#10151b"><title>Bellwether Business Engine v0.1.23</title>
 <style>
 :root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;background:#10151b;color:#e8edf3}
 *{box-sizing:border-box}body{margin:0;padding:18px 14px 50px;max-width:1050px;margin-inline:auto}h1{font-size:1.5rem;margin:8px 0 2px}h2{font-size:1.15rem}p,.muted{color:#9cadbd;line-height:1.5}.eyebrow{color:#d6a44e;font-size:.85rem;letter-spacing:.07em}.panel{background:#1b232d;border:1px solid #344352;border-radius:15px;padding:17px;margin-top:16px}.controls{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}button,select,input{font:inherit;border-radius:9px;padding:10px;background:#101820;color:#e8edf3;border:1px solid #465a6c}button{cursor:pointer}button.primary{background:#b48739;color:#111;font-weight:700;border-color:#b48739}button:focus-visible,select:focus-visible{outline:2px solid #e9b85a}.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stat{background:#121a22;border:1px solid #354554;padding:12px;border-radius:10px}.stat small{display:block;color:#9cadbd}.stat strong{font-size:1.4rem}.list{display:grid;gap:8px}.business{width:100%;text-align:left;display:flex;justify-content:space-between;align-items:center;gap:8px}.business.selected{border-color:#d5a24a;background:#2c2a25}.tag{font-size:.75rem;color:#d6b16b}.record{padding:10px 0;border-bottom:1px solid #34414e;overflow-wrap:anywhere}.record:last-child{border:0}.details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.details div{background:#121a22;padding:10px;border-radius:8px}.details small{display:block;color:#9cadbd}.warning{color:#e3b269}.pass{color:#7acb92}#businesses{max-height:340px;overflow:auto}#history{max-height:300px;overflow:auto}.diag{background:#121a22;border-radius:9px;padding:12px;margin:10px 0}.diag small{color:#9cadbd}.mini-table{width:100%;border-collapse:collapse;font-size:.87rem}.mini-table td,.mini-table th{padding:8px 5px;text-align:left;border-bottom:1px solid #34414e}.mini-table td:not(:first-child),.mini-table th:not(:first-child){text-align:right}.trend{font-size:.85rem;color:#d6b16b}footer{font-size:.82rem;color:#92a3b3;margin-top:20px}@media(min-width:750px){.stats{grid-template-columns:repeat(4,1fr)}.columns{display:grid;grid-template-columns:1fr 1fr;gap:16px}.columns .panel{margin-top:0}} 
 </style></head><body>
 <div class="eyebrow">BELLWETHER · STANDALONE SIMULATION</div>
-<h1>Business Engine</h1><div class="muted">Prototype <b>v0.1.22 — Customer demand routing (prospective)</b></div>
-<div class="panel"><strong>Independent engines · shared opportunities</strong><p>Businesses independently respond to market conditions, while new firms may emerge from demand, gaps in capacity, local opportunity, and uncertainty. Growth, contraction, formation, and closure are possible, never guaranteed. These are provisional simulation indicators, not historical financial records. No Life Engine dependency. Supplier and customer links persist. v0.1.22 introduces independent production decisions prospectively; earlier history remains unchanged. No business-count target or survival rescue exists.</p></div>
+<h1>Business Engine</h1><div class="muted">Prototype <b>v0.1.23 — Customer demand routing (prospective)</b></div>
+<div class="panel"><strong>Independent engines · shared opportunities</strong><p>Businesses independently respond to market conditions, while new firms may emerge from demand, gaps in capacity, local opportunity, and uncertainty. Growth, contraction, formation, and closure are possible, never guaranteed. These are provisional simulation indicators, not historical financial records. No Life Engine dependency. Supplier and customer links persist. v0.1.23 introduces independent production decisions prospectively; earlier history remains unchanged. No business-count target or survival rescue exists.</p></div>
 <div class="panel"><div class="controls"><button class="primary" id="day">Advance 1 day</button><button id="month">Advance 1 month</button><button id="advance">Advance 1 year</button><button id="five">Advance 5 years</button><button id="export">Export save</button><button id="import">Import save</button><button id="reset">New simulation</button><input type="file" id="file" accept=".json,application/json" hidden></div>
 <div class="stats"><div class="stat"><small>World date</small><strong id="date"></strong></div><div class="stat"><small>Businesses</small><strong id="count"></strong></div><div class="stat"><small>Active</small><strong id="active"></strong></div><div class="stat"><small>Closed</small><strong id="closed"></strong></div><div class="stat"><small>New formations</small><strong id="formations"></strong></div><div class="stat"><small>Historical records</small><strong id="events"></strong></div><div class="stat"><small>Audit faults</small><strong id="faults"></strong></div></div><p id="notice" role="status"></p></div>
 <div class="columns"><section class="panel"><h2>Business registry</h2><label for="filter" class="muted">Industry</label> <select id="filter"><option value="all">All industries</option></select> <label for="statusFilter" class="muted">Status</label> <select id="statusFilter"><option value="all">All businesses</option><option value="active">Active</option><option value="closed">Closed</option></select><div id="businesses" class="list" style="margin-top:12px"></div></section>
 <section class="panel"><h2>Business identity</h2><div id="detail" class="details"></div><h2>Business characteristics</h2><div id="traits" class="details"></div><h2>Business circumstances</h2><div id="circumstances" class="details"></div><h2>Lifecycle diagnostics</h2><div id="diagnostics"></div><h2>Commercial relationships</h2><div id="relationships"></div><h2>Individual history</h2><div id="history"></div></section></div>
-<section class="panel" id="validationPanel"><h2>Economic validation · historical and prospective</h2><p class="muted">Diagnostics are read-only; v0.1.22 adds supplier-option availability, choice ranking and delivery-mode diagnostics without rewriting prior history. Counts are descriptive, not population targets.</p><div class="controls"><button id="validationExport">Export validation snapshot (CSV)</button><button id="segmentsExport">Export operating segments (CSV)</button></div><h3>Causality diagnostics · read-only</h3><div id="causalityDiagnostics"></div><h3>Operating performance by circumstance · prospective</h3><div id="operatingSegments"></div><h3>Independent demand, capacity and output · v0.1.22</h3><div id="strategyDiagnostics"></div><div class="controls"><button id="strategyExport">Export strategy decisions (CSV)</button></div><h3>Customer demand routing · prospective v0.1.22</h3><p class="muted">v0.1.22 records eligible local/regional alternatives, available capacity, supplier rank and delivery mode; orders can be rerouted when a supplier closes. A reservation that cannot settle is explicitly canceled in the audit.</p><div id="customerFlow"></div><div class="controls"><button id="customerFlowExport">Export customer flows (CSV)</button><button id="settlementExport">Export completed purchases (CSV)</button><button id="purchaseFailuresExport">Export failed purchases (CSV)</button><button id="orderAuditExport">Export order audit (CSV)</button><button id="supplierChoicesExport">Export supplier choices + alternatives (CSV)</button></div><h3>Demand and capacity mechanics · prospective</h3><div id="demandCapacityDiagnostics"></div><div class="controls"><button id="demandCapacityExport">Export demand and capacity (CSV)</button></div><h3>City outcomes</h3><div id="validationCities"></div><h3>Industry outcomes</h3><div id="validationIndustries"></div><h3>Liquidity and capacity</h3><div id="validationFinancial"></div><h3>Relationship and survival checks</h3><div id="validationLinks"></div><p class="muted">Financial indicators are not cash flow, profit, debt, or accounting reserves. A high liquidity indicator does not establish that a firm earned enough to sustain itself. Historical-era and location modifiers are illustrative, not calibrated economic history.</p></section><section class="panel"><h2>Survival cohorts</h2><p class="muted">Founding cohorts by decade. Active share is measured as of the current world date, not a fixed-age survival probability.</p><div id="cohorts"></div></section><section class="panel"><h2>Integrity audit</h2><div id="audit"></div></section>
-<footer>Prototype scope: fictional businesses, persistent IDs, daily Gregorian calendar, monthly independent business reviews, meaningful event histories, operational responses, permanent closures, independent business formation, bounded monthly diagnostic observations with IndexedDB persistence and read-back verification, founding cohort analysis, local market opportunity evaluation, persistent business traits, recovery actions, lifecycle-aware reviews, active/closed filtering, save migration and integrity audits. v0.1.22 adds prospective customer purchase settlement; v0.1.12 added liquidity decomposition and advance reconciliation; v0.1.8 simulation changes apply prospectively to existing saves; closed firms and historical observations are never rewritten. Industry, local market, and historical-era modifiers are illustrative assumptions, not historically calibrated data. Commercial links represent modeled business relationships and indicative orders, not actual accounting transactions, wages, or hiring.</footer>
+<section class="panel" id="validationPanel"><h2>Economic validation · historical and prospective</h2><p class="muted">Diagnostics are read-only; v0.1.23 adds market coverage observations and customer choice variation without rewriting prior history. Counts are descriptive, not population targets.</p><div class="controls"><button id="validationExport">Export validation snapshot (CSV)</button><button id="segmentsExport">Export operating segments (CSV)</button></div><h3>Causality diagnostics · read-only</h3><div id="causalityDiagnostics"></div><h3>Operating performance by circumstance · prospective</h3><div id="operatingSegments"></div><h3>Independent demand, capacity and output · v0.1.23</h3><div id="strategyDiagnostics"></div><div class="controls"><button id="strategyExport">Export strategy decisions (CSV)</button></div><h3>Customer demand routing · prospective v0.1.23</h3><p class="muted">v0.1.23 records eligible local/regional alternatives, available capacity, supplier rank and delivery mode; orders can be rerouted when a supplier closes. A reservation that cannot settle is explicitly canceled in the audit.</p><div id="customerFlow"></div><div class="controls"><button id="customerFlowExport">Export customer flows (CSV)</button><button id="settlementExport">Export completed purchases (CSV)</button><button id="purchaseFailuresExport">Export failed purchases (CSV)</button><button id="orderAuditExport">Export order audit (CSV)</button><button id="supplierChoicesExport">Export supplier choices + alternatives (CSV)</button><button id="marketCoverageExport">Export market coverage (CSV)</button></div><h3>Demand and capacity mechanics · prospective</h3><div id="demandCapacityDiagnostics"></div><div class="controls"><button id="demandCapacityExport">Export demand and capacity (CSV)</button></div><h3>City outcomes</h3><div id="validationCities"></div><h3>Industry outcomes</h3><div id="validationIndustries"></div><h3>Liquidity and capacity</h3><div id="validationFinancial"></div><h3>Relationship and survival checks</h3><div id="validationLinks"></div><p class="muted">Financial indicators are not cash flow, profit, debt, or accounting reserves. A high liquidity indicator does not establish that a firm earned enough to sustain itself. Historical-era and location modifiers are illustrative, not calibrated economic history.</p></section><section class="panel"><h2>Survival cohorts</h2><p class="muted">Founding cohorts by decade. Active share is measured as of the current world date, not a fixed-age survival probability.</p><div id="cohorts"></div></section><section class="panel"><h2>Integrity audit</h2><div id="audit"></div></section>
+<footer>Prototype scope: fictional businesses, persistent IDs, daily Gregorian calendar, monthly independent business reviews, meaningful event histories, operational responses, permanent closures, independent business formation, bounded monthly diagnostic observations with IndexedDB persistence and read-back verification, founding cohort analysis, local market opportunity evaluation, persistent business traits, recovery actions, lifecycle-aware reviews, active/closed filtering, save migration and integrity audits. v0.1.23 adds prospective customer purchase settlement; v0.1.12 added liquidity decomposition and advance reconciliation; v0.1.8 simulation changes apply prospectively to existing saves; closed firms and historical observations are never rewritten. Industry, local market, and historical-era modifiers are illustrative assumptions, not historically calibrated data. Commercial links represent modeled business relationships and indicative orders, not actual accounting transactions, wages, or hiring.</footer>
 <script>
 "use strict";
 const KEY="bellwether-business-v0180",V016="bellwether-business-v0170",V015="bellwether-business-v0150",V014="bellwether-business-v0140",PREVIOUS="bellwether-business-v0130",PRIOR="bellwether-business-v0120",OLD="bellwether-business-v0110",LEGACY="bellwether-business-v0100";
@@ -58,7 +58,7 @@ let priorDemand=c.demand,priorCapacity=c.capacity;let seasonal=bias*.4;
 // Market demand is independent of productive capacity. Scarcity may alter future
 // customer interest, but never guarantees a favorable response.
 let scarcitySignal=Number(c.scarcitySignal)||0;
-let customerReferral=0; c.customerReferral=0; // v0.1.22: referrals settle as separately tracked purchases, never synthetic base demand
+let customerReferral=0; c.customerReferral=0; // v0.1.23: referrals settle as separately tracked purchases, never synthetic base demand
 let demandTarget=m.opportunity+seasonal+shock*profile.volatility+disruption+opportunity+t.advantage*.10-m.competition*7+scarcitySignal+customerReferral;
 c.demand=clamp(Math.round(c.demand*.78+demandTarget*.22+((h>>>4)%7-3)),0,100);
 c.scarcitySignal=0;
@@ -161,7 +161,7 @@ observeDemandCapacity(b,{priorDemand,priorCapacity,demandTarget,demandAfterUpdat
 observeOperatingSegment(b,date,{salesReturn,operatingCost,utilization,margin,burden,competition:m.competition,marketOpportunity:m.opportunity,priorLiquidity:prev.liquidity,finalLiquidity:c.liquidity,rawNet:liquidityUnbounded-prev.liquidity,ceilingHit:liquidityRounded>100});
 recordDiagnostic(b,date,{salesReturn,operatingCost,utilizationGap:(c.demand-c.capacity)*.035,randomLiquidity,eraLiquidity,liquidityUnbounded,liquidityRounded,liquidityBeforeActions,liquidityAfterActions:c.liquidity,shock,disruption,opportunity,bias,marketOpportunity:m.opportunity,competition:m.competition,margin,burden,priorLiquidity:prev.liquidity,priorDemand:prev.demand,phaseBefore:previousPhase,gatePressure,gateLiquidity,gateResilience,gateProbability,gateAll,liquidityCeiling:c.liquidity===100});
 }
-// v0.1.22 observational counters: use already computed inputs, never affect decisions.
+// v0.1.23 observational counters: use already computed inputs, never affect decisions.
 function observeStrategy(b,o){
  let t=b.strategyTrace||(b.strategyTrace={reviews:0,hold:0,expand:0,reduce:0,restricted:0,scarcityPositive:0,scarcityNeutral:0,scarcityNegative:0,output:0,unused:0,capacity:0,demand:0,investment:0});
  t.reviews++;t.output+=o.actualOutput;t.unused+=o.unusedCapacity;t.capacity+=o.capacity;t.demand+=o.demand;t.investment+=o.capacityInvestment;
@@ -172,7 +172,7 @@ function renderStrategy(){
  let keys=['reviews','hold','expand','reduce','restricted','scarcityPositive','scarcityNeutral','scarcityNegative','output','unused','capacity','demand','investment'],t=Object.fromEntries(keys.map(k=>[k,0]));
  for(let b of state.businesses)for(let k of keys)t[k]+=(b.strategyTrace?.[k]||0);
  let n=t.reviews,rows=[['Business-months',n],['Hold installed capacity',t.hold],['Capacity expansion decisions',t.expand],['Capacity reduction decisions',t.reduce],['Deliberate output restrictions',t.restricted],['Scarcity signals: favorable / neutral / adverse',t.scarcityPositive+' / '+t.scarcityNeutral+' / '+t.scarcityNegative],['Mean demand',n?(t.demand/n).toFixed(2):'—'],['Mean installed capacity',n?(t.capacity/n).toFixed(2):'—'],['Mean actual output',n?(t.output/n).toFixed(2):'—'],['Mean unused capacity',n?(t.unused/n).toFixed(2):'—'],['Total capacity-change investment indicator',t.investment.toFixed(2)]];
- el('strategyDiagnostics').innerHTML='<p class="muted">Prospective v0.1.22 observations only. Installed capacity, actual output, and customer demand are separate. Scarcity signals are uncertain and affect the next demand review; they are not guaranteed demand gains. Financial units are abstract indicators.</p><div style="overflow-x:auto"><table class="mini-table"><tbody>'+rows.map(([k,v])=>'<tr><td>'+safe(k)+'</td><td>'+safe(v)+'</td></tr>').join('')+'</tbody></table></div>';
+ el('strategyDiagnostics').innerHTML='<p class="muted">Prospective v0.1.23 observations only. Installed capacity, actual output, and customer demand are separate. Scarcity signals are uncertain and affect the next demand review; they are not guaranteed demand gains. Financial units are abstract indicators.</p><div style="overflow-x:auto"><table class="mini-table"><tbody>'+rows.map(([k,v])=>'<tr><td>'+safe(k)+'</td><td>'+safe(v)+'</td></tr>').join('')+'</tbody></table></div>';
 }
 function exportStrategy(){let keys=['reviews','hold','expand','reduce','restricted','scarcityPositive','scarcityNeutral','scarcityNegative','output','unused','capacity','demand','investment'];let q=x=>'"'+String(x??'').replace(/"/g,'""')+'"';let rows=[['worldDate','businessId','industry','city',...keys].join(','),...state.businesses.filter(b=>b.strategyTrace?.reviews).map(b=>[state.date,b.id,b.industry,b.city,...keys.map(k=>b.strategyTrace[k]||0)].map(q).join(','))];let url=URL.createObjectURL(new Blob([rows.join('\r\n')],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='bellwether-strategy-'+state.date+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);notify('Strategy diagnostics exported.');}
 function observeDemandCapacity(b,o){
@@ -188,9 +188,9 @@ function observeDemandCapacity(b,o){
 }
 function demandCapacityTotals(){let t={};for(let b of state.businesses)for(let [k,v] of Object.entries(b.demandCapacityTrace||{}))t[k]=(t[k]||0)+v;return t}
 function renderDemandCapacity(){let t=demandCapacityTotals(),n=t.n||0,f=v=>n?(v/n).toFixed(2):'—',p=v=>n?(100*v/n).toFixed(1)+'%':'—';
- if(!n){el('demandCapacityDiagnostics').innerHTML='<p class="muted">No new reviews yet. Advance time after deploying v0.1.22.</p>';return}
+ if(!n){el('demandCapacityDiagnostics').innerHTML='<p class="muted">No new reviews yet. Advance time after deploying v0.1.23.</p>';return}
  let rows=[['Observed business-months',n],['Mean demand before → after',f(t.demandBefore)+' → '+f(t.demandAfter)],['Mean demand target',f(t.target)],['Mean capacity before → after monthly drift',f(t.capacityBefore)+' → '+f(t.capacityAfter)],['Mean absolute demand/capacity gap before → after',f(t.absGapBefore)+' → '+f(t.absGapAfter)],['Mean market opportunity',f(t.market)],['Mean competition index',f(t.competition)],['Mean local supply / active peers',f(t.supply)+' / '+f(t.peers)],['Capacity rose / fell / unchanged',t.capacityUp+' / '+t.capacityDown+' / '+t.capacityFlat],['Capacity drift moved toward / away from updated demand',t.capacityTowardDemand+' / '+t.capacityAwayDemand],['Demand rose / fell',t.demandUp+' / '+t.demandDown],['Utilization ≥95% / below 50%',p(t.nearFull)+' / '+p(t.under50)],['Demand exceeds capacity by >12 / capacity exceeds demand by >12',p(t.shortage)+' / '+p(t.surplus)],['Negative operating result',p(t.negativeNet)],['Mean operating result',f(t.operatingNet)],['High-competition reviews (index ≥1.5)',t.highCompetition],['Positive high-competition reviews',t.highCompetition?((100*t.highCompetitionPositive/t.highCompetition).toFixed(1)+'%'):'—'],['Reviews ending in closure',t.closed]];
- el('demandCapacityDiagnostics').innerHTML='<p class="muted">New observations only, beginning with v0.1.22. Firm-months include firms that subsequently close. Capacity after refers to the ordinary monthly drift, before management expansion or contraction. Gap comparison measures updated demand against capacity before and after drift. Beginning v0.1.22, independent capacity decisions and output restrictions replace automatic capacity drift.</p><div style="overflow-x:auto"><table class="mini-table"><thead><tr><th>Measurement</th><th>Result</th></tr></thead><tbody>'+rows.map(([k,v])=>'<tr><td>'+safe(k)+'</td><td>'+safe(v)+'</td></tr>').join('')+'</tbody></table></div>';
+ el('demandCapacityDiagnostics').innerHTML='<p class="muted">New observations only, beginning with v0.1.23. Firm-months include firms that subsequently close. Capacity after refers to the ordinary monthly drift, before management expansion or contraction. Gap comparison measures updated demand against capacity before and after drift. Beginning v0.1.23, independent capacity decisions and output restrictions replace automatic capacity drift.</p><div style="overflow-x:auto"><table class="mini-table"><thead><tr><th>Measurement</th><th>Result</th></tr></thead><tbody>'+rows.map(([k,v])=>'<tr><td>'+safe(k)+'</td><td>'+safe(v)+'</td></tr>').join('')+'</tbody></table></div>';
 }
 function exportDemandCapacity(){let fields=['businessId','industry','city','founded','closed','observations','demandBefore','demandAfter','target','capacityBefore','capacityAfter','market','competition','supply','peers','operatingNet','absGapBefore','absGapAfter','nearFull','under50','shortage','surplus','capacityUp','capacityDown','capacityFlat','capacityTowardDemand','capacityAwayDemand','demandUp','demandDown','negativeNet','highCompetition','highCompetitionPositive'];let quote=x=>'"'+String(x??'').replace(/"/g,'""')+'"';let csv=[['worldDate',...fields].join(','),...state.businesses.filter(b=>b.demandCapacityTrace?.n).map(b=>[state.date,...fields.map(k=>k==='businessId'?b.id:k==='industry'?b.industry:k==='city'?b.city:k==='founded'?b.founded:k==='closed'?(b.circumstances.phase==='closed'):k==='observations'?b.demandCapacityTrace.n:b.demandCapacityTrace[k]??'')].map(quote).join(','))].join('\r\n');let url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='bellwether-demand-capacity-'+state.date+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);notify('Demand/capacity diagnostics exported. Simulation unchanged.')}
 function operatingAgeBand(b,date){let years=Number(date.slice(0,4))-Number(b.founded.slice(0,4))-(date.slice(5,10)<b.founded.slice(5,10)?1:0);return years<5?"0–4 years":years<15?"5–14 years":years<30?"15–29 years":"30+ years"}
@@ -207,7 +207,7 @@ function observeOperatingSegment(b,date,o){
 }
 function renderOperatingSegments(){
  let dimensions=[["industry","Industry"],["city","City"],["utilization","Capacity utilization"],["competition","Competition index"],["age","Business age"]];
- let format=x=>Number.isFinite(x)?x.toFixed(2):"—",html='<p class="muted">Only reviews processed after v0.1.22 are included. Each row represents firm-months, not unique businesses. A positive operating month means margin exceeds burden; it is not an accounting profit. Capacity utilization is sales utilization divided by capacity, measured after the monthly demand/capacity update. Competition is the modeled local supply-to-opportunity index. Figures are observational, not calibrated monetary values.</p>';
+ let format=x=>Number.isFinite(x)?x.toFixed(2):"—",html='<p class="muted">Only reviews processed after v0.1.23 are included. Each row represents firm-months, not unique businesses. A positive operating month means margin exceeds burden; it is not an accounting profit. Capacity utilization is sales utilization divided by capacity, measured after the monthly demand/capacity update. Competition is the modeled local supply-to-opportunity index. Figures are observational, not calibrated monetary values.</p>';
  for(const [dim,title] of dimensions){
   let groups=new Map();for(const b of state.businesses)for(const [key,src] of Object.entries(b.operatingSegments||{})){
    if(!key.startsWith(dim+'|'))continue;let name=key.slice(dim.length+1),a=groups.get(name);
@@ -350,7 +350,7 @@ function commercialReview(date){
  state.network.reviews++;
 }
 
-// v0.1.22: prospective order lifecycle. Existing saves are migrated without
+// v0.1.23: prospective order lifecycle. Existing saves are migrated without
 // reconstructing earlier transactions. Financial amounts are indexed operating
 // units, not dollars; the 0-100 liquidity indicator remains separate.
 function customerLedger(date){
@@ -366,7 +366,7 @@ function recordOrder(l,o,date,status,units,reason='',extra={}){
  l.orderAudit.push({date,orderId:o.orderId,originId:o.originId,recipientId:o.recipientId||o.originId,source:o.source||o.kind||'deferred',status,units,reason,created:o.created,...extra});
  if(l.orderAudit.length>12000)l.orderAudit.splice(0,l.orderAudit.length-12000);
 }
-// v0.1.22: deterministic, readable product/service specialties. Existing firms
+// v0.1.23: deterministic, readable product/service specialties. Existing firms
 // receive stable catalog identities derived from their IDs; no history is changed.
 const productCatalog={
  'Hospitality':[{name:'Restaurant meals',range:35,kind:'local-service'},{name:'Lodging',range:280,kind:'destination-service'},{name:'Catering',range:80,kind:'local-service'}],
@@ -408,7 +408,7 @@ function recordSupplierChoice(l,o,date,dest,availableOptions){
  // Eligibility and immediately usable headroom are distinct. A compatible seller
  // may exist but lack room for another order at the moment of selection.
  const all=rankedSuppliers(origin,date);
- const options=availableOptions||all;
+ const options=(availableOptions||all).slice().sort((a,b)=>supplierAssessment(origin,b,date).score-supplierAssessment(origin,a,date).score||a.id.localeCompare(b.id));
  const localEligible=all.filter(b=>b.city===origin.city).length;
  const regionalEligible=all.length-localEligible;
  const localAvailable=options.filter(b=>b.city===origin.city).length;
@@ -416,13 +416,45 @@ function recordSupplierChoice(l,o,date,dest,availableOptions){
  const chosenRank=options.findIndex(b=>b.id===dest.id)+1;
  const best=options[0];
  const bestScore=best?supplierAssessment(origin,best,date).score:null;
- const choiceReason=localAvailable===0&&dest.city!==origin.city?'no-available-local-supplier':dest.city!==origin.city?'regional-preferred-on-score':chosenRank===1?'highest-ranked-available':'capacity-allocation';
+ const choiceReason=localAvailable===0&&dest.city!==origin.city?'no-available-local-supplier':dest.city!==origin.city?'regional-preferred-on-score':chosenRank===1?'highest-ranked-available':'customer-preference-or-capacity';
  l.supplierChoices=l.supplierChoices||[];
  l.supplierChoices.push({date,orderId:o.orderId,originId:o.originId,recipientId:dest.id,originCity:origin.city,recipientCity:dest.city,product:x.wanted,distanceMiles:x.distance,priceIndex:x.priceIndex,shippingIndex:x.shippingIndex,qualityIndex:x.qualityIndex,relationshipIndex:x.relationshipIndex,score:x.score,source:o.kind||'deferred',localEligible,regionalEligible,localAvailable,regionalAvailable,chosenRank,bestScore,scoreGap:bestScore===null?'':+(bestScore-x.score).toFixed(3),choiceReason,deliveryMode:supplierDeliveryMode(x.wanted,x.distance)});
  if(l.supplierChoices.length>3000)l.supplierChoices.splice(0,l.supplierChoices.length-3000);
  l.supplierChoiceTotal=(l.supplierChoiceTotal||0)+1;
 }
-function rerouteClosedOrder(o,date,byId,l){const origin=byId.get(o.originId);if(!origin)return false;const candidates=rankedSuppliers(origin,date,o.recipientId);const choice=candidates[0];if(!choice)return false;const old=o.recipientId;o.recipientId=choice.id;o.kind=origin.city===choice.city?'local':'regional';recordOrder(l,o,date,'rerouted',o.units,'supplier-closed',{previousRecipientId:old});recordSupplierChoice(l,o,date,choice,candidates);l.reroutedOrders=(l.reroutedOrders||0)+1;return true;}
+// v0.1.23: customer preference can select an acceptable non-top-ranked seller.
+// Deterministic per order and candidate; scores remain visible and no sale is guaranteed.
+function chooseSupplier(origin,date,options,orderKey){
+ if(!options.length)return null;
+ const ranked=options.slice().sort((a,b)=>supplierAssessment(origin,b,date).score-supplierAssessment(origin,a,date).score||a.id.localeCompare(b.id));
+ const h=hash('customer-preference|'+(state.seed||0)+'|'+date+'|'+orderKey);
+ const preferred=ranked[Math.min(ranked.length-1,(h%100)<72?0:(h%100)<92?1:2)];
+ return preferred;
+}
+function marketCoverageSnapshot(date){
+ const active=state.businesses.filter(b=>b.founded<=date&&b.circumstances.phase!=='closed');
+ const rows=[];
+ for(const city of cities)for(const industry of industries)for(const product of productCatalog[industry]){
+  const firms=active.filter(b=>b.city===city&&b.industry===industry&&productOf(b).name===product.name);
+  const available=firms.filter(b=>{const p=b.circumstances.lastProduction;return p&&p.date===date&&p.limit-p.output>0});
+  const demand=active.filter(b=>b.city===city&&b.industry===industry&&productOf(b).name===product.name).reduce((n,b)=>n+Math.max(0,Math.floor((b.circumstances.lastProduction?.date===date?b.circumstances.lastProduction.demand-b.circumstances.lastProduction.output:0))),0);
+  rows.push({date,city,industry,product:product.name,localFirms:firms.length,availableFirms:available.length,unmetUnits:demand,coverage:!firms.length?'no-local-supplier':!available.length?'no-current-headroom':'available'});
+ }
+ return rows;
+}
+function recordMarketSignals(date){
+ const l=customerLedger(date);l.coverageHistory=l.coverageHistory||[];
+ const rows=marketCoverageSnapshot(date);
+ // Store monthly aggregates, not a fabricated customer population.
+ for(const r of rows)if(r.unmetUnits>0||r.localFirms===0)l.coverageHistory.push(r);
+ if(l.coverageHistory.length>18000)l.coverageHistory.splice(0,l.coverageHistory.length-18000);
+ l.coverageMonths=(l.coverageMonths||0)+1;
+}
+function exportMarketCoverage(){
+ const l=customerLedger(state.date),fields=['date','city','industry','product','localFirms','availableFirms','unmetUnits','coverage'];
+ exportCustomerCSV('bellwether-market-coverage',fields,l.coverageHistory||[]);
+}
+function rerouteClosedOrder(o,date,byId,l){const origin=byId.get(o.originId);if(!origin)return false;const candidates=rankedSuppliers(origin,date,o.recipientId);const choice=chooseSupplier(origin,date,candidates,o.orderId+'|reroute');if(!choice)return false;const old=o.recipientId;o.recipientId=choice.id;o.kind=origin.city===choice.city?'local':'regional';recordOrder(l,o,date,'rerouted',o.units,'supplier-closed',{previousRecipientId:old});recordSupplierChoice(l,o,date,choice,candidates);l.reroutedOrders=(l.reroutedOrders||0)+1;return true;}
 function preparePurchaseReservations(date){
  const l=customerLedger(date),byId=new Map(state.businesses.map(b=>[b.id,b]));
  const reservations=new Map(),intents=[];
@@ -529,7 +561,7 @@ function exportCustomerCSV(prefix,fields,rows){
  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download=prefix+'-'+state.date+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);
 }
 
-// v0.1.22: conservation of *unfulfilled customer interest*, not a money ledger.
+// v0.1.23: conservation of *unfulfilled customer interest*, not a money ledger.
 // Routing occurs after independent business reviews. Referrals influence the NEXT
 // review; no extra sales are booked in the current review. One unit is assigned
 // exactly once. A local or regional recipient must have available output headroom.
@@ -547,7 +579,10 @@ function customerDemandReview(date){
   // Priority is contextual and deterministic; no guaranteed transfer.
   const options=rankedSuppliers(origin,date).filter(b=>active.includes(b)&&headroom.get(b.id)>0);
   const willing=Math.floor(unmet*(.30+(h%31)/100));
-  for(const dest of options){if(remaining<=0||local+regional>=willing)break;
+  const orderedOptions=options.slice();
+  // Customers need not pick the top-scored alternative every time.
+  if(orderedOptions.length>1){const first=chooseSupplier(origin,date,orderedOptions,origin.id+'|'+date);orderedOptions.splice(orderedOptions.indexOf(first),1);orderedOptions.unshift(first);}
+  for(const dest of orderedOptions){if(remaining<=0||local+regional>=willing)break;
    const capacity=headroom.get(dest.id),want=Math.min(remaining,willing-local-regional,capacity);
    if(want<=0)continue;
    headroom.set(dest.id,capacity-want);remaining-=want;
@@ -572,6 +607,7 @@ function customerDemandReview(date){
  ledger.months++;
  // Bounded detailed history; aggregate totals remain cumulative.
  ledger.entries.push(...entries);if(ledger.entries.length>2400)ledger.entries.splice(0,ledger.entries.length-2400);
+ recordMarketSignals(date);
 }
 function renderCustomerFlow(){
  const t=state.customerFlow||{},keys=[['Unfulfilled customer interest','unmet'],['Redirected to named local businesses','local'],['Redirected to named regional businesses','regional'],['Outside modeled business population','external'],['Deferred purchases','deferred'],['Substituted products (unassigned)','substituted'],['Abandoned purchases','abandoned'],['Completed redirected / returned sales','settledUnits'],['Unfulfilled redirected opportunities','failedUnits'],['Returned deferred purchases','recoveredDeferred'],['Indexed settlement revenue','settlementRevenue'],['Indexed fulfillment costs','settlementCost'],['Indexed settlement margin','settlementMargin'],['Customer-rejected units','rejectedUnits'],['Capacity-failed units','capacityFailedUnits'],['Expired deferred demand','expiredUnits'],['Pending referrals','pendingCount'],['Waiting customer units','waitingCount'],['Reservations canceled (units)','reservationCanceledUnits'],['Orders rerouted after closure','reroutedOrders'],['Cumulative supplier selections','supplierChoiceTotal']];
@@ -714,7 +750,7 @@ let q=x=>'"'+String(x??'').replace(/"/g,'""')+'"',csv=rows.map(r=>r.map(q).join(
 el('segmentsExport').onclick=exportOperatingSegments;
 el('demandCapacityExport').onclick=exportDemandCapacity;
 el('strategyExport').onclick=exportStrategy;
-el('customerFlowExport').onclick=exportCustomerFlow;el('settlementExport').onclick=exportSettlements;el('purchaseFailuresExport').onclick=exportPurchaseFailures;el('orderAuditExport').onclick=exportOrderAudit;el('supplierChoicesExport').onclick=exportSupplierChoices;
+el('customerFlowExport').onclick=exportCustomerFlow;el('settlementExport').onclick=exportSettlements;el('purchaseFailuresExport').onclick=exportPurchaseFailures;el('orderAuditExport').onclick=exportOrderAudit;el('supplierChoicesExport').onclick=exportSupplierChoices;el('marketCoverageExport').onclick=exportMarketCoverage;
 
 
 function notify(s){el("notice").textContent=s}
@@ -723,7 +759,7 @@ el("month").onclick=()=>advanceTo(addMonths(state.date,1));
 el("advance").onclick=()=>advanceTo(addMonths(state.date,12));
 el("five").onclick=()=>advanceTo(addMonths(state.date,60));
 el("reset").onclick=async()=>{if(advanceBusy)return;if(confirm("Start a new simulation? This replaces the current browser save. Export first if needed.")){state=fresh();selected=null;const ok=await save();render();notify(ok?"New simulation saved and verified.":"New simulation is NOT saved; export immediately. "+storageMode)}};
-el("export").onclick=()=>{let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="bellwether-business-v0.1.22-save.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);notify("Save exported.")};
+el("export").onclick=()=>{let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="bellwether-business-v0.1.23-save.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);notify("Save exported.")};
 el("import").onclick=()=>el("file").click();
 function upgrade(obj){
 if(!obj||!Array.isArray(obj.businesses))throw Error("Invalid save structure");
